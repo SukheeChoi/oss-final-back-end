@@ -27,12 +27,13 @@ public class OrderController {
 	@GetMapping("/{pageNo}")
 	public List<String> getOrderList(@PathVariable int pageNo) { 
 		List<String> list = new ArrayList<>();
-		// OrderService의 메소드에 pageNO를 파라미터로 넘겨주고
-		// '주문확인' 페이지 1개 분량의 정보를 list로 받아온다.
 		
 		// totalRows 확인.
 		int totalRows = orderService.getTotalOrders();
 		Pager pager = new Pager(20, 10, pageNo, totalRows);
+		
+		// OrderService의 메소드에 pageNo를 파라미터로 넘겨주고
+		// '주문확인' 페이지 1개 분량의 정보를 list로 받아온다.
 		list = orderService.getOrderNoList(pager);
 		
 		return list;
