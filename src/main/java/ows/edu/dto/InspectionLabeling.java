@@ -3,7 +3,7 @@ package ows.edu.dto;
 import lombok.Data;
 
 @Data
-public class InspectionLabelingDto {
+public class InspectionLabeling {
 	private int placingOrderItemNo;	//발주품목코드
 	private int receivedQty;		//수령수량
 	private int inspectionQty;		//검수수량

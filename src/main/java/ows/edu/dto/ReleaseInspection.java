@@ -6,7 +6,7 @@ import lombok.Data;
 
 //출고검수&패킹
 @Data
-public class ReleaseInspectionDto {
+public class ReleaseInspection {
 	private int orderItemNo;			//주문품목번호
 	private String personInCharge;		//담당자
 	private int inspectionQty;			//검수수량

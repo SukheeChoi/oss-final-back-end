@@ -6,7 +6,7 @@ import lombok.Data;
 
 //피킹
 @Data
-public class PickingDto {
+public class Picking {
 	private int pikingNo;			//피킹번호
 	private int orderItemNo;		//주문품목번호
 	private String personInCharge;	//담당자

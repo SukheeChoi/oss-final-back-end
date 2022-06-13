@@ -3,7 +3,7 @@
   
 <configuration>
 	<typeAliases>
-		<!-- <typeAlias type="ows.edu.dto.Board" alias="board"/> -->
+		<typeAlias type="ows.edu.dto.Order" alias="order"/>
 	</typeAliases>	
 </configuration>
 

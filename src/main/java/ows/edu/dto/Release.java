@@ -6,7 +6,7 @@ import lombok.Data;
 
 //출고
 @Data
-public class ReleasesDto {
+public class Release {
 	private int releaseNo;			//출고번호
 	private int orderItemNo;		//주문상품번호
 	private String personInCharge;	//담당자

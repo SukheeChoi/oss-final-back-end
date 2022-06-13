@@ -6,7 +6,7 @@ import lombok.Data;
 
 //협력사로 부터 제공받은 정보
 @Data
-public class PartnersInfoDto {
+public class PartnersInfo {
 	private int partnerNo;			//업체번호
 	private int orderItemNo;		//주문품목번호
 	private Date orderCheckDate;	//주문확인일시

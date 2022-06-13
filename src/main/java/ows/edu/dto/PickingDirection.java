@@ -6,7 +6,7 @@ import lombok.Data;
 
 //피킹지시
 @Data
-public class PickingDirectionDto {
+public class PickingDirection {
 	private int orderItemNo;		//주문번호
 	private int attempt;			//차수
 	private Date directionDate;		//지시일시

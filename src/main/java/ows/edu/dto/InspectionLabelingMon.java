@@ -6,7 +6,7 @@ import lombok.Data;
 
 //검품검수 및 라벨링 모니터링
 @Data
-public class InspectionLabelingMonDto {
+public class InspectionLabelingMon {
 	private String placingOrderNo;		//업무번호??
 	private String personInCharge;		//담당자
 	private String receiveDate;			//수령일
