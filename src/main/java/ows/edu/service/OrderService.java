@@ -1,21 +1,10 @@
 package ows.edu.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.log4j.Log4j2;
-
-@Service
-@Log4j2
-public class OrderService {
-	
-	public List<String> getOrderNoList(int pageNo) {
-	List<String> list = new ArrayList<>();
-	
-	
-	return list;
-	}
-	
+@Transactional
+public interface OrderService {
+	public List<String> getOrderNoList(int pageNo);
 }

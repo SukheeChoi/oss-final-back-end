@@ -2,25 +2,23 @@ package ows.edu.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
-import ows.edu.service.OrderService;
+import ows.edu.service.impl.OrderServiceImpl;
 
 @RestController
 @RequestMapping("/order")
 @Log4j2
 public class OrderController {
 	@Resource
-	OrderService orderService;
+	OrderServiceImpl orderService;
 	
 	// 주문확인 페이지
 	
