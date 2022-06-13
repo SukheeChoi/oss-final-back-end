@@ -24,22 +24,14 @@ public class OrderController {
 	
 	// 주문확인 페이지
 	
-	// 페이지네이션한 주문확인 페이지의 주문번호 리스트.
+	// 페이지번호를 받아와서, 해당하는 '주문확인'페이지의 결과를 출력.
 	@GetMapping("/{pageNo}")
-	public List<String> getOrderNoList(@PathVariable int pageNo) {
+	public List<String> getOrderList(@PathVariable int pageNo) { 
 		List<String> list = new ArrayList<>();
 		// OrderService의 메소드에 pageNO를 파라미터로 넘겨주고
-		// 주문번호 리스트를 받아온다.
+		// '주문확인' 페이지 1개 분량의 정보를 list로 받아온다.
 		list = orderService.getOrderNoList(pageNo);
-//		list.add("주문번호~");
-		return null;
-	}
-	
-	
-	// 주문번호를 받아와서, 해당하는 '주문확인'페이지의 결과를 출력.
-	@GetMapping("/")
-	public Map<String, Object> getOrderList(@RequestParam int orderNo) { 
 		
-		return null;
+		return list;
 	}
 }
