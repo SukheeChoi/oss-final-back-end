@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
+import ows.edu.dto.Pager;
 import ows.edu.service.impl.OrderServiceImpl;
 
 @RestController
@@ -28,7 +29,11 @@ public class OrderController {
 		List<String> list = new ArrayList<>();
 		// OrderService의 메소드에 pageNO를 파라미터로 넘겨주고
 		// '주문확인' 페이지 1개 분량의 정보를 list로 받아온다.
-		list = orderService.getOrderNoList(pageNo);
+		
+		// totalRows 확인.
+		int totalRows = orderService.getTotalOrders();
+		Pager pager = new Pager(20, 10, pageNo, totalRows);
+		list = orderService.getOrderNoList(pager);
 		
 		return list;
 	}

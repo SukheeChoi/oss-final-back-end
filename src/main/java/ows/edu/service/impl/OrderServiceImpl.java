@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
+import ows.edu.dao.OrderDao;
+import ows.edu.dto.Pager;
 import ows.edu.service.OrderService;
 
 @Service
@@ -15,13 +17,19 @@ import ows.edu.service.OrderService;
 public class OrderServiceImpl implements OrderService {
 	
 	@Resource
+	OrderDao orderDao;
 	
 	@Override
-	public List<String> getOrderNoList(int pageNo) {
+	public List<String> getOrderNoList(Pager pager) {
 	List<String> list = new ArrayList<>();
+	orderDao.selectByPage(pager);
 	
-	
-	return list;
+		return list;
+	}
+
+	@Override
+	public int getTotalOrders() {
+		return orderDao.count();
 	}
 	
 }
