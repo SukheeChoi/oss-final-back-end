@@ -1,5 +1,12 @@
 package ows.edu.dto;
 
-public class Picking {
+import java.util.Date;
 
+public class Picking {
+	private int pickingNo;
+	private int orderItemNo;
+	private String employeeId;
+	private String locationCode;
+	private Date date;
+	private Boolean done;
 }
