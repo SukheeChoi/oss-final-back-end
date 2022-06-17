@@ -1,5 +1,15 @@
 package ows.edu.dto;
 
-public class ReleaseInspection {
+import java.util.Date;
 
+public class ReleaseInspection {	
+	private int orderItemNo;
+	private int releaseInspectionQuentity;
+	private Date releaseInspectionDate;
+	private Date releasePrintDate;
+	private Date receiptePrintDate;
+	private String employeeId;
+	private int releaseInspectionBarcode;
+	private String releaseInspectionNote;
+	private int unReleased;
 }
