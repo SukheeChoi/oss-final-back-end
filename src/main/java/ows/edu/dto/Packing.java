@@ -1,5 +1,13 @@
 package ows.edu.dto;
 
-public class Packing {
+import java.util.Date;
 
+import lombok.Data;
+
+@Data
+public class Packing {
+	private int orderItemNo;
+	private int boxQty;
+	private String employeeId;
+	private Date dateTime;
 }
