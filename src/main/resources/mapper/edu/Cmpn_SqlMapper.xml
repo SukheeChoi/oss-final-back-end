@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ows.edu.mapper.CmpnMapper">
+
+  <select id="select" resultType="CmpnDto">
+    SELECT /* ows.edu.mapper.CmpnMApper.select */
+      CMPN_CD
+      , CMPN_NM
+      , CTRY_CD
+      , CMPN_ENG_NM
+      , CMPN_ADDR
+      , ZIP_NO
+      , SIDO_NM
+      , CRNY_CD
+    FROM TB_CMPN
+    WHERE CMPN_CD = #{cmpnCd}
+  </select>
+
+  <select id="selectList" resultType="CmpnDto">
+    SELECT /* ows.edu.mapper.CmpnMapper.selectList */
+      CMPN_CD
+      , CMPN_NM
+      , CTRY_CD
+      , CMPN_ENG_NM
+      , CMPN_ADDR
+      , ZIP_NO
+      , SIDO_NM
+      , CRNY_CD
+    FROM TB_CMPN
+  </select>
+
+  <select id="selectTotalCount" resultType="int">
+    SELECT /* ows.edu.mapper.CmpnMapper.selectTotalCount */
+     COUNT(*)
+    FROM TB_CMPN
+  </select>
+
+  <insert id="insert" parameterType="CmpnDto">
+    INSERT  /* ows.edu.mapper.CmpnMapper.insert */
+    INTO TB_CMPN
+        (CMPN_CD
+      , CMPN_NM
+      , CTRY_CD
+      , CMPN_ENG_NM
+      , CMPN_ADDR
+      , ZIP_NO
+      , SIDO_NM
+      , CRNY_CD
+      , PROC_PRGM_ID
+      , RGST_PROCR_ID
+      , RGST_PROC_DTM
+       ) VALUES(
+        #{cmpnCd}
+        , #{cmpnNm}
+        , #{ctryCd}
+        , #{cmpnEngNm}
+        , #{cmpnAddr}
+        , #{zipNo}
+        , #{sidoNm}
+        , #{crnyCd}
+        , #{procPrgmId}
+        , #{rgstProcrId}
+        , #{rgstProcDtm}
+       )
+
+  </insert>
+
+  <update id="update" parameterType="CmpnDto">
+    UPDATE TB_CMPN_CD /* ows.edu.mapper.CmpnMapper.update */
+    SET CMPN_NM = #{cmpnNm}
+    WHERE CMPN_CD = #{cmpnCd}
+  </update>
+
+  <delete id="delete" parameterType="CmpnDto">
+    DELETE /* ows.edu.mapper.CmpnMapper.delete */
+    FROM TB_CMPN_CD
+    WHERE CMPN_CD = #{cmpnCd}
+  </delete>
+
+
+</mapper>
