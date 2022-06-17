@@ -1,5 +1,10 @@
 package ows.edu.dto;
 
-public class LotLocation {
+import lombok.Data;
 
+@Data
+public class LotLocation {
+	private int lotLoccationNo;
+	private String lotCode;
+	private String lctCode;
 }
