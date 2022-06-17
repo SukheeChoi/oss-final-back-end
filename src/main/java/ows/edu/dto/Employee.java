@@ -1,5 +1,5 @@
 package ows.edu.dto;
 
-public class Release {
+public class Employee {
 
 }
