@@ -10,7 +10,7 @@ public class LabelingWorkTime {
 	private int receiveQuentity;
 	private Date scheduledHourMinute;
 	private Date scheduledStartTime;
-	private Date endTime;
+	private Date scheduledEndTime;
 	private String totalWorkTime;
 	private int LWTNine;
 	private int LWTTen;

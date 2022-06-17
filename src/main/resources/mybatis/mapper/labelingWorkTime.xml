@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mycompany.backend.dao.labelingWorkTimeDao">
+	<select id="selectByPage" parameterType="pager" resultType="board">
+		SELECT rnum, emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14, lwt_15, lwt_16, lwt_17
+		FROM (
+		  SELECT ROWNUM as rnum, emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14, lwt_15, lwt_16, lwt_17
+		  FROM (
+		    SELECT emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14, lwt_15, lwt_16, lwt_17
+		    FROM tb_lbl_wrk_tm
+		    ORDER BY emp_id DESC
+		  )
+		  <!-- WHERE rownum &lt;= #{endRowNo} -->
+		)
+		<!-- WHERE rnum &gt;= #{startRowNo} -->
+	</select>
+	
+	<select id="count" resultType="int">
+		SELECT count(*) FROM tb_lbl_wrk_tm
+	</select>
+</mapper>
+
+
