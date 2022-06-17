@@ -1,5 +1,8 @@
 package ows.edu.dto;
 
+import lombok.Data;
+
+@Data
 public class InspectionLabeling {
 	private int placeOrderItemNo;
 	private String employeeNo;

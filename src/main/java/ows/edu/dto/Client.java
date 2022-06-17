@@ -1,5 +1,12 @@
 package ows.edu.dto;
 
-public class Client {
+import lombok.Data;
 
+@Data
+public class Client {
+  private int clientNo;
+  private String clientName;
+  private String employeeId;
+  private String Representative;
+  private String RepresentativeContact;
 }

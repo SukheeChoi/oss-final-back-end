@@ -1,5 +1,9 @@
 package ows.edu.dto;
 
-public class Branch {
+import lombok.Data;
 
+@Data
+public class Branch {
+  private String branchCode;
+  private String branchName;
 }
