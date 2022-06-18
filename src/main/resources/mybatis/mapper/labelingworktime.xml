@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.LabelingWorkTimeDao">
+
+	<select id="search" parameterType="date" resultType="labelingworktime">
+		SELECT sum(LWT_RCV_ITM), sum(LWT_RCV_QTY), min(LWT_SCH_STR_TM), max(LWT_END_TM), max(LWT_TTL_WRK_TM) 
+		FROM osstem.TB_LBL_WRK_TM 
+		WHERE LWT_DT = #(labelingWorkTimeDate);
+	</select>
+
+</mapper>
+
+

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class InspectionLabelingWork {
-	private int placeOrderNo;
+	private int placeOrderNo;          //발주번호는 숫자고 앞에 P붙이기?? 뭔가 String으로 바꿔야 할 거 같음
 	private String employeeId;
 	private Date receiveMonthDay;
 	private Date receiveHourMinute;
