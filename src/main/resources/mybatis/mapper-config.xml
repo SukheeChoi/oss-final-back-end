@@ -22,11 +22,13 @@
 		<typeAlias type="ows.edu.dto.Picking" alias="picking"/>
 		<typeAlias type="ows.edu.dto.PickingDirection" alias="pickingdirection"/>
 		<typeAlias type="ows.edu.dto.PlacingOrder" alias="placingorder"/>
-		<typeAlias type="ows.edu.dto.PlacingOrderitem" alias="placingorderitem"/>
+		<typeAlias type="ows.edu.dto.PlacingOrderItem" alias="placingorderitem"/>
 		<typeAlias type="ows.edu.dto.Release" alias="release"/>
 		<typeAlias type="ows.edu.dto.ReleaseInspection" alias="releaseinspection"/>
 		<typeAlias type="ows.edu.dto.Transfer" alias="transfer"/>
 		<typeAlias type="ows.edu.dto.Vendor" alias="vendor"/>
+		<typeAlias type="ows.edu.dto.Pager" alias="pager"/>
+		<typeAlias type="ows.edu.dto.Board" alias="board"/>
 	</typeAliases>	
 </configuration>
 
