@@ -15,6 +15,7 @@
 		<typeAlias type="ows.edu.dto.LabelingWorkTime" alias="labelingworktime"/>
 		<typeAlias type="ows.edu.dto.Location" alias="location"/>
 		<typeAlias type="ows.edu.dto.Lot" alias="lot"/>
+		<typeAlias type="ows.edu.dto.Lct" alias="lct"/>
 		<typeAlias type="ows.edu.dto.LotLocation" alias="lotlocation"/>
 		<typeAlias type="ows.edu.dto.Order" alias="order"/>
 		<typeAlias type="ows.edu.dto.OrderItem" alias="orderitem"/>

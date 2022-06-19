@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="ows.edu.dao.LctDao">
+<mapper namespace="ows.edu.dao.CombineShippingDao">
 	<select id="countAll" resultType="int">
-		SELECT count(*) FROM tb_lct
+		SELECT count(*) FROM tb_cmb_shp
 	</select>
 	
-	<select id="selectByCode" parameterType="string" resultType="lct">
-		SELECT lct_code, lct_cat
-		    FROM tb_lct
-		    WHERE lct_code=#{lctCode}
+	<select id="selectByDate" resultType="combineShipping">
+		SELECT oi.ord_no, r.rls_no, i.itm_name, oi.itm_code
+			, oi.oi_qty, cs.cs_urls, cs.CS_DLV_CHK
+		FROM TB_CMB_SHP cs
+		JOIN tb_ord_itm oi on (cs.OI_NO = oi.OI_NO)
+		JOIN tb_ord o on (oi.ord_no=o.ord_no)
+		JOIN tb_itm i on (i.itm_code=oi.itm_code)
+		JOIN tb_rls r on (o.ord_no = r.ord_no)
+		WHERE DATE_FORMAT(cs_rcv_dt, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d');
 	</select>
 	
 </mapper>
