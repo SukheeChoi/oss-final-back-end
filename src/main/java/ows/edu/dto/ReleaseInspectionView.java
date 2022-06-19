@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 public class ReleaseInspectionView {
+	private int no;
+	
 	//order
 	private int orderNo;				//주문번호
 	private Date date;					//주문일시
