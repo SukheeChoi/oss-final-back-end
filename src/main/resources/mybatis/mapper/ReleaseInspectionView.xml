@@ -36,8 +36,11 @@
 		ORDER BY RLS_CODE DESC, V_NAME;
 	</select>
 
-	<select id="select" resultType="Order">
-		
+	<select id="selectByPage" parameterType="pager" resultMap="releaseInspectionViewMap">
+		SET @rownum:=#{startRowNo};
+		SELECT @rownum:=@rownum+1 as no, CLT_NAME, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE, PIC_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
+		FROM rls_insp_view
+		imit #{rowsPerPage}, #{startRowNo};
 	</select>
 
 </mapper>
