@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.CombineShippingDao">
-	<resultMap id="combineShippingDeliveryMap" type="">
+<!-- 	<resultMap id="combineShippingDeliveryMap" type="">
 		<id property="employeeId" column="EMP_ID"/>
 		<result property="totalWorkTime" column="LWT_TTL_WRK_TM"/>
-		<association property="order" column="blog_author_id" javaType="Order" resultMap="OrderMap"/>
-	</resultMap>
+		<association property="order" column="" javaType="Order" resultMap="OrderMap"/>
+	</resultMap> -->
 
 	<select id="countAll" resultType="int">
 		SELECT count(*) FROM tb_cmb_shp
