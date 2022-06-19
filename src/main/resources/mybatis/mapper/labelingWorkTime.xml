@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.mycompany.backend.dao.labelingWorkTimeDao">
-	<select id="selectByPage" parameterType="pager" resultType="board">
-		SELECT rnum, emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14, lwt_15, lwt_16, lwt_17
-		FROM (
-		  SELECT ROWNUM as rnum, emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14, lwt_15, lwt_16, lwt_17
-		  FROM (
-		    SELECT emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14, lwt_15, lwt_16, lwt_17
-		    FROM tb_lbl_wrk_tm
-		    ORDER BY emp_id DESC
-		  )
-		  <!-- WHERE rownum &lt;= #{endRowNo} -->
-		)
-		<!-- WHERE rnum &gt;= #{startRowNo} -->
+<mapper namespace="ows.edu.dao.LabelingWorkTimeDao">
+	<resultMap type="LabelingWorkTime" id="labelingWorkTime">
+		<id property="employeeId" column="EMP_ID"/>
+		<id property="labelingWorkTimeDate" column="LWT_DT"/>
+		<result property="totalProgressRate" column="LWT_TTL_PRG_RT"/>
+		<result property="receiveItem" column="LWT_RCV_ITM"/>
+		<result property="receiveQuentity" column="LWT_RCV_QTY"/>
+		<result property="scheduledStartTime" column="LWT_SCH_STR_TM"/>
+		<result property="scheduledendTime" column="LWT_SCH_END_TM"/>
+		<result property="totalWorkTime" column="LWT_TTL_WRK_TM"/>
+		<result property="LWTNine" column="LWT_9"/>
+		<result property="LWTTen" column="LWT_10"/>
+		<result property="LWTEleven" column="LWT_11"/>
+		<result property="LWTThirteen" column="LWT_13"/>
+		<result property="LWTFourteen" column="LWT_14"/>
+		<result property="LWTFifteen" column="LWT_15"/>
+		<result property="LWTSixteen" column="LWT_16"/>
+		<result property="LWTSeventeen" column="LWT_17"/>
+	</resultMap>
+	
+	<select id="searchTotal" parameterType="date" resultMap="labelingWorkTime">
+		select sum(LWT_RCV_ITM) AS LWT_RCV_ITM
+			 , sum(LWT_RCV_QTY) AS LWT_RCV_QTY
+			 , min(LWT_SCH_STR_TM) AS LWT_SCH_STR_TM
+			 , max(LWT_SCH_END_TM) AS LWT_SCH_END_TM
+			 , max(LWT_TTL_WRK_TM) AS LWT_TTL_WRK_TM
+			 , round(avg(LWT_9)) AS LWT_9
+		     , round(avg(LWT_10)) AS LWT_10
+		     , round(avg(LWT_11)) AS LWT_11
+		     , round(avg(LWT_13)) AS LWT_13
+		     , round(avg(LWT_14)) AS LWT_14
+		     , round(avg(LWT_15)) AS LWT_15
+		     , round(avg(LWT_16)) AS LWT_16
+		     , round(avg(LWT_17)) AS LWT_17
+		from osstem.TB_LBL_WRK_TM 
+		WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(),  '%Y-%m-%d')
 	</select>
 	
-	<select id="count" resultType="int">
-		SELECT count(*) FROM tb_lbl_wrk_tm
+	<select id="searchAll" parameterType="date" resultMap="labelingWorkTime">
+		select *
+		from osstem.TB_LBL_WRK_TM
+		WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(#{labelingWorkTimeDate},  '%Y-%m-%d')
 	</select>
 </mapper>
 
