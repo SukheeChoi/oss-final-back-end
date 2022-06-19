@@ -12,5 +12,9 @@ import ows.edu.dto.ReleaseInspectionView;
 public interface ReleaseInspectionViewDao {
 	public List<ReleaseInspectionView> select();
 	public int count();
-	public List<ReleaseInspectionView> selectByPage(@Param("pager") Pager pager);
+// 객체 1개만 파라미터로 넘길거라면 @Param은 필요 없습니다~
+// 객체와 기본타입을 동시에 파라미터로 넘길 때 유용한 어노테이션으로 알고 있어요~
+// 필요에 따라서 @Param을 사용한 경우에는 객체 생성해서 사용하듯이 .필요합니다!
+// ex. 매퍼에서 pager객체 내부의 필드를 사용하고 싶다면, #{pager.startRowNo} 이런식!
+	public List<ReleaseInspectionView> selectByPage(Pager pager);
 }

@@ -16,7 +16,7 @@
 		<result property="orderItemqty" column="OI_QTY"/>
 		<result property="itemName" column="ITM_NAME"/>
 		<result property="vendorNo" column="V_NO"/>
-		<result property="releaseCode" column="RLS_CODE"/>
+		<result property="releaseNo" column="RLS_NO"/>
 		<result property="done" column="RLS_DN"/>
 		<result property="releaseInspectionQuantity" column="RI_QTY"/>
 		<result property="note" column="RI_NT"/>
@@ -30,17 +30,26 @@
 	</resultMap>
 
 	<select id="select" resultMap="releaseInspectionViewMap">
-		SELECT CLT_NAME, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE,
+		SELECT CLT_NAME, ORD_ORD_WAY, RLS_NO, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE,
 				PIC_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
 		FROM rls_insp_view
 		ORDER BY RLS_CODE DESC, V_NAME;
 	</select>
 
 	<select id="selectByPage" parameterType="pager" resultMap="releaseInspectionViewMap">
-		SET @rownum:=#{startRowNo};
-		SELECT @rownum:=@rownum+1 as no, CLT_NAME, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE, PIC_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
+		<!-- ROWNUM사용할 때는 FROM절 내부에 SELECT문을 둬서
+			 0으로 초기화 시켜야 하는것 같네요!!! -->
+		SELECT rowNum, CLT_NAME, ORD_ORD_WAY, RLS_NO, ORD_SHP_DEST, ORD_NO
+			, V_NAME, ITM_NAME, ITM_CODE, PIC_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN
+		    , RI_RCPT_PRT_DT, RI_NT
+		FROM (SELECT @ROWNUM:=@ROWNUM+1 as rowNum, CLT_NAME, ORD_ORD_WAY, RLS_NO, ORD_SHP_DEST, ORD_NO
+			, V_NAME, ITM_NAME, ITM_CODE, PIC_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN
+		    , RI_RCPT_PRT_DT, RI_NT
+		    FROM rls_insp_view, (SELECT @ROWNUM:=0) AS R ) T
+<!-- 		SET @rownum:=#{startRowNo};
+		SELECT @rownum:=@rownum+1 as no, CLT_NAME, ORD_ORD_WAY, RLS_NO, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE, PIC_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
 		FROM rls_insp_view
-		imit #{rowsPerPage}, #{startRowNo};
+		imit #{rowsPerPage}, #{startRowNo}; -->
 	</select>
 	
 	<select id="count" resultType="int">

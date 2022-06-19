@@ -37,10 +37,9 @@ public class ReleaseInspectionController {
 		//페이저 
 		int totalRows = releaseInspectionService.count();
 		Pager pager = new Pager(3, 10, totalRows, pageNo);
-		
 		//paging 처리된 list 가져오기
 		List<ReleaseInspectionView> list = new ArrayList<>();
-		list = releaseInspectionService.selectByPage(pager);		
+		list = releaseInspectionService.selectByPage(pager);	
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("RIList", list);
