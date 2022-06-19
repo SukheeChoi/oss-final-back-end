@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import ows.edu.dto.InspectionLabeling;
 
 @Mapper
-public interface inspectionLabelingDao {
+public interface InspectionLabelingDao {
   public List<InspectionLabeling> search(List<String> placeOrderItemNo);
 }

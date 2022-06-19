@@ -41,5 +41,4 @@
 	</select>
 
 </mapper>
-<!-- view와 rownum을 동시에 사용할 생각인데, 그럼 resulttype은 어떻게 해야하는지 고민하기. -->
 
