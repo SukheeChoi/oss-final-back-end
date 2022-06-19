@@ -42,6 +42,10 @@
 		FROM rls_insp_view
 		imit #{rowsPerPage}, #{startRowNo};
 	</select>
+	
+	<select id="count" resultType="int">
+		select count(*) from rls_insp_view;
+	</select>
 
 </mapper>
 
