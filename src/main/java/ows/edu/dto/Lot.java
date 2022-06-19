@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class Lot {
-	private String LotCode;
+	private String lotCode;
 	private String itemCode;
 }

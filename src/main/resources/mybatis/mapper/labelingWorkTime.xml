@@ -2,23 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mycompany.backend.dao.labelingWorkTimeDao">
-	<select id="selectByPage" parameterType="pager" resultType="board">
-		SELECT rnum, emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14, lwt_15, lwt_16, lwt_17
-		FROM (
-		  SELECT ROWNUM as rnum, emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14, lwt_15, lwt_16, lwt_17
-		  FROM (
-		    SELECT emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14, lwt_15, lwt_16, lwt_17
-		    FROM tb_lbl_wrk_tm
-		    ORDER BY emp_id DESC
-		  )
-		  <!-- WHERE rownum &lt;= #{endRowNo} -->
-		)
-		<!-- WHERE rnum &gt;= #{startRowNo} -->
-	</select>
-	
-	<select id="count" resultType="int">
+	<select id="countAll" resultType="int">
 		SELECT count(*) FROM tb_lbl_wrk_tm
 	</select>
+	<!-- 수령일 기준으로 담당자에 해당하는 정보 모두 조회. -->
+	<select id="selectByDate" resultType="labelingworktime">
+		SELECT emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm
+			, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm
+			, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14
+			, lwt_15, lwt_16, lwt_17
+	    FROM tb_lbl_wrk_tm
+	    WHERE lwt_dt=#{labelingWorkTimeDate}
+	    ORDER BY lwt_sch_hm DESC
+	</select>
+	<!-- 수령일과 담당자를 기준으로 해당하는 1행의 정보를 조회. -->
+	<select id="selectByAssigneeAndDate" resultType="labelingworktime">
+		SELECT emp_id, lwt_dt, lwt_ttl_prg_rt, lwt_rcv_itm
+			, lwt_rcv_qty, lwt_sch_hm, lwt_sch_str_tm, lwt_sch_end_tm
+			, lwt_ttl_wrk_tm, lwt_9, lwt_10, lwt_11, lwt_13, lwt_14
+			, lwt_15, lwt_16, lwt_17
+	    FROM tb_lbl_wrk_tm
+	    WHERE emp_id=#{employeeId}
+	    AND lwt_dt=#{labelingWorkTimeDate}
+	</select>
+	
 </mapper>
 
 

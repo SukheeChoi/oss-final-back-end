@@ -12,7 +12,7 @@ public class LabelingWorkTime {
 	private int receiveQuentity;         //수령 수량
 	private Date scheduledStartTime;     //예정 시작 시간
 	private Date scheduledendTime;       //예정 완료 시간
-  private int totalProgressRate;       //전체 진행률
+	private int totalProgressRate;       //전체 진행률
 	private String totalWorkTime;        //작업 시간 => 예정 완료 시간 - 예정 시작 시간(07:00)
 	private int LWTNine;                 //9시
 	private int LWTTen;                  //10시

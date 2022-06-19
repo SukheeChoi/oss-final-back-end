@@ -2,26 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mycompany.backend.dao.InspectionLabelingWorkDao">
-	<select id="selectByPage" parameterType="pager" resultType="board">
-		SELECT rnum, po_no, emp_id, ilw_rcv_md, ilw_rcv_hm, ilw_rcv_itm, ilw_rcv_qty, ilw_sch_srt_tm, ilw_sch_end_tm, ilw_str_tm,
-				ilw_wrk_tm, ilw_prg_rt, ilw_sts, ilw_lt_tm, ilw_insp_qty, ilw_pas_itm_qty, ilw_lbl_itm_qty
-		FROM (
-		  SELECT ROWNUM as rnum, po_no, emp_id, ilw_rcv_md, ilw_rcv_hm, ilw_rcv_itm, ilw_rcv_qty, ilw_sch_srt_tm, ilw_sch_end_tm, ilw_str_tm,
-								ilw_wrk_tm, ilw_prg_rt, ilw_sts, ilw_lt_tm, ilw_insp_qty, ilw_pas_itm_qty, ilw_lbl_itm_qty
-		  FROM (
-		    SELECT po_no, emp_id, ilw_rcv_md, ilw_rcv_hm, ilw_rcv_itm, ilw_rcv_qty, ilw_sch_srt_tm, ilw_sch_end_tm, ilw_str_tm,
-				ilw_wrk_tm, ilw_prg_rt, ilw_sts, ilw_lt_tm, ilw_insp_qty, ilw_pas_itm_qty, ilw_lbl_itm_qty
-		    FROM tb_insp_lbl_wrk
-		    ORDER BY po_no DESC
-		  )
-		  <!-- WHERE rownum &lt;= #{endRowNo} -->
-		)
-		<!-- WHERE rnum &gt;= #{startRowNo} -->
-	</select>
-	
-	<select id="count" resultType="int">
+	<select id="countAll" resultType="int">
 		SELECT count(*) FROM tb_insp_lbl_wrk
 	</select>
+	
+	<select id="selectByAssigneeAndDate" resultType="inspectionlabelingwork">
+		SELECT po_no, emp_id, ilw_rcv_md, ilw_rcv_hm
+			, ilw_rcv_itm, ilw_rcv_qty, ilw_sch_srt_tm
+			, ilw_sch_end_tm, ilw_str_tm, ilw_wrk_tm
+			, ilw_prg_rt, ilw_sts, ilw_lt_tm, ilw_insp_qty
+			, ilw_pas_itm_qty, ilw_lbl_itm_qty
+	    FROM tb_insp_lbl_wrk
+	    WHERE emp_id=#{inspectionlabelingwork.employeeId}
+	    AND ilw_rcv_md=#{inspectionlabelingwork.receiveMonthDay}
+	    ORDER BY ilw_rcv_hm DESC
+	</select>
+	
 </mapper>
 
 

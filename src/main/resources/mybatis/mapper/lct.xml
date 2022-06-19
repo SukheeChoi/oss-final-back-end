@@ -3,13 +3,13 @@
 
 <mapper namespace="com.mycompany.backend.dao.lotDao">
 	<select id="countAll" resultType="int">
-		SELECT count(*) FROM tb_lot
+		SELECT count(*) FROM tb_lct
 	</select>
 	
-	<select id="selectByCode" parameterType="string" resultType="lot">
-		SELECT lot_code, itm_code
-		    FROM tb_lot
-		    WHERE lot_code=#{lotCode}
+	<select id="selectByCode" parameterType="string" resultType="lct">
+		SELECT lct_code, lct_cat
+		    FROM tb_lct
+		    WHERE lct_code=#{lctCode}
 	</select>
 	
 </mapper>
