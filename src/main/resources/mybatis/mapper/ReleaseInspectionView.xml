@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.ReleaseInspectionViewDao">
+	<resultMap id="releaseInspectionViewMap" type="releaseinspectionView">
+		<result property="orderNo" column="ORD_NO"/>
+		<result property="date" column="ORD_DT"/>
+		<result property="clientNo" column="CLT_NO"/>
+		<result property="shippingWay" column="ORD_SHP_WAY"/>
+		<result property="status" column="ORD_STS"/>
+		<result property="shippingDestination" column="ORD_SHP_DEST"/>
+		<result property="shippingAddress" column="ORD_SHP_ADDR"/>
+		<result property="orderWay" column="ORD_ORD_WAY"/>
+		<result property="orderItemNo" column="OI_NO"/>
+		<result property="code" column="ITM_CODE"/>
+		<result property="orderItemqty" column="OI_QTY"/>
+		<result property="itemName" column="ITM_NAME"/>
+		<result property="vendorNo" column="V_NO"/>
+		<result property="releaseCode" column="RLS_CODE"/>
+		<result property="done" column="RLS_DN"/>
+		<result property="releaseInspectionQuantity" column="RI_QTY"/>
+		<result property="note" column="RI_NT"/>
+		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
+		<result property="receiptePrintDate" column="RI_RCPT_PRT_DT"/>
+		<result property="pickingQty" column="PIC_QTY"/>
+		<result property="boxQty" column="PAC_BX_QTY"/>
+		<result property="vendorName" column="V_NAME"/>
+		<result property="employeeName" column="EMP_NAME"/>
+		<result property="clientName" column="CLT_NAME"/>
+	</resultMap>
+
+	<select id="select" resultMap="releaseInspectionViewMap">
+		SELECT CLT_NAME, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE,
+				PIC_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
+		FROM rls_insp_view
+		ORDER BY RLS_CODE DESC, V_NAME;
+	</select>
+
+	<select id="select" resultType="Order">
+		
+	</select>
+
+</mapper>
+<!-- view와 rownum을 동시에 사용할 생각인데, 그럼 resulttype은 어떻게 해야하는지 고민하기. -->
+
