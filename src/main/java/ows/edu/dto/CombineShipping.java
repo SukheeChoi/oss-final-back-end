@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class CombinedShop {
+public class CombineShipping {
   private int orderItemNo;
   private Date orderCheckDate;
   private boolean recieveCheck;

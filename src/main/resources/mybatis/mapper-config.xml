@@ -6,7 +6,7 @@
 		<typeAlias type="ows.edu.dto.Branch" alias="branch"/>
 		<typeAlias type="ows.edu.dto.Client" alias="client"/>
 		<typeAlias type="ows.edu.dto.ClientDetail" alias="clientdetail"/>
-		<typeAlias type="ows.edu.dto.CombinedShop" alias="combinedshop"/>
+		<typeAlias type="ows.edu.dto.CombineShipping" alias="combineShipping"/>
 		<typeAlias type="ows.edu.dto.Department" alias="department"/>
 		<typeAlias type="ows.edu.dto.Employee" alias="employee"/>
 		<typeAlias type="ows.edu.dto.InspectionLabeling" alias="inspectionlabeling"/>
