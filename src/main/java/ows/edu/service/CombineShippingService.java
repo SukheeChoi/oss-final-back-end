@@ -10,4 +10,6 @@ import ows.edu.dto.CombineShipping;
 public interface CombineShippingService {
 	public List<String> getDeliveryOrderItemNoList(String employeeId);
 	public CombineShipping getADelivery(String orderItemNo);
+	
+	public List<String> getReceiptOrderItemNoList(String employeeId);
 }

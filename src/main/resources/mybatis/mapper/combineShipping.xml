@@ -58,7 +58,7 @@
 	<select id="countAll" resultType="int">
 		SELECT COUNT(*) FROM TB_CMB_SHP
 	</select>
-	<!-- 담당사원을 기준으로 조회. -->
+	<!-- 담당사원을 기준으로 전달 목록 조회. -->
 	<select id="selectDeliveryOrderItemNoList" parameterType="string" resultType="string">
 		SELECT OI.OI_NO
 		FROM TB_CMB_SHP CS
@@ -68,7 +68,6 @@
 		AND CS.CS_DLV_CHK=0
 		AND CS.EMP_ID=#{employeeId};
 	</select>
-	
 	<select id="selectADelivery" parameterType="string" resultMap="combineShippingMap">
 		SELECT OI.ORD_NO, R.RLS_NO, I.ITM_NAME, OI.ITM_CODE
 			, OI.OI_QTY, CS.CS_URLS, CS.CS_DLV_CHK
@@ -78,6 +77,16 @@
 		JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
 		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
 		AND OI.OI_NO=#{orderItemNo}
+	</select>
+	
+	<select id="selectReceiptOrderItemNoList" parameterType="string" resultType="string">
+		SELECT OI.OI_NO
+		FROM TB_CMB_SHP CS
+		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
+		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
+		AND CS.CS_RCV_CHK=0
+		AND CS.CS_DLV_CHK=0
+		AND CS.EMP_ID=#{employeeId};
 	</select>
 	
 </mapper>

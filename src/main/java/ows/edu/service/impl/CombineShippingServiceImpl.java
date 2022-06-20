@@ -31,5 +31,12 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		CombineShipping combineShipping = combineShippingDao.selectADelivery(orderItemNo);
 		return combineShipping;
 	}
+
+	@Override
+	public List<String> getReceiptOrderItemNoList(String employeeId) {
+		log.info("실행");
+		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(employeeId);
+		return list;
+	}
 	
 }

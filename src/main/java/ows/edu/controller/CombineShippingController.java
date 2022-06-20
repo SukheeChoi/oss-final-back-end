@@ -21,10 +21,20 @@ public class CombineShippingController {
 
 	@Resource
 	CombineShippingService combineShippingService;
-	
+//	선택된 담당자를 기준으로 수령 목록 조회.
+	@GetMapping("/getReceiptList")
+	public List<CombineShipping> getCombineShippingReceiptList(@RequestParam(value="employeeId") String employeeId){
+		// 필요한 OI_NO 조회해서 List로 받아옴.
+		List<String> orderItemNoList = new ArrayList<>();
+		orderItemNoList = combineShippingService.getReceiptOrderItemNoList(employeeId);
+		log.info("orderItemNoList : " + orderItemNoList);
+		
+		return null;
+	}
+//	선택된 담당자를 기준으로 전달 목록 조회.
 	@GetMapping("/getDeliveryList")
-	public List<CombineShipping> getReleaseInspectionList(@RequestParam(value="employeeId") String employeeId){
-		// 필요한 ORD_NO 조회해서 List로 받아옴.
+	public List<CombineShipping> getCombineShippingDeliveryList(@RequestParam(value="employeeId") String employeeId){
+		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
 		orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(employeeId);
 		log.info("orderItemNoList : " + orderItemNoList);
