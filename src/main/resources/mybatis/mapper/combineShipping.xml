@@ -36,17 +36,17 @@
 	</resultMap>
 
 	<select id="countAll" resultType="int">
-		SELECT count(*) FROM tb_cmb_shp
+		SELECT COUNT(*) FROM TB_CMB_SHP
 	</select>
 	
 	<select id="selectByDate" resultMap="combineShippingMap">
-		SELECT oi.ord_no, r.rls_no, i.itm_name, oi.itm_code
-			, oi.oi_qty, cs.cs_urls, cs.CS_DLV_CHK
-		FROM TB_CMB_SHP cs
-		JOIN tb_ord_itm oi on (cs.OI_NO = oi.OI_NO)
-		JOIN tb_itm i on (i.itm_code=oi.itm_code)
-		JOIN tb_rls r on (oi.ord_no = r.ord_no)
-		WHERE DATE_FORMAT(cs_rcv_dt, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d');
+		SELECT OI.ORD_NO, R.RLS_NO, I.ITM_NAME, OI.ITM_CODE
+			, OI.OI_QTY, CS.CS_URLS, CS.CS_DLV_CHK
+		FROM TB_CMB_SHP CS
+		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
+		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
+		JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
+		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d');
 	</select>
 	
 </mapper>
