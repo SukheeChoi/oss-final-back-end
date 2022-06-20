@@ -1,7 +1,9 @@
 package ows.edu.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -23,7 +25,7 @@ public class CombineShippingController {
 	CombineShippingService combineShippingService;
 //	선택된 담당자를 기준으로 수령 목록 조회.
 	@GetMapping("/getReceiptList")
-	public List<CombineShipping> getCombineShippingReceiptList(@RequestParam(value="employeeId") String employeeId){
+	public Map<String, Object> getCombineShippingReceiptList(@RequestParam(value="employeeId") String employeeId){
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
 		orderItemNoList = combineShippingService.getReceiptOrderItemNoList(employeeId);
@@ -35,12 +37,13 @@ public class CombineShippingController {
 			receiptList.add(combineShippingService.getAReceipt(orderItemNo));
 		}
 		log.info("receiptList : " + receiptList);
-		
-		return receiptList;
+		Map<String, Object> map = new HashMap<>();
+		map.put("receiptList", receiptList);
+		return map;
 	}
 //	선택된 담당자를 기준으로 전달 목록 조회.
 	@GetMapping("/getDeliveryList")
-	public List<CombineShipping> getCombineShippingDeliveryList(@RequestParam(value="employeeId") String employeeId){
+	public Map<String, Object> getCombineShippingDeliveryList(@RequestParam(value="employeeId") String employeeId){
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
 		orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(employeeId);
@@ -52,7 +55,9 @@ public class CombineShippingController {
 			deliveryList.add(combineShippingService.getADelivery(orderItemNo));
 		}
 		log.info("deliveryList : " + deliveryList);
-		return deliveryList;
+		Map<String, Object> map = new HashMap<>();
+		map.put("deliveryList", deliveryList);
+		return map;
 	}
 	
 	
