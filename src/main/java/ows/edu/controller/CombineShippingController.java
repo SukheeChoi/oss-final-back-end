@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.CombineShipping;
+import ows.edu.dto.Employee;
 import ows.edu.service.CombineShippingService;
+import ows.edu.service.EmployeeService;
 
 @RestController
 @RequestMapping("/combineShipping")
@@ -23,6 +25,20 @@ public class CombineShippingController {
 
 	@Resource
 	CombineShippingService combineShippingService;
+
+	
+//	'전달'탭 선택시에 표시되는 합배송 담당직원의 목록 조회.
+//	당일의 '전달'사항을 할일로 가진 모든 담당자 조회.
+//	수령1 + 전달0인 행들의 모든 EMP_ID기준으로 중복없이 정렬해서,EMP_ID와 EMP_NAME 전달.
+	@GetMapping("/getAssignee")
+	public Map<String, Object> getAssignee() {
+		Map<String, Object> map = new HashMap<>();
+		List<Employee> list = combineShippingService.getAssigneeListByDate();
+		log.info("list : " + list);
+		map.put("list", list);
+		return map;
+	}
+	
 //	선택된 담당자를 기준으로 수령 목록 조회.
 	@GetMapping("/getReceiptList")
 	public Map<String, Object> getCombineShippingReceiptList(@RequestParam(value="employeeId") String employeeId){
