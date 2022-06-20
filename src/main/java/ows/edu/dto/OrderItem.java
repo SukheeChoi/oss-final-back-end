@@ -6,7 +6,7 @@ import lombok.Data;
 public class OrderItem {
 	private int orderItemNo;
 	private int orderNo;
-	private String code;
+	private String itemCode;
 	private int qty;
 	
 	

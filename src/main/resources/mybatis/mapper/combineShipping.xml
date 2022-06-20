@@ -2,24 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.CombineShippingDao">
-<!-- 	<resultMap id="combineShippingDeliveryMap" type="">
-		<id property="employeeId" column="EMP_ID"/>
-		<result property="totalWorkTime" column="LWT_TTL_WRK_TM"/>
-		<association property="order" column="" javaType="Order" resultMap="OrderMap"/>
-	</resultMap> -->
+ 	<resultMap id="orderItemMap" type="orderItem">
+		<result property="orderItemNo" column="OI_NO"/>
+		<result property="orderNo" column="ORD_NO"/>
+		<result property="itemCode" column="ITN_CODE"/>
+		<result property="qty" column="OI_QTY"/>
+	</resultMap>
+ 	<resultMap id="itemMap" type="item">
+		<result property="itemCode" column="ITM_CODE"/>
+		<result property="itemName" column="ITM_NAME"/>
+		<result property="vendorNo" column="V_NO"/>
+	</resultMap>
+ 	<resultMap id="releaseMap" type="release">
+		<result property="releaseNo" column="RLS_NO"/>
+		<result property="orderNo" column="ORD_NO"/>
+		<result property="employeeId" column="EMP_ID"/>
+		<result property="releaseDate" column="RLS_DT"/>
+		<result property="releaseDone" column="RLS_DN"/>
+	</resultMap>
+ 	<resultMap id="combineShippingMap" type="combineShipping">
+		<result property="orderItemNo" column="OI_NO"/>
+		<result property="orderCheckDate" column="CS_ORD_CHK_DT"/>
+		<result property="recieveCheck" column="CS_RCV_CHK"/>
+		<result property="unrelease" column="CS_URLS"/>
+		<result property="deliverCheck" column="CS_DLV_CHK"/>
+		<result property="employeeId" column="EMP_ID"/>
+		<result property="releaseScheduleDate" column="CS_RLS_SCH_DT"/>
+		<result property="recieveDate" column="CS_RCV_DT"/>
+		
+		<collection property="orderItem" resultMap="orderItemMap"/>
+		<collection property="item" resultMap="itemMap"/>
+		<collection property="release" resultMap="releaseMap"/>
+	</resultMap>
 
 	<select id="countAll" resultType="int">
 		SELECT count(*) FROM tb_cmb_shp
 	</select>
 	
-	<select id="selectByDate" resultType="combineShipping">
+	<select id="selectByDate" resultMap="combineShippingMap">
 		SELECT oi.ord_no, r.rls_no, i.itm_name, oi.itm_code
 			, oi.oi_qty, cs.cs_urls, cs.CS_DLV_CHK
 		FROM TB_CMB_SHP cs
 		JOIN tb_ord_itm oi on (cs.OI_NO = oi.OI_NO)
-		JOIN tb_ord o on (oi.ord_no=o.ord_no)
 		JOIN tb_itm i on (i.itm_code=oi.itm_code)
-		JOIN tb_rls r on (o.ord_no = r.ord_no)
+		JOIN tb_rls r on (oi.ord_no = r.ord_no)
 		WHERE DATE_FORMAT(cs_rcv_dt, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d');
 	</select>
 	

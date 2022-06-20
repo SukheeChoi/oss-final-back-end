@@ -28,7 +28,7 @@ public class ReleaseInspectionView {
 	private int vendorNo;
 	
 	//Release
-	private String releaseCode;
+	private String releaseNo;
 	private int done;
 	
 	//ReleaseInspection

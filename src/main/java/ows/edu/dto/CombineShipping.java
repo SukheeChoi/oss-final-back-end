@@ -11,7 +11,11 @@ public class CombineShipping {
   private boolean recieveCheck;
   private int unrelease;
   private boolean deliverCheck;
-  private String EmployeeId;
+  private String employeeId;
   private Date releaseScheduleDate;
   private Date recieveDate;
+  
+  private OrderItem orderItem;
+  private Item item;
+  private Release release;
 }

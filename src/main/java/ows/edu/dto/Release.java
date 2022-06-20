@@ -10,4 +10,5 @@ public class Release {
 	private int orderNo;
 	private String employeeId;
 	private Date releaseDate;
+	private Boolean releaseDone;
 }
