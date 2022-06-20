@@ -8,5 +8,6 @@ import ows.edu.dto.CombineShipping;
 
 @Mapper
 public interface CombineShippingDao {
-	public List<CombineShipping> selectByDate();
+	public List<String> selectDeliveryOrderItemNoList(String employeeId);
+	public CombineShipping selectADelivery(String orderItemNo);
 }

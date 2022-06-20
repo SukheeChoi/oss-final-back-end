@@ -19,10 +19,17 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	CombineShippingDao combineShippingDao;
 	
 	@Override
-	public List<CombineShipping> getDeliveryList() {
+	public List<String> getDeliveryOrderItemNoList(String employeeId) {
 		log.info("실행");
-		List<CombineShipping> list = combineShippingDao.selectByDate();
+		List<String> list = combineShippingDao.selectDeliveryOrderItemNoList(employeeId);
 		return list;
+	}
+	
+	@Override
+	public CombineShipping getADelivery(String orderItemNo) {
+		log.info("실행");
+		CombineShipping combineShipping = combineShippingDao.selectADelivery(orderItemNo);
+		return combineShipping;
 	}
 	
 }

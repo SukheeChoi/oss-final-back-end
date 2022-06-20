@@ -8,6 +8,6 @@ import ows.edu.dto.CombineShipping;
 
 @Transactional
 public interface CombineShippingService {
-
-	public List<CombineShipping> getDeliveryList();
+	public List<String> getDeliveryOrderItemNoList(String employeeId);
+	public CombineShipping getADelivery(String orderItemNo);
 }

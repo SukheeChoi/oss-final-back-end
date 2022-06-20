@@ -30,23 +30,54 @@
 		<result property="releaseScheduleDate" column="CS_RLS_SCH_DT"/>
 		<result property="recieveDate" column="CS_RCV_DT"/>
 		
-		<collection property="orderItem" resultMap="orderItemMap"/>
+		<association property="orderItem" javaType="orderItem">
+			<result property="orderItemNo" column="OI_NO"/>
+			<result property="orderNo" column="ORD_NO"/>
+			<result property="itemCode" column="ITN_CODE"/>
+			<result property="qty" column="OI_QTY"/>
+		</association>
+		<association property="item" javaType="item">
+			<result property="itemCode" column="ITM_CODE"/>
+			<result property="itemName" column="ITM_NAME"/>
+			<result property="vendorNo" column="V_NO"/>
+		</association>
+		<association property="release" javaType="release">
+			<result property="releaseNo" column="RLS_NO"/>
+			<result property="orderNo" column="ORD_NO"/>
+			<result property="employeeId" column="EMP_ID"/>
+			<result property="releaseDate" column="RLS_DT"/>
+			<result property="releaseDone" column="RLS_DN"/>
+		</association>
+		<!-- <association property="item" resultMap="itemMap"/>
+		<association property="release" resultMap="releaseMap"/> -->
+<!-- 		<collection property="orderItem" resultMap="orderItemMap"/>
 		<collection property="item" resultMap="itemMap"/>
-		<collection property="release" resultMap="releaseMap"/>
+		<collection property="release" resultMap="releaseMap"/> -->
 	</resultMap>
 
 	<select id="countAll" resultType="int">
 		SELECT COUNT(*) FROM TB_CMB_SHP
 	</select>
+	<!-- 담당사원을 기준으로 조회. -->
+	<select id="selectDeliveryOrderItemNoList" parameterType="string" resultType="string">
+		SELECT OI.OI_NO
+		FROM TB_CMB_SHP CS
+		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
+		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
+		AND CS.CS_RCV_CHK=1
+		AND CS.CS_DLV_CHK=0
+		AND CS.EMP_ID=#{employeeId};
+	</select>
 	
-	<select id="selectByDate" resultMap="combineShippingMap">
+	<select id="selectADelivery" parameterType="string" resultMap="combineShippingMap">
 		SELECT OI.ORD_NO, R.RLS_NO, I.ITM_NAME, OI.ITM_CODE
 			, OI.OI_QTY, CS.CS_URLS, CS.CS_DLV_CHK
 		FROM TB_CMB_SHP CS
 		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
 		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
 		JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
-		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d');
+		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
+		AND OI.OI_NO=#{orderItemNo}
 	</select>
 	
 </mapper>
