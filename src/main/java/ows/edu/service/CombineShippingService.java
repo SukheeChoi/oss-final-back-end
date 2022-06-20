@@ -12,4 +12,5 @@ public interface CombineShippingService {
 	public CombineShipping getADelivery(String orderItemNo);
 	
 	public List<String> getReceiptOrderItemNoList(String employeeId);
+	public CombineShipping getAReceipt(String orderItemNo);
 }

@@ -17,7 +17,21 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	@Resource
 	CombineShippingDao combineShippingDao;
+	// '수령' 탭 선택된 경우.
+	@Override
+	public List<String> getReceiptOrderItemNoList(String employeeId) {
+		log.info("실행");
+		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(employeeId);
+		return list;
+	}
 	
+	@Override
+	public CombineShipping getAReceipt(String orderItemNo) {
+		log.info("실행");
+		CombineShipping combineShipping = combineShippingDao.selectAReceipt(orderItemNo);
+		return combineShipping;
+	}
+	// '전달' 탭 선택된 경우.
 	@Override
 	public List<String> getDeliveryOrderItemNoList(String employeeId) {
 		log.info("실행");
@@ -32,11 +46,5 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		return combineShipping;
 	}
 
-	@Override
-	public List<String> getReceiptOrderItemNoList(String employeeId) {
-		log.info("실행");
-		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(employeeId);
-		return list;
-	}
 	
 }
