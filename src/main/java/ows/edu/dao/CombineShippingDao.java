@@ -12,4 +12,5 @@ public interface CombineShippingDao {
 	public CombineShipping selectADelivery(String orderItemNo);
 	
 	public List<String> selectReceiptOrderItemNoList(String employeeId);
+	public CombineShipping selectAReceipt(String orderItemNo);
 }

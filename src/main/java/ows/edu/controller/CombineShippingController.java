@@ -28,8 +28,15 @@ public class CombineShippingController {
 		List<String> orderItemNoList = new ArrayList<>();
 		orderItemNoList = combineShippingService.getReceiptOrderItemNoList(employeeId);
 		log.info("orderItemNoList : " + orderItemNoList);
+		//
+		List<CombineShipping> receiptList = new ArrayList<>();
+		for(String orderItemNo : orderItemNoList) {
+			log.info("orderItemNo : " + orderItemNo);
+			receiptList.add(combineShippingService.getAReceipt(orderItemNo));
+		}
+		log.info("receiptList : " + receiptList);
 		
-		return null;
+		return receiptList;
 	}
 //	선택된 담당자를 기준으로 전달 목록 조회.
 	@GetMapping("/getDeliveryList")
