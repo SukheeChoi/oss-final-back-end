@@ -17,6 +17,7 @@ public class CombineShipping {
   private Date receiveDate;
   private int releaseQuantity;
   private int deliveryQuantity;
+  private int vendorNo;
   
   private OrderItem orderItem;
   private Item item;

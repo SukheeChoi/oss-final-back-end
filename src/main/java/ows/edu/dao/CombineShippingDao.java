@@ -1,8 +1,10 @@
 package ows.edu.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import ows.edu.dto.CombineShipping;
 import ows.edu.dto.Employee;
@@ -20,4 +22,6 @@ public interface CombineShippingDao {
 
 	// 전달여부 update.
 	public int updateADelivery(CombineShipping combineShipping);
+
+	public List<CombineShipping> getReceiptListByDate(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }

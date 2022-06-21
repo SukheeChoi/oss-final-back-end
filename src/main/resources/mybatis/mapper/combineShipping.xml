@@ -129,6 +129,20 @@
 		WHERE OI_NO=#{orderItemNo}
 	</update>
 	
+	<select id="getReceiptListByDate" resultMap="combineShippingMap">
+		SELECT OI.OI_NO, I.ITM_NAME, OI.ITM_CODE
+			, CS.CS_RCV_URLS, CS.CS_RCV_QTY, CS.CS_RCV_CHK
+		FROM TB_CMB_SHP CS
+		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
+		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
+		JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
+		<![CDATA[
+		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+			AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+		]]>
+		ORDER BY I.ITM_NAME
+	</select>
+	
 </mapper>
 
 

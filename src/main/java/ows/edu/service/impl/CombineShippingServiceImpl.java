@@ -1,5 +1,6 @@
 package ows.edu.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -74,6 +75,14 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 			result = "fail";
 		}
 		return result;
+	}
+
+	@Override
+	public List<CombineShipping> getReceiptListByDate(String[] dateList) {
+		String startDate = dateList[0];
+		String endDate = dateList[1];
+		List<CombineShipping> list = combineShippingDao.getReceiptListByDate(startDate, endDate);
+		return list;
 	}
 
 }

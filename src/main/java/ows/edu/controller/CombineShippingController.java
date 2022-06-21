@@ -88,4 +88,14 @@ public class CombineShippingController {
 		return resultMap;
 	}
 	
+// 선택된 기간 동안안의 수령 목록 조회.
+	@PostMapping("/getReceiptListByDate")
+	public Map<String, Object> getReceiptListByDate(@RequestBody String[] dateList) {
+		Map<String, Object> map = new HashMap<>();
+		List<CombineShipping> list = combineShippingService.getReceiptListByDate(dateList);
+		map.put("list", list);
+		log.info("list : " + list);
+		return map;
+	}
+	
 }

@@ -1,5 +1,6 @@
 package ows.edu.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -20,4 +21,6 @@ public interface CombineShippingService {
 
 	// 전달여부 update.
 	public String updateDelivery(CombineShipping[] itemOrderNOList);
+	// 선택된 기간 동안의 수령목록 조회.
+	public List<CombineShipping> getReceiptListByDate(String[] dateList);
 }
