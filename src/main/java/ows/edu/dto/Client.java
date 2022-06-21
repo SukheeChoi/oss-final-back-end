@@ -9,4 +9,6 @@ public class Client {
   private String employeeId;
   private String representative;
   private String representativeContact;
+  
+  private Order order;
 }
