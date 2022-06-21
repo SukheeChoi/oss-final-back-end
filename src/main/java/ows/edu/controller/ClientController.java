@@ -29,7 +29,6 @@ public class ClientController {
 		Map<String, Object> m = new HashMap<>();
 		List<String> list = new ArrayList<>();
 		list = clientService.getlist();
-//		log.info("clientName : " + clientName);
 		log.info("clientcontroller : " + list);
 		m.put("list", list);
 		return m;
