@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.ClientDao">
+	<!-- 고객수취 거래처 조회 -->
+	<select id="countAll" resultType="int">
+		SELECT count(*) FROM TB_CLT;
+	</select>
+	
+	<select id="showList" resultType="client">
+		SELECT CLT_NAME FROM TB_CLT;
+	</select>
+</mapper>
+
+
