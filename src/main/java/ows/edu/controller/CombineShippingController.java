@@ -1,6 +1,8 @@
 package ows.edu.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.CombineShipping;
 import ows.edu.dto.Employee;
+import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
 
 @RestController
@@ -27,6 +30,32 @@ public class CombineShippingController {
 	@Resource
 	CombineShippingService combineShippingService;
 
+	
+	//수령 대상 업체 필터링을 위한 조회.
+	//선택된 날짜(parameter로 넘김.) || (parameter X)오늘 날짜에 해당하도록 조회할 것.
+	@GetMapping("/getVendorList")
+	public Map<String, Object> getVendorList(@RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
+		Map<String, Object> map = new HashMap<>();
+		List<Vendor> list = new ArrayList<>();
+		log.info("dateList[0] : " + dateList[0]);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String strNowDate = simpleDateFormat.format(new Date()); 
+		log.info("strNowDate : " + strNowDate);
+		if(dateList != null) {
+			if(dateList.length == 1) {
+				String[] strNowDateList = new String[2];
+				strNowDateList[0] = strNowDate;
+				strNowDateList[1] = strNowDate;
+				list = combineShippingService.getVendorList(strNowDateList);
+			} else {
+				list = combineShippingService.getVendorList(dateList);
+			}
+		}
+				
+		map.put("list", list);
+		
+		return map;
+	}
 	
 //	'전달'탭 선택시에 표시되는 합배송 담당직원의 목록 조회.
 //	당일의 '전달'사항을 할일로 가진 모든 담당자 조회.

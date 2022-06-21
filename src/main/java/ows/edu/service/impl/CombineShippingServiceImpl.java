@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.CombineShippingDao;
 import ows.edu.dto.CombineShipping;
 import ows.edu.dto.Employee;
+import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
 
 @Service
@@ -19,6 +20,12 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	@Resource
 	CombineShippingDao combineShippingDao;
+	
+	@Override
+	public List<Vendor> getVendorList(String[] strNowDateList) {
+		List<Vendor> list = combineShippingDao.getVendorList(strNowDateList);
+		return list;
+	}
 	
 	// 담당자 필터링을 위한 조회.
 	@Override
