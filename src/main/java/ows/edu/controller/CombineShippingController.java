@@ -33,11 +33,11 @@ public class CombineShippingController {
 	
 	//수령 대상 업체 필터링을 위한 조회.
 	//선택된 날짜(parameter로 넘김.) || (parameter X)오늘 날짜에 해당하도록 조회할 것.
-	@GetMapping("/getVendorList")
+	@PostMapping("/getVendorList")
 	public Map<String, Object> getVendorList(@RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
 		Map<String, Object> map = new HashMap<>();
 		List<Vendor> list = new ArrayList<>();
-		log.info("dateList[0] : " + dateList[0]);
+		log.info("dateList.length : " + dateList.length);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String strNowDate = simpleDateFormat.format(new Date()); 
 		log.info("strNowDate : " + strNowDate);
@@ -70,12 +70,31 @@ public class CombineShippingController {
 	}
 	
 //	선택된 담당자를 기준으로 수령 목록 조회.
-	@GetMapping("/getReceiptList")
-	public Map<String, Object> getCombineShippingReceiptList(@RequestParam(value="employeeId") String employeeId){
+	@PostMapping("/getReceiptList")
+	public Map<String, Object> geReceiptList(@RequestParam(value="employeeId") String employeeId
+			, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
-		orderItemNoList = combineShippingService.getReceiptOrderItemNoList(employeeId);
-		log.info("orderItemNoList : " + orderItemNoList);
+		
+		if(dateList != null) {
+			if(dateList.length == 1) {
+				//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String strNowDate = simpleDateFormat.format(new Date()); 
+				log.info("strNowDate : " + strNowDate);
+				
+				String[] strNowDateList = new String[2];
+				strNowDateList[0] = strNowDate;
+				strNowDateList[1] = strNowDate;
+				orderItemNoList = combineShippingService.getReceiptOrderItemNoList(employeeId, strNowDateList);
+				log.info("orderItemNoList : " + orderItemNoList);
+			} else {
+				log.info("dateList : " + dateList);
+				orderItemNoList = combineShippingService.getReceiptOrderItemNoList(employeeId, dateList);
+				log.info("orderItemNoList : " + orderItemNoList);
+			}
+		}
+		
 		//
 		List<CombineShipping> receiptList = new ArrayList<>();
 		for(String orderItemNo : orderItemNoList) {
@@ -88,13 +107,28 @@ public class CombineShippingController {
 		return map;
 	}
 //	선택된 담당자를 기준으로 전달 목록 조회.
-	@GetMapping("/getDeliveryList")
-	public Map<String, Object> getCombineShippingDeliveryList(@RequestParam(value="employeeId") String employeeId){
+	@PostMapping("/getDeliveryList")
+	public Map<String, Object> getDeliveryList(@RequestParam(value="employeeId") String employeeId
+												, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
-		orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(employeeId);
+		
+		if(dateList != null) {
+			if(dateList.length == 1) {
+				//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String strNowDate = simpleDateFormat.format(new Date()); 
+				log.info("strNowDate : " + strNowDate);
+				
+				String[] strNowDateList = new String[2];
+				strNowDateList[0] = strNowDate;
+				strNowDateList[1] = strNowDate;
+				orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(employeeId, strNowDateList);
+			} else {
+				orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(employeeId, dateList);
+			}
+		}
 		log.info("orderItemNoList : " + orderItemNoList);
-		// 
 		List<CombineShipping> deliveryList = new ArrayList<>();
 		for(String orderItemNo : orderItemNoList) {
 			log.info("orderItemNo : " + orderItemNo);
@@ -118,13 +152,13 @@ public class CombineShippingController {
 	}
 	
 // 선택된 기간 동안안의 수령 목록 조회.
-	@PostMapping("/getReceiptListByDate")
-	public Map<String, Object> getReceiptListByDate(@RequestBody String[] dateList) {
-		Map<String, Object> map = new HashMap<>();
-		List<CombineShipping> list = combineShippingService.getReceiptListByDate(dateList);
-		map.put("list", list);
-		log.info("list : " + list);
-		return map;
-	}
+//	@PostMapping("/getReceiptListByDate")
+//	public Map<String, Object> getReceiptListByDate(@RequestBody String[] dateList) {
+//		Map<String, Object> map = new HashMap<>();
+//		List<CombineShipping> list = combineShippingService.getReceiptListByDate(dateList);
+//		map.put("list", list);
+//		log.info("list : " + list);
+//		return map;
+//	}
 	
 }

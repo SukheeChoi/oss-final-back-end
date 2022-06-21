@@ -15,15 +15,17 @@ public interface CombineShippingService {
 	//담당자 필터링을 위한 조회.
 	public List<Employee> getAssigneeListByDate();
 	
-	public List<String> getDeliveryOrderItemNoList(String employeeId);
-	public CombineShipping getADelivery(String orderItemNo);
-	
-	public List<String> getReceiptOrderItemNoList(String employeeId);
+	// 담당사원 + 날짜정보 필터링 적용한 수령정보 조회.
+	public List<String> getReceiptOrderItemNoList(String employeeId, String[] dateList);
 	public CombineShipping getAReceipt(String orderItemNo);
+	
+	// 업체정보 + 날짜정보 필터링 적용한 전달정보 조회.
+	public List<String> getDeliveryOrderItemNoList(String employeeId, String[] dateList);
+	public CombineShipping getADelivery(String orderItemNo);
 
 	// 전달여부 update.
 	public String updateDelivery(CombineShipping[] itemOrderNOList);
 	// 선택된 기간 동안의 수령목록 조회.
-	public List<CombineShipping> getReceiptListByDate(String[] dateList);
+//	public List<CombineShipping> getReceiptListByDate(String[] dateList);
 
 }
