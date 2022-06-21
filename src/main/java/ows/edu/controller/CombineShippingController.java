@@ -83,7 +83,6 @@ public class CombineShippingController {
 	@PostMapping("/updateDelivery")
 	public Map<String, String> updateDelivery(@RequestBody CombineShipping[] combineShipping) {
 		Map<String, String> resultMap = new HashMap<>();
-		log.info("combineShipping[0] : " + combineShipping[0]);
 		String result = combineShippingService.updateDelivery(combineShipping);
 		resultMap.put("result", result);
 		return resultMap;
