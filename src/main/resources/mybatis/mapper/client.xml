@@ -7,8 +7,8 @@
 		SELECT count(*) FROM TB_CLT;
 	</select>
 	
-	<select id="showList" resultType="client">
-		SELECT CLT_NAME FROM TB_CLT;
+	<select id="showList" resultType="string">
+		SELECT CLT_NAME FROM TB_CLT
 	</select>
 </mapper>
 

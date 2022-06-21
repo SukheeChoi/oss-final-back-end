@@ -1,7 +1,9 @@
 package ows.edu.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -23,12 +25,14 @@ public class ClientController {
 	
 	//거래처 목록 불러오기
 	@GetMapping("/")
-	public List<Client> getClientNameList() {
-		List<Client> list = new ArrayList<>();
+	public Map<String, Object> getClientNameList() {
+		Map<String, Object> m = new HashMap<>();
+		List<String> list = new ArrayList<>();
 		list = clientService.getlist();
 //		log.info("clientName : " + clientName);
 		log.info("clientcontroller : " + list);
-		return list;
+		m.put("list", list);
+		return m;
 	}
 	
 	

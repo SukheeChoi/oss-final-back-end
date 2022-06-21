@@ -24,11 +24,14 @@ public class ClientService {
 //	    return list;
 //	};
 	
-	public List<Client> getlist() {
+	public List<String> getlist() {
 //		List<Client> list = new ArrayList<>();
 //	    list.addAll(clientDao.showList());
 //	    log.info("ClientService : " + clientName);
-	    log.info("ClientService : " + clientDao.showList());
-	    return clientDao.showList();
+		List<String> v = clientDao.showList();
+//	    log.info("ClientService : " + v);
+//	    log.info("ClientService : " + v.get(0));
+//	    log.info("ClientService : " + v.get(0).getClientName());
+	    return v;
 	};
 }
