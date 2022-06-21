@@ -8,6 +8,6 @@ import ows.edu.dto.Client;
 
 @Mapper
 public interface ClientDao {
-  public List<Client> search();
+  public List<Client> showList();
   public Client searchByNo(int clientNo);
 }
