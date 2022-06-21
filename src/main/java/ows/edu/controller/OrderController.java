@@ -1,19 +1,19 @@
 package ows.edu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
-import ows.edu.service.impl.OrderServiceImpl;
+import ows.edu.dto.OrderView;
+import ows.edu.service.OrderViewService;
 
 @RestController
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @RequestMapping("/order")
 @Log4j2
 public class OrderController {
@@ -37,4 +37,13 @@ public class OrderController {
 //		
 //		return list;
 //	}
+  @Autowired
+  private OrderViewService orderViewService;
+  
+  @CrossOrigin(origins="*", allowedHeaders = "*")
+  @GetMapping("/orderview")
+  public List<OrderView> getList() {
+    return orderViewService.get();
+  }
+  
 }

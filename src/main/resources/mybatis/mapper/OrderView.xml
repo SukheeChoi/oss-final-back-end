@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.OrderViewDao">
+	<resultMap id="orderViewMap" type="orderView">
+		<result property="orderItemNo" column="OI_NO"/>
+		<result property="orderDate" column="ORD_DT"/>
+		<result property="orderNo" column="ORD_NO"/>
+		<result property="clientName" column="CLT_NAME"/>
+		<result property="itemName" column="ITM_NAME"/>
+		<result property="itemCode" column="ITM_CODE"/>
+		<result property="orderItemQuantity" column="OI_QTY"/>
+		<result property="orderShippingWay" column="ORD_SHP_WAY"/>
+		<result property="VendorName" column="V_NAME"/>
+		<result property="PickingDirectionAttempt" column="PD_ATM"/>
+		<result property="PickingDirectionDate" column="PD_DT"/>
+		<result property="PickingDirectionQuantity" column="PD_QTY"/>
+		<result property="PickingDirectionUnrelease" column="PD_URLS"/>
+	</resultMap>
+
+	<select id="search" resultMap="orderViewMap">
+		SELECT * FROM osstem.ord_view; 
+	</select>
+
+	
+<!-- 	<select id="count" resultType="int">
+		select count(*) from rls_insp_view;
+	</select> -->
+
+</mapper>
+

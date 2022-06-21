@@ -18,6 +18,7 @@
 		<typeAlias type="ows.edu.dto.Lct" alias="lct"/>
 		<typeAlias type="ows.edu.dto.LotLocation" alias="lotlocation"/>
 		<typeAlias type="ows.edu.dto.Order" alias="order"/>
+		<typeAlias type="ows.edu.dto.OrderView" alias="orderView"/>
 		<typeAlias type="ows.edu.dto.OrderItem" alias="orderitem"/>
 		<typeAlias type="ows.edu.dto.Packing" alias="packing"/>
 		<typeAlias type="ows.edu.dto.Picking" alias="picking"/>
