@@ -7,6 +7,8 @@ public class Client {
   private int clientNo;
   private String clientName;
   private String employeeId;
-  private String Representative;
-  private String RepresentativeContact;
+  private String representative;
+  private String representativeContact;
+  
+  private Order order;
 }
