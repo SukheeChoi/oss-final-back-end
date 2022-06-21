@@ -3,11 +3,11 @@
 
 <mapper namespace="ows.edu.dao.ClientDao">
 	<resultMap id="clientMap" type="client">
-		<result property="clientNo" column="CLT_NO"/>
+		<!-- <result property="clientNo" column="CLT_NO"/> -->
 		<result property="clientName" column="CLT_NAME"/>
-		<result property="employeeId" column="EMP_ID"/>
-		<result property="representative" column="CLT_RPR"/>
-		<result property="representativeContact" column="CNT_RPR_CNT"/>
+		<!-- <result property="employeeId" column="EMP_ID"/> -->
+		<!-- <result property="representative" column="CLT_RPR"/> -->
+		<!-- <result property="representativeContact" column="CNT_RPR_CNT"/> -->
 <!-- 		<association property="order" javaType="order">
 			<result property="orderNo" column="ORD_NO"/>
 			<result property="date" column="ORD_DT"/>

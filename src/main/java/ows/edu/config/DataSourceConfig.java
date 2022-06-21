@@ -20,8 +20,8 @@ public class DataSourceConfig {
 	    config.setDriverClassName("org.mariadb.jdbc.Driver");
 	    config.setJdbcUrl("jdbc:mariadb://localhost:3306/osstem");
 	    config.setUsername("root");
-//	    config.setPassword("shsh");
-	    config.setPassword("1111");
+	    config.setPassword("shsh");
+//	    config.setPassword("1111");
 //	    config.setPassword("mariadb");
 	    config.setMaximumPoolSize(3);
 	    HikariDataSource hikariDataSource = new HikariDataSource(config);
