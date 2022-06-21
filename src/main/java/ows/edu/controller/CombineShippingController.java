@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +18,6 @@ import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.CombineShipping;
 import ows.edu.dto.Employee;
 import ows.edu.service.CombineShippingService;
-import ows.edu.service.EmployeeService;
 
 @RestController
 @RequestMapping("/combineShipping")
@@ -76,5 +77,16 @@ public class CombineShippingController {
 		return map;
 	}
 	
+// 전달여부가 선택된 행들의 정보를 []로 받아와서,
+// OI_NO를 기준으로
+// CS_DLV_QTY, CS_DLV_URLS, CS_DLV_CHK update.
+	@PostMapping("/updateDelivery")
+	public Map<String, String> updateDelivery(@RequestBody CombineShipping[] combineShipping) {
+		Map<String, String> resultMap = new HashMap<>();
+		log.info("combineShipping[0] : " + combineShipping[0]);
+		String result = combineShippingService.updateDelivery(combineShipping);
+		resultMap.put("result", result);
+		return resultMap;
+	}
 	
 }

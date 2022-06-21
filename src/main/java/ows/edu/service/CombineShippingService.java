@@ -17,4 +17,7 @@ public interface CombineShippingService {
 	
 	public List<String> getReceiptOrderItemNoList(String employeeId);
 	public CombineShipping getAReceipt(String orderItemNo);
+
+	// 전달여부 update.
+	public String updateDelivery(CombineShipping[] itemOrderNOList);
 }

@@ -56,4 +56,24 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		return combineShipping;
 	}
 
+	// 전달여부 update.
+	@Override
+	public String updateDelivery(CombineShipping[] combineShippingList) {
+		log.info("실행");
+		String result = null;
+		int totalAffectedRows = 0;
+		for(CombineShipping combineShipping : combineShippingList) {
+			int affectedRowNo = combineShippingDao.updateADelivery(combineShipping);
+			if(affectedRowNo == 1) {
+				totalAffectedRows++;				
+			}
+		}
+		if(totalAffectedRows == combineShippingList.length) {
+			result = "success";
+		} else {
+			result = "fail";
+		}
+		return result;
+	}
+
 }

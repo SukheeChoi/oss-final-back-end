@@ -120,6 +120,14 @@
 		AND OI.OI_NO=#{orderItemNo}
 	</select>
 	
+	<!-- 전달항목 정보 update. -->
+	<update id="updateADelivery" parameterType="combineShipping">
+		UPDATE TB_CMB_SHP
+		SET CS_DLV_QTY=#{deliveryQuantity}
+		    , CS_DLV_URLS=#{deliveryUnrelease}
+		    , CS_DLV_CHK=#{deliverCheck}
+		WHERE OI_NO=#{orderItemNo}
+	</update>
 	
 </mapper>
 
