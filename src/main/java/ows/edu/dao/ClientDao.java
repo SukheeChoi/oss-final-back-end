@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 import ows.edu.dto.Client;
 import ows.edu.dto.Pager;
-import ows.edu.dto.ReleaseInspectionView;
 
 @Mapper
 public interface ClientDao {
