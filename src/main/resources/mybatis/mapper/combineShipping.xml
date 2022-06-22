@@ -107,8 +107,7 @@
 		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
 		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
 		JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
-		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
-		AND OI.OI_NO=#{orderItemNo}
+		WHERE OI.OI_NO=#{orderItemNo}
 	</select>
 	
 	<!-- 담당사원을 기준으로 전달 목록 조회. -->
@@ -132,8 +131,7 @@
 		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
 		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
 		JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
-		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
-		AND OI.OI_NO=#{orderItemNo}
+		WHERE OI.OI_NO=#{orderItemNo}
 	</select>
 	
 	<!-- 전달항목 정보 update. -->
