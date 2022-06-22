@@ -26,7 +26,6 @@
 		<typeAlias type="ows.edu.dto.PlacingOrderItem" alias="placingorderitem"/>
 		<typeAlias type="ows.edu.dto.Release" alias="release"/>
 		<typeAlias type="ows.edu.dto.ReleaseInspection" alias="releaseinspection"/>
-		<typeAlias type="ows.edu.dto.ReleaseInspectionView" alias="releaseinspectionView"/>
 		<typeAlias type="ows.edu.dto.Transfer" alias="transfer"/>
 		<typeAlias type="ows.edu.dto.Vendor" alias="vendor"/>
 		<typeAlias type="ows.edu.dto.Pager" alias="pager"/>

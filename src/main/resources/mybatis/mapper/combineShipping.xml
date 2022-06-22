@@ -51,11 +51,6 @@
 			<result property="releaseDate" column="RLS_DT"/>
 			<result property="releaseDone" column="RLS_DN"/>
 		</association>
-		<!-- <association property="item" resultMap="itemMap"/>
-		<association property="release" resultMap="releaseMap"/> -->
-<!-- 		<collection property="orderItem" resultMap="orderItemMap"/>
-		<collection property="item" resultMap="itemMap"/>
-		<collection property="release" resultMap="releaseMap"/> -->
 	</resultMap>
 	
 	<resultMap id="employeeMap" type="employee">
