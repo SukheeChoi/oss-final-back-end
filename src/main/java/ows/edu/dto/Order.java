@@ -13,4 +13,5 @@ public class Order {
 	private String shippingDestination;	//배송지
 	private String shippingAddress;		//주소
 	private String orderWay;			//주문방법
+	private String shippingCategory;
 }
