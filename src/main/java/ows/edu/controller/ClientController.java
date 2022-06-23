@@ -28,6 +28,7 @@ public class ClientController {
 	//거래처 목록 불러오기
 	@GetMapping("/")
 	public Map<String, Object> getClientNameList(@RequestParam(value="pageNo", defaultValue="1") int pageNo) {
+		int statusCnt =clientService.status();
 		int totalRows = clientService.count();
 		Pager pager = new Pager(3, 10, totalRows, pageNo);
 
@@ -35,9 +36,10 @@ public class ClientController {
 		list = clientService.selectByPage(pager);
 		
 		Map<String, Object> map = new HashMap<>();
-		log.info("clientcontroller : " + list);
+		log.info("clientcontroller : " + statusCnt);
 		map.put("list", list);
 		map.put("pager", pager);
+		map.put("statusCnt", statusCnt);
 		return map;
 	}
 	

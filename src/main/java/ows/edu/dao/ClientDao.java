@@ -13,4 +13,6 @@ public interface ClientDao {
   
   public int count();
   public List<String> selectByPage(Pager pager);
+  
+  public int status();
 }

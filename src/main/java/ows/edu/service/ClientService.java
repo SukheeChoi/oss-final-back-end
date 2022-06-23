@@ -31,4 +31,8 @@ public class ClientService {
 	public List<String> selectByPage(Pager pager){
 		return clientDao.selectByPage(pager);
 	}
+	
+	public int status() {
+		return clientDao.status();
+	}
 }

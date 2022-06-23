@@ -18,24 +18,30 @@
 		SELECT count(*) FROM TB_CLT;
 	</select>
 	
-	<!-- <select id="selectByPage"  resultMap="clientMap">
-		SELECT C.CLT_NAME
+	<select id="selectByPage" resultMap="clientMap">
+		SELECT C.CLT_NAME, O.ORD_STS
 		FROM TB_CLT C, TB_ORD O
 		WHERE O.CLT_NO = C.CLT_NO
-			AND O.ORD_SHP_CAT = "일반"
-		    AND O.ORD_STS = 1
+			AND C.CLT_NAME="현대치과"
+		ORDER BY O.ORD_DT DESC;
+	</select>
+	
+<!-- 	<select id="selectByPage" parameterType="client">
+		SELECT C.CLT_NAME, O.ORD_STS
+		FROM TB_CLT C, TB_ORD O
+		WHERE O.CLT_NO = C.CLT_NO
+			AND O.ORD_SHP_CAT = #{shippingCategory}
+			AND O.ORD_STS = #{status}
 		ORDER BY O.ORD_DT DESC;
 	</select> -->
 	
-	<select id="selectByPage" resultMap="clientMap">
-		SELECT C.CLT_NAME, O.ORD_STS
-		FROM TB_CLT C
-		INNER JOIN TB_ORD O 
-		ON O.CLT_NO = C.CLT_NO
-			AND C.CLT_NAME="열린치과"
-		ORDER BY O.ORD_DT DESC;
+	<!-- 주문 단계마다 카운트 --> 
+	<select id="status" resultType="int">
+		SELECT COUNT(*)
+		FROM TB_CLT C, TB_ORD O
+		WHERE O.CLT_NO = C.CLT_NO
+			AND O.ORD_STS=1;
 	</select>
 
 </mapper>
-
 
