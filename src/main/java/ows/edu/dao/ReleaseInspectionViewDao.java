@@ -10,11 +10,20 @@ import ows.edu.dto.ReleaseInspectionView;
 
 @Mapper
 public interface ReleaseInspectionViewDao {
+	// 객체 1개만 파라미터로 넘길거라면 @Param은 필요 없습니다~
+	// 객체와 기본타입을 동시에 파라미터로 넘길 때 유용한 어노테이션으로 알고 있어요~
+	// 필요에 따라서 @Param을 사용한 경우에는 객체 생성해서 사용하듯이 .필요합니다!
+	// ex. 매퍼에서 pager객체 내부의 필드를 사용하고 싶다면, #{pager.startRowNo} 이런식!
+	
+	//단순 가져오기
 	public List<ReleaseInspectionView> select();
+	
+	//데이터 총 개수
 	public int count();
-// 객체 1개만 파라미터로 넘길거라면 @Param은 필요 없습니다~
-// 객체와 기본타입을 동시에 파라미터로 넘길 때 유용한 어노테이션으로 알고 있어요~
-// 필요에 따라서 @Param을 사용한 경우에는 객체 생성해서 사용하듯이 .필요합니다!
-// ex. 매퍼에서 pager객체 내부의 필드를 사용하고 싶다면, #{pager.startRowNo} 이런식!
+
+	//페이징처리
 	public List<ReleaseInspectionView> selectByPage(Pager pager);
+	
+	//오른쪽에 띄어줄 주문에 대한 상세 정보
+	public List<ReleaseInspectionView> selectByOrderNo(int orderNo);
 }

@@ -32,8 +32,17 @@ public class ReleaseInspectionController {
 		return list;
 	}
 	
+	@GetMapping("/getFilterList")
+	public List<ReleaseInspectionView> getFilterList(List<String> newGroup){
+		log.info(newGroup);
+		List<ReleaseInspectionView> list = new ArrayList<>();
+		list = releaseInspectionService.select();
+		return list;
+	}
+	
+	//왼쪽 배송 list
 	@GetMapping("/list")
-	public Map<String, Object> getList(@RequestParam(value="pageNo", defaultValue="1") int pageNo){
+	public Map<String, Object> getList(@RequestParam(defaultValue="1") int pageNo){
 		//페이저 
 		int totalRows = releaseInspectionService.count();
 		Pager pager = new Pager(3, 10, totalRows, pageNo);
@@ -46,5 +55,13 @@ public class ReleaseInspectionController {
 		map.put("pager", pager);
 		return map;
 	}
+	
+	@GetMapping("/listItemInfo")
+	public List<ReleaseInspectionView> getlistItemInfo(int orderNo){
+		List<ReleaseInspectionView> list = new ArrayList<>();
+		list = releaseInspectionService.selectByOrderNo(orderNo);
+		return list;
+	}
+	
 	
 }
