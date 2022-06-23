@@ -1,19 +1,24 @@
 package ows.edu.controller;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
-import ows.edu.service.impl.OrderServiceImpl;
+import ows.edu.dto.OrderView;
+import ows.edu.dto.Orderfilter;
+import ows.edu.dto.Pager;
+import ows.edu.service.OrderViewService;
 
 @RestController
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @RequestMapping("/order")
 @Log4j2
 public class OrderController {
@@ -37,4 +42,27 @@ public class OrderController {
 //		
 //		return list;
 //	}
+  @Autowired
+  private OrderViewService orderViewService;
+  
+  @GetMapping("/orderview")
+  public Map<String, Object> getList(@RequestParam(defaultValue = "1") int pageNo) {
+    log.info("실행");
+    int totalRows = orderViewService.getTotalNum();
+    Pager pager = new Pager(5, 5, totalRows, pageNo);
+//    List<OrderView> list = orderViewService.getList(pager);
+    List<OrderView> list = orderViewService.getList();
+    Map<String, Object> map = new HashMap<>();
+    map.put("list", list);
+    map.put("pager", pager);
+    return map;
+  }
+  
+  @GetMapping("/orderfilter")
+  public Object filterList(Orderfilter orderfilter) {
+    log.info(orderfilter);
+    return orderfilter;
+  }
+  
+  
 }
