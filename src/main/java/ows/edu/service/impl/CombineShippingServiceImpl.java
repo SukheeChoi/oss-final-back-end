@@ -1,5 +1,6 @@
 package ows.edu.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.CombineShippingDao;
 import ows.edu.dto.CombineShipping;
 import ows.edu.dto.Employee;
+import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
 
 @Service
@@ -18,6 +20,12 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	@Resource
 	CombineShippingDao combineShippingDao;
+	
+	@Override
+	public List<Vendor> getVendorList(String[] strNowDateList) {
+		List<Vendor> list = combineShippingDao.getVendorList(strNowDateList);
+		return list;
+	}
 	
 	// 담당자 필터링을 위한 조회.
 	@Override
@@ -29,9 +37,9 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	// '수령' 탭 선택된 경우.
 	@Override
-	public List<String> getReceiptOrderItemNoList(String employeeId) {
+	public List<String> getReceiptOrderItemNoList(String employeeId, String[] dateList) {
 		log.info("실행");
-		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(employeeId);
+		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(employeeId, dateList);
 		return list;
 	}
 	
@@ -43,9 +51,9 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	}
 	// '전달' 탭 선택된 경우.
 	@Override
-	public List<String> getDeliveryOrderItemNoList(String employeeId) {
+	public List<String> getDeliveryOrderItemNoList(String employeeId, String[] dateList) {
 		log.info("실행");
-		List<String> list = combineShippingDao.selectDeliveryOrderItemNoList(employeeId);
+		List<String> list = combineShippingDao.selectDeliveryOrderItemNoList(employeeId, dateList);
 		return list;
 	}
 	
@@ -75,5 +83,13 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		}
 		return result;
 	}
+
+//	@Override
+//	public List<CombineShipping> getReceiptListByDate(String[] dateList) {
+//		String startDate = dateList[0];
+//		String endDate = dateList[1];
+//		List<CombineShipping> list = combineShippingDao.getReceiptListByDate(startDate, endDate);
+//		return list;
+//	}
 
 }

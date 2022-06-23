@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.ReleaseInspectionDao">
+	
+ 	<resultMap id="afterPickingMap" type="releaseInspection">
+		<result property="releaseInspectionQuantity" column="RI_QTY"/>
+		<result property="unReleased" column="RI_URLS"/>
+		<result property="employeeName" column="RI_EMP_NAME"/>			
+		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
+		<result property="receiptePrintDate" column="RI_RCPT_PRT_DT"/>
+		<result property="releaseInspectionDate" column="RI_DT"/>
+		<result property="releaseInspectionNote" column="RI_NT"/>
+		
+		<association property="release" javaType="release">
+			<result property="releaseNo" column="RLS_NO"/>
+			<result property="invoiceCode" column="RLS_RLS_IVC_CODE"/>
+			<result property="employeeName" column="RLS_EMP_NAME"/>			
+			<result property="shippingCompany" column="RLS_SHP_CPN"/>			
+			<result property="note" column="RLS_RLS_NT"/>
+		</association>
+		<association property="item" javaType="item">
+			<result property="itemName" column="ITM_NAME"/>
+			<result property="itemCode" column="ITM_CODE"/>
+		</association>
+		<association property="picking" javaType="picking">
+			<result property="pickingNo" column="PIC_NO"/>
+			
+		</association>
+		<association property="vendor" javaType="vendor">
+			<result property="vendorName" column="V_NAME"/>
+		</association>
+		<association property="order" javaType="order">
+			<result property="shippingDestination" column="ORD_SHP_DEST"/>			
+			<result property="shippingCategory" column="ORD_SHP_CAT"/>			
+			<result property="shippingWay" column="ORD_SHP_WAY"/>			
+		</association>
+		<association property="packing" javaType="packing">
+			<result property="unrelease" column="PAC_URLS"/>			
+			<result property="boxQty" column="PAC_BX_QTY"/>			
+			<result property="note" column="PAC_NT"/>		
+		</association>
+	</resultMap>
+
+ 	<select id="selectAfterPickingList" resultMap="afterPickingMap">
+		SELECT R.RLS_NO, I.ITM_NAME, I.ITM_CODE, PI.PIC_NO
+			, RI.RI_QTY, RI_URLS, PA.PAC_URLS, V.V_NAME, O.ORD_SHP_DEST
+		    , O.ORD_SHP_CAT, O.ORD_SHP_WAY, E.EMP_NAME RI_EMP_NAME
+		    , RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_DT, PA.PAC_BX_QTY
+		    , R.RLS_EMP_NAME, R.RLS_SHP_CPN, R.RLS_RLS_IVC_CODE, IFNULL(RI.RI_NT, ' ') RI_NT
+		    , IFNULL(PA.PAC_NT, ' ') PAC_NT, IFNULL(R.RLS_RLS_NT, ' ') RLS_RLS_NT
+		FROM TB_ORD O
+		JOIN (SELECT RLS.RLS_NO RLS_NO, RLS.ORD_NO RLS_ORD_NO, EMP.EMP_NAME RLS_EMP_NAME
+				,RLS_SHP_CPN , RLS.RLS_IVC_CODE RLS_RLS_IVC_CODE, RLS.RLS_NT RLS_RLS_NT
+			  FROM TB_RLS RLS
+		      JOIN TB_EMP EMP
+				ON (RLS.EMP_ID=EMP.EMP_ID)
+			) R
+			ON (O.ORD_NO=RLS_ORD_NO)
+		RIGHT JOIN TB_ORD_ITM OI
+			ON (O.ORD_NO=OI.ORD_NO)
+		JOIN TB_ITM I
+			ON (OI.ITM_CODE=I.ITM_CODE)
+		JOIN TB_VND V
+			ON (I.V_NO=V.V_NO)
+		JOIN TB_RLS_INSP RI
+			ON (OI.OI_NO=RI.OI_NO)
+		JOIN TB_PIC PI
+			ON (OI.OI_NO=PI.OI_NO)
+		JOIN TB_PAC PA
+			ON (OI.OI_NO=PA.OI_NO)
+		JOIN TB_EMP E
+			ON (RI.EMP_ID=E.EMP_ID)
+		ORDER BY R.RLS_NO, I.ITM_NAME
+ 	</select>
+</mapper>
+
+
