@@ -38,11 +38,11 @@ public class CombineShippingController {
 		Map<String, Object> map = new HashMap<>();
 		List<Vendor> list = new ArrayList<>();
 		log.info("dateList.length : " + dateList.length);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String strNowDate = simpleDateFormat.format(new Date()); 
-		log.info("strNowDate : " + strNowDate);
 		if(dateList != null) {
 			if(dateList.length == 1) {
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String strNowDate = simpleDateFormat.format(new Date()); 
+				log.info("strNowDate : " + strNowDate);
 				String[] strNowDateList = new String[2];
 				strNowDateList[0] = strNowDate;
 				strNowDateList[1] = strNowDate;
@@ -51,8 +51,14 @@ public class CombineShippingController {
 				list = combineShippingService.getVendorList(dateList);
 			}
 		}
-				
-		map.put("list", list);
+		log.info("getVendorList - list.isEmpty() : " + list.isEmpty());
+		if(list.isEmpty()) {
+			map.put("list", null);
+		} else {
+			map.put("list", list);
+		}
+		log.info("getVendorList : " + list);
+		log.info("getVendorList.size() : " + list.size());
 		
 		return map;
 	}
@@ -64,8 +70,11 @@ public class CombineShippingController {
 	public Map<String, Object> getAssignee() {
 		Map<String, Object> map = new HashMap<>();
 		List<Employee> list = combineShippingService.getAssigneeListByDate();
-		log.info("list : " + list);
-		map.put("list", list);
+		if(list.isEmpty()) {
+			map.put("list", null);
+		} else {
+			map.put("list", list);
+		}
 		return map;
 	}
 	
@@ -95,15 +104,19 @@ public class CombineShippingController {
 			}
 		}
 		
-		//
-		List<CombineShipping> receiptList = new ArrayList<>();
-		for(String orderItemNo : orderItemNoList) {
-			log.info("orderItemNo : " + orderItemNo);
-			receiptList.add(combineShippingService.getAReceipt(orderItemNo));
-		}
-		log.info("receiptList : " + receiptList);
 		Map<String, Object> map = new HashMap<>();
-		map.put("receiptList", receiptList);
+		if(orderItemNoList.isEmpty()) {
+			map.put("receiptList", null);
+		} else {
+			List<CombineShipping> receiptList = new ArrayList<>();
+			for(String orderItemNo : orderItemNoList) {
+				log.info("orderItemNo : " + orderItemNo);
+				receiptList.add(combineShippingService.getAReceipt(orderItemNo));
+			}
+			log.info("receiptList : " + receiptList);
+			map.put("receiptList", receiptList);
+		}
+		
 		return map;
 	}
 //	선택된 담당자를 기준으로 전달 목록 조회.
@@ -128,15 +141,20 @@ public class CombineShippingController {
 				orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(employeeId, dateList);
 			}
 		}
-		log.info("orderItemNoList : " + orderItemNoList);
-		List<CombineShipping> deliveryList = new ArrayList<>();
-		for(String orderItemNo : orderItemNoList) {
-			log.info("orderItemNo : " + orderItemNo);
-			deliveryList.add(combineShippingService.getADelivery(orderItemNo));
-		}
-		log.info("deliveryList : " + deliveryList);
+		
 		Map<String, Object> map = new HashMap<>();
-		map.put("deliveryList", deliveryList);
+		if(orderItemNoList.isEmpty()) {
+			map.put("deliveryList", null);
+		} else {
+			List<CombineShipping> deliveryList = new ArrayList<>();
+			for(String orderItemNo : orderItemNoList) {
+				log.info("orderItemNo : " + orderItemNo);
+				deliveryList.add(combineShippingService.getADelivery(orderItemNo));
+				log.info("deliveryList : " + deliveryList);
+			}
+			map.put("deliveryList", deliveryList);
+		}
+		
 		return map;
 	}
 	

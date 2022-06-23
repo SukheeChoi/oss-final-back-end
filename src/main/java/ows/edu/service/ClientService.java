@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.ClientDao;
-import ows.edu.dto.Client;
+import ows.edu.dto.Pager;
 
 @Service
 @Log4j2
@@ -24,14 +24,11 @@ public class ClientService {
 //	    return list;
 //	};
 	
-	public List<String> getlist() {
-//		List<Client> list = new ArrayList<>();
-//	    list.addAll(clientDao.showList());
-//	    log.info("ClientService : " + clientName);
-		List<String> v = clientDao.showList();
-//	    log.info("ClientService : " + v);
-//	    log.info("ClientService : " + v.get(0));
-//	    log.info("ClientService : " + v.get(0).getClientName());
-	    return v;
-	};
+	public int count() {
+		return clientDao.count();
+	}
+	
+	public List<String> selectByPage(Pager pager){
+		return clientDao.selectByPage(pager);
+	}
 }

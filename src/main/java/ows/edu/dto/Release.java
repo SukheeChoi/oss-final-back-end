@@ -11,4 +11,9 @@ public class Release {
 	private String employeeId;
 	private Date releaseDate;
 	private Boolean releaseDone;
+	private String invoiceCode;
+	private String note;
+	private String shippingCompany;
+	
+	private String employeeName;
 }
