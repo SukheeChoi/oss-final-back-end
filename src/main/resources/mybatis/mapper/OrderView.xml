@@ -22,7 +22,11 @@
 		<result property="releaseScheduleDate" column="CS_RLS_SCH_DT"/>
 		<result property="recieveDate" column="CS_RCV_DT"/>
 	</resultMap>
-
+	
+	<select id="selectByStatus" resultType="orderstatus">
+	
+	</select>
+	
 	<select id="select" resultMap="orderViewMap">
 		SELECT * FROM osstem.ord_view
 	</select>
