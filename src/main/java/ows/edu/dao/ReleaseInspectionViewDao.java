@@ -26,4 +26,9 @@ public interface ReleaseInspectionViewDao {
 	
 	//오른쪽에 띄어줄 주문에 대한 상세 정보
 	public List<ReleaseInspectionView> selectByOrderNo(int orderNo);
+	
+	//페이징처리&필터
+	public List<ReleaseInspectionView> selectByFilterPage(Pager pager);
+	
+	
 }

@@ -28,13 +28,24 @@ public class ReleaseInspectionService {
 				releaseCode = list.get(i).getReleaseCode();
 				count++;
 			}
-			
-			//공백으로 바꾸고 싶었지만 데이터 타입이 맞지 않음. > front 에서 수정
-//			if(list.get(i).getBoxQty()==0) {
-//				list.get(i).setBoxQty(" ");
-//			}
 			list.get(i).setNo(count);
 		}
+		return list;
+	}
+	
+	public List<ReleaseInspectionView> selectByFilterPage(Pager pager){
+		List<ReleaseInspectionView> list = releaseInspectionViewDao.selectByFilterPage(pager);
+		
+		int count = 0;
+		
+		for(int i=0; i<list.size(); i++ ) {
+			if(!list.get(i).getReleaseCode().equals(releaseCode)) {
+				releaseCode = list.get(i).getReleaseCode();
+				count++;
+			}
+			list.get(i).setNo(count);
+		}		
+		
 		return list;
 	}
 	

@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Arrays;
 
 import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,11 +35,21 @@ public class ReleaseInspectionController {
 		return list;
 	}
 	
-	@GetMapping("/getFilterList")
-	public List<ReleaseInspectionView> getFilterList(List<String> newGroup){
+	@PostMapping("/getFilterList")
+	public List<ReleaseInspectionView> getFilterList(@RequestBody String[] newGroup){
 		log.info(newGroup);
+		System.out.println(Arrays.toString(newGroup));
+		
+		//페이저 & 필터 설정
+		Pager pager = new Pager(3, 10, 10, 1);
+		pager.setNewGroup(newGroup);
+		System.out.println(Arrays.toString(pager.getNewGroup()));
+		
+		//서비스 단에서 페이저, 필터 처리된 정보 가져오기
+		//list = releaseI
+		
 		List<ReleaseInspectionView> list = new ArrayList<>();
-		list = releaseInspectionService.select();
+		list = releaseInspectionService.selectByFilterPage(pager);
 		return list;
 	}
 	

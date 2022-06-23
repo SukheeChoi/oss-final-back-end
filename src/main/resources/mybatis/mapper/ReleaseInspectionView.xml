@@ -47,6 +47,22 @@
 		  (SELECT @ROWNUM := 0) R
 		 ORDER BY CLT_NAME DESC
 	</select>
+	
+	<select id="selectByFilterPage" parameterType="pager" resultMap="releaseInspectionViewMap">
+		SELECT 
+		  @rownum:=@rownum+1, A.* 
+		FROM 
+		  (		
+		  	SELECT CLT_NAME, ORD_SHP_CAT, ORD_SHP_WAY, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE,
+			PIC_QTY, RI_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
+			FROM rls_insp_view) A, 
+		  (SELECT @ROWNUM := 0) R
+		Where ORD_SHP_CAT IN
+	    <foreach collection="newGroup" item="arr" open="(" close=")" separator=",">
+	 	#{arr}
+	    </foreach>
+		ORDER BY CLT_NAME DESC			
+	</select>
 
 	<select id="selectByPage" parameterType="pager" resultMap="releaseInspectionViewMap">
 		<!-- ROWNUM사용할 때는 FROM절 내부에 SELECT문을 둬서
