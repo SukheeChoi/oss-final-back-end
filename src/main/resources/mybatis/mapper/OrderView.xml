@@ -10,7 +10,7 @@
 		<result property="itemName" column="ITM_NAME"/>
 		<result property="itemCode" column="ITM_CODE"/>
 		<result property="orderItemQuantity" column="OI_QTY"/>
-		<result property="orderShippingWay" column="ORD_SHP_WAY"/>
+		<result property="orderCategory" column="ORD_ORD_CAT"/>
 		<result property="VendorName" column="V_NAME"/>
 		<result property="PickingDirectionAttempt" column="PD_ATM"/>
 		<result property="PickingDirectionDate" column="PD_DT"/>
@@ -18,14 +18,17 @@
 		<result property="PickingDirectionUnrelease" column="PD_URLS"/>
 	</resultMap>
 
-	<select id="search" resultMap="orderViewMap">
+	<select id="select" resultMap="orderViewMap">
 		SELECT * FROM osstem.ord_view; 
 	</select>
 
+	<select id="count" resultType="int">
+		SELECT count(*) FROM osstem.ord_view; 
+	</select>
 	
-<!-- 	<select id="count" resultType="int">
-		select count(*) from rls_insp_view;
-	</select> -->
+	<select id="selectByPage" parameterType="pager" resultMap="orderViewMap">
+
+	</select>
 
 </mapper>
 
