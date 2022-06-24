@@ -1,19 +1,26 @@
 package ows.edu.controller;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
-import ows.edu.service.impl.OrderServiceImpl;
+import ows.edu.dto.OrderFilter;
+import ows.edu.dto.OrderStatus;
+import ows.edu.dto.OrderView;
+import ows.edu.dto.Pager;
+import ows.edu.service.OrderViewService;
 
 @RestController
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @RequestMapping("/order")
 @Log4j2
 public class OrderController {
@@ -37,4 +44,81 @@ public class OrderController {
 //		
 //		return list;
 //	}
+  @Autowired
+  private OrderViewService orderViewService;
+  
+  @GetMapping("/orderStatus")
+  public OrderStatus getStatus() {
+    log.info("실행");
+    
+    OrderStatus orderStatus = orderViewService.getStatus();
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("list", orderStatus);
+    return orderStatus;
+  }
+  
+  @GetMapping("/orderview")
+  public Map<String, Object> getList(@RequestParam(defaultValue = "1") int pageNo) {
+    log.info("실행");
+    int totalRows = orderViewService.getTotalNum();
+    Pager pager = new Pager(5, 5, totalRows, pageNo);
+//    List<OrderView> list = orderViewService.getList(pager);
+    List<OrderView> list = orderViewService.getList();
+    Map<String, Object> map = new HashMap<>();
+    map.put("list", list);
+    map.put("pager", pager);
+    return map;
+  }
+  
+  @GetMapping("/orderfilter")
+  public Map<String, Object> filterList(@RequestParam(value="company") String[] company
+                         , @RequestParam(value="shippingway", defaultValue = "null") String[] shippingway
+                         , @RequestParam(value="unreleased", defaultValue = "null") String[] unreleased
+                         , @RequestParam(value="searchSelected", defaultValue = "null") String searchSelected
+                         , @RequestParam(value="searchContent", defaultValue = "null") String searchContent
+                         , @RequestParam(defaultValue = "1") int pageNo) {
+    
+    OrderFilter orderfilter = new OrderFilter();
+    orderfilter.setCompany(company);
+    orderfilter.setShippingway(shippingway);
+    orderfilter.setUnreleased(unreleased);
+    orderfilter.setSearchSelected(searchSelected);
+    orderfilter.setSearchContent(searchContent);
+    int totalRows = orderViewService.getTotalNum();
+    Pager pager = new Pager(5, 5, totalRows, pageNo);
+    
+    List<OrderView> list = null;
+    list = orderViewService.getListByFilter(orderfilter);
+
+    Map<String, Object> map = new HashMap<>();
+    map.put("list", list);
+    return map;
+  }
+  
+//  @GetMapping("/ordersearch")
+//  public Map<String, Object> searchList(@RequestParam(value="company") String[] company
+//                         , @RequestParam(value="shippingway", defaultValue = "null") String[] shippingway
+//                         , @RequestParam(value="unreleased", defaultValue = "null") String[] unreleased
+//                         , @RequestParam(value="searchSelected", defaultValue = "null") String searchSelected
+//                         , @RequestParam(value="searchContent", defaultValue = "null") String searchContent
+//                         , @RequestParam(defaultValue = "1") int pageNo) {
+//    
+//    OrderFilter orderfilter = new OrderFilter();
+//    orderfilter.setCompany(company);
+//    orderfilter.setShippingway(shippingway);
+//    orderfilter.setUnreleased(unreleased);
+//    orderfilter.setSearchSelected(searchSelected);
+//    orderfilter.setSearchContent(searchContent);
+//    
+//    int totalRows = orderViewService.getTotalNum();
+//    Pager pager = new Pager(5, 5, totalRows, pageNo);
+//    
+//    List<OrderView> list = null;
+//    list = orderViewService.getListByFilter(orderfilter);
+//
+//    Map<String, Object> map = new HashMap<>();
+//    map.put("list", list);
+//    return map;
+//  }
 }

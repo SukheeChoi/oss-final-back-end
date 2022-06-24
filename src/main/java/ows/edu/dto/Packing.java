@@ -10,4 +10,6 @@ public class Packing {
 	private int boxQty;
 	private String employeeId;
 	private Date dateTime;
+	private String note;
+	private int unrelease;
 }

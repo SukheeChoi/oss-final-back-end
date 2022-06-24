@@ -8,12 +8,16 @@ import lombok.Data;
 public class CombineShipping {
   private int orderItemNo;
   private Date orderCheckDate;
-  private boolean recieveCheck;
-  private int unrelease;
+  private boolean receiveCheck;
+  private int receiveUnrelease;
+  private int deliveryUnrelease;
   private boolean deliverCheck;
   private String employeeId;
-  private Date releaseScheduleDate;
-  private Date recieveDate;
+  private int releaseScheduleDate;
+  private Date receiveDate;
+  private int releaseQuantity;
+  private int deliveryQuantity;
+  private int vendorNo;
   
   private OrderItem orderItem;
   private Item item;

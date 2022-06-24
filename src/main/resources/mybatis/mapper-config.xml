@@ -18,7 +18,10 @@
 		<typeAlias type="ows.edu.dto.Lct" alias="lct"/>
 		<typeAlias type="ows.edu.dto.LotLocation" alias="lotlocation"/>
 		<typeAlias type="ows.edu.dto.Order" alias="order"/>
+		<typeAlias type="ows.edu.dto.OrderView" alias="orderView"/>
 		<typeAlias type="ows.edu.dto.OrderItem" alias="orderitem"/>
+		<typeAlias type="ows.edu.dto.OrderFilter" alias="orderfilter"/>
+		<typeAlias type="ows.edu.dto.OrderStatus" alias="orderstatus"/>
 		<typeAlias type="ows.edu.dto.Packing" alias="packing"/>
 		<typeAlias type="ows.edu.dto.Picking" alias="picking"/>
 		<typeAlias type="ows.edu.dto.PickingDirection" alias="pickingdirection"/>
@@ -26,7 +29,6 @@
 		<typeAlias type="ows.edu.dto.PlacingOrderItem" alias="placingorderitem"/>
 		<typeAlias type="ows.edu.dto.Release" alias="release"/>
 		<typeAlias type="ows.edu.dto.ReleaseInspection" alias="releaseinspection"/>
-		<typeAlias type="ows.edu.dto.ReleaseInspectionView" alias="releaseinspectionView"/>
 		<typeAlias type="ows.edu.dto.Transfer" alias="transfer"/>
 		<typeAlias type="ows.edu.dto.Vendor" alias="vendor"/>
 		<typeAlias type="ows.edu.dto.Pager" alias="pager"/>

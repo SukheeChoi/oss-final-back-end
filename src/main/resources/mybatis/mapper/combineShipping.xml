@@ -23,12 +23,15 @@
  	<resultMap id="combineShippingMap" type="combineShipping">
 		<result property="orderItemNo" column="OI_NO"/>
 		<result property="orderCheckDate" column="CS_ORD_CHK_DT"/>
-		<result property="recieveCheck" column="CS_RCV_CHK"/>
-		<result property="unrelease" column="CS_URLS"/>
+		<result property="receiveCheck" column="CS_RCV_CHK"/>
+		<result property="receiveUnrelease" column="CS_RCV_URLS"/>
+		<result property="deliveryUnrelease" column="CS_DLV_URLS"/>
 		<result property="deliverCheck" column="CS_DLV_CHK"/>
 		<result property="employeeId" column="EMP_ID"/>
 		<result property="releaseScheduleDate" column="CS_RLS_SCH_DT"/>
-		<result property="recieveDate" column="CS_RCV_DT"/>
+		<result property="receiveDate" column="CS_RCV_DT"/>
+		<result property="releaseQuantity" column="CS_RCV_QTY"/>
+		<result property="deliveryQuantity" column="CS_DLV_QTY"/>
 		
 		<association property="orderItem" javaType="orderItem">
 			<result property="orderItemNo" column="OI_NO"/>
@@ -48,36 +51,110 @@
 			<result property="releaseDate" column="RLS_DT"/>
 			<result property="releaseDone" column="RLS_DN"/>
 		</association>
-		<!-- <association property="item" resultMap="itemMap"/>
-		<association property="release" resultMap="releaseMap"/> -->
-<!-- 		<collection property="orderItem" resultMap="orderItemMap"/>
-		<collection property="item" resultMap="itemMap"/>
-		<collection property="release" resultMap="releaseMap"/> -->
 	</resultMap>
+	
+	<resultMap id="employeeMap" type="employee">
+		<result property="employeeId" column="EMP_ID"/>
+		<result property="employeeName" column="EMP_NAME"/>
+	</resultMap>
+	<resultMap id="vendorMap" type="vendor">
+		<result property="vendorNo" column="V_No"/>
+		<result property="vendorName" column="V_NAME"/>
+	</resultMap>
+	<!-- 수령 대상 업체 조회. 날짜 필터링 포함. -->
+	<select id="getVendorList" resultMap="vendorMap">
+		SELECT DISTINCT V.V_NO, V.V_NAME
+		FROM TB_CMB_SHP CS
+		JOIN TB_VND V ON (CS.V_NO=CS.V_NO)
+		<![CDATA[
+		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{strNowDateList[0]}, '%Y-%m-%d')
+			AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{strNowDateList[1]}, '%Y-%m-%d')
+		]]>
+	</select>
+	
+	<!-- 담당자별 필터링을 위한 담당자 조회. -->
+	<select id="selectAssigneeListByDate" resultMap="employeeMap">
+		SELECT DISTINCT E.EMP_ID, E.EMP_NAME
+		FROM TB_CMB_SHP CS
+		JOIN TB_EMP E ON (CS.EMP_ID=E.EMP_ID)
+		WHERE DATE_FORMAT(CS.CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
+			AND CS.CS_RCV_CHK=1
+			AND CS.CS_DLV_CHK=0
+		ORDER BY E.EMP_NAME
+	</select>
 
 	<select id="countAll" resultType="int">
 		SELECT COUNT(*) FROM TB_CMB_SHP
 	</select>
-	<!-- 담당사원을 기준으로 조회. -->
-	<select id="selectDeliveryOrderItemNoList" parameterType="string" resultType="string">
+	
+	<!-- 담당사원을 기준으로 수령 목록 조회.('전달'탭이 선택된 경우.) -->
+	<select id="selectReceiptOrderItemNoList" resultType="string">
 		SELECT OI.OI_NO
 		FROM TB_CMB_SHP CS
 		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
-		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
-		AND CS.CS_RCV_CHK=1
-		AND CS.CS_DLV_CHK=0
-		AND CS.EMP_ID=#{employeeId};
+		<![CDATA[
+		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{dateList[0]}, '%Y-%m-%d')
+			AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{dateList[1]}, '%Y-%m-%d')
+		]]>
+			AND CS.CS_RCV_CHK=0
+			AND CS.CS_DLV_CHK=0
+			AND CS.EMP_ID=#{employeeId}
 	</select>
-	
-	<select id="selectADelivery" parameterType="string" resultMap="combineShippingMap">
-		SELECT OI.ORD_NO, R.RLS_NO, I.ITM_NAME, OI.ITM_CODE
-			, OI.OI_QTY, CS.CS_URLS, CS.CS_DLV_CHK
+	<select id="selectAReceipt" parameterType="string" resultMap="combineShippingMap">
+		SELECT OI.OI_NO, I.ITM_NAME, OI.ITM_CODE
+			, CS.CS_RCV_URLS, CS.CS_RCV_QTY, CS.CS_RCV_CHK
 		FROM TB_CMB_SHP CS
 		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
 		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
 		JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
-		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
-		AND OI.OI_NO=#{orderItemNo}
+		WHERE OI.OI_NO=#{orderItemNo}
+	</select>
+	
+	<!-- 담당사원을 기준으로 전달 목록 조회. -->
+	<select id="selectDeliveryOrderItemNoList" parameterType="string" resultType="string">
+		SELECT OI.OI_NO
+		FROM TB_CMB_SHP CS
+		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
+		<![CDATA[
+		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{dateList[0]}, '%Y-%m-%d')
+			AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{dateList[1]}, '%Y-%m-%d')
+		]]>
+			AND CS.CS_RCV_CHK=1
+			AND CS.CS_DLV_CHK=0
+			AND CS.EMP_ID=#{employeeId}
+	</select>
+	<select id="selectADelivery" parameterType="string" resultMap="combineShippingMap">
+		SELECT OI.ORD_NO, R.RLS_NO, I.ITM_NAME, OI.ITM_CODE
+			, CS.CS_DLV_URLS, CS.CS_DLV_QTY
+			, OI.OI_QTY, CS.CS_DLV_CHK
+		FROM TB_CMB_SHP CS
+		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
+		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
+		JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
+		WHERE OI.OI_NO=#{orderItemNo}
+	</select>
+	
+	<!-- 전달항목 정보 update. -->
+	<update id="updateADelivery" parameterType="combineShipping">
+		UPDATE TB_CMB_SHP
+		SET CS_DLV_QTY=#{deliveryQuantity}
+		    , CS_DLV_URLS=#{deliveryUnrelease}
+		    , CS_DLV_CHK=#{deliverCheck}
+		WHERE OI_NO=#{orderItemNo}
+	</update>
+	
+	<select id="getReceiptListByDate" resultMap="combineShippingMap">
+		SELECT OI.OI_NO, I.ITM_NAME, OI.ITM_CODE
+			, CS.CS_RCV_URLS, CS.CS_RCV_QTY, CS.CS_RCV_CHK
+		FROM TB_CMB_SHP CS
+		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
+		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
+		JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
+		<![CDATA[
+		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+			AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+		]]>
+		ORDER BY I.ITM_NAME
 	</select>
 	
 </mapper>

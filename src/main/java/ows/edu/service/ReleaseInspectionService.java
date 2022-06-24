@@ -2,21 +2,20 @@ package ows.edu.service;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.ReleaseInspectionViewDao;
 import ows.edu.dto.Pager;
+import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleaseInspectionView;
 
 @Service
-@Log4j2
 public class ReleaseInspectionService {
-	@Resource
-	ReleaseInspectionViewDao releaseInspectionViewDao;
 	
+	@Autowired
+	ReleaseInspectionViewDao releaseInspectionViewDao;
+
 	private String releaseCode ="";
 	
 	public List<ReleaseInspectionView> select(){
@@ -60,4 +59,5 @@ public class ReleaseInspectionService {
 	public List<ReleaseInspectionView> selectByOrderNo(int orderNo){
 		return releaseInspectionViewDao.selectByOrderNo(orderNo);
 	}
+
 }

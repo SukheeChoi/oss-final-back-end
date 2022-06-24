@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.ClientDao">
+	<resultMap id="clientMap" type="client">
+		<!-- <result property="clientNo" column="CLT_NO"/> -->
+		<result property="clientName" column="CLT_NAME"/>
+		<!-- <result property="employeeId" column="EMP_ID"/> -->
+		<!-- <result property="representative" column="CLT_RPR"/> -->
+		<!-- <result property="representativeContact" column="CNT_RPR_CNT"/> -->
+		<association property="order" javaType="order">
+			<result property="status" column="ORD_STS"/>
+		</association>
+	</resultMap>
+	
+	<!-- 고객수취 거래처 조회 -->
+	<select id="count" resultType="int">
+		SELECT count(*) FROM TB_CLT;
+	</select>
+	
+	<!-- <select id="selectByPage"  resultMap="clientMap">
+		SELECT C.CLT_NAME
+		FROM TB_CLT C, TB_ORD O
+		WHERE O.CLT_NO = C.CLT_NO
+			AND O.ORD_SHP_CAT = "일반"
+		    AND O.ORD_STS = 1
+		ORDER BY O.ORD_DT DESC;
+	</select> -->
+	
+	<select id="selectByPage" resultMap="clientMap">
+		SELECT C.CLT_NAME, O.ORD_STS
+		FROM TB_CLT C
+		INNER JOIN TB_ORD O 
+		ON O.CLT_NO = C.CLT_NO
+			AND C.CLT_NAME="열린치과"
+		ORDER BY O.ORD_DT DESC;
+	</select>
+
+</mapper>
+
+
