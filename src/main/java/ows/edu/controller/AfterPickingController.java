@@ -21,14 +21,5 @@ public class AfterPickingController {
 
 	@Resource
 	ReleaseInspectionService releaseInspectionService;
-
-	@GetMapping("/")
-	public Map<String, Object> getList() {
-		Map<String, Object> map = new HashMap<>();
-		List<ReleaseInspection> list = releaseInspectionService.getAfterPickingList();
-		
-		map.put("list", list);
-		return map;
-	}
 	
 }
