@@ -22,8 +22,8 @@
 		SELECT C.CLT_NAME, O.ORD_STS
 		FROM TB_CLT C, TB_ORD O
 		WHERE O.CLT_NO = C.CLT_NO
-			AND C.CLT_NAME="현대치과"
-		ORDER BY O.ORD_DT DESC;
+			AND C.CLT_NAME="이을치과"
+		ORDER BY O.ORD_STS;
 	</select>
 	
 <!-- 	<select id="selectByPage" parameterType="client">
@@ -40,7 +40,7 @@
 		SELECT COUNT(*)
 		FROM TB_CLT C, TB_ORD O
 		WHERE O.CLT_NO = C.CLT_NO
-			AND O.ORD_STS=1;
+<!-- 			AND O.ORD_STS=#{status}; -->
 	</select>
 
 </mapper>

@@ -36,7 +36,7 @@ public class ClientController {
 		list = clientService.selectByPage(pager);
 		
 		Map<String, Object> map = new HashMap<>();
-		log.info("clientcontroller : " + statusCnt);
+		log.info("clientcontroller : " + list);
 		map.put("list", list);
 		map.put("pager", pager);
 		map.put("statusCnt", statusCnt);

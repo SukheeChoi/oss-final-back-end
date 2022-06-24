@@ -42,7 +42,6 @@
 		     , round(avg(LWT_17)) AS LWT_17
 		from osstem.TB_LBL_WRK_TM 
 		WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(),  '%Y-%m-%d')
-		ORDER BY lwt_sch_hm DESC
 	</select>
 	
 	<select id="searchAll" parameterType="date" resultMap="labelingWorkTime">
