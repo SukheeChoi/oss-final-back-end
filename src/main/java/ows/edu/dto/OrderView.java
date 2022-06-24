@@ -20,5 +20,10 @@ public class OrderView {
 	private String PickingDirectionDate;
 	private String PickingDirectionQuantity;
 	private String PickingDirectionUnrelease;
+	private String orderShippingWay;
+	private String orderCheckDate;
+	private int releaseQuantity;
+	private String releaseScheduleDate;
+	private String recieveDate;
 	
 }
