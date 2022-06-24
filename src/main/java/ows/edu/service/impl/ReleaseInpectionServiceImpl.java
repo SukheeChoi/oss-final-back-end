@@ -13,7 +13,10 @@ import ows.edu.dao.OrderDao;
 import ows.edu.dao.PackingDao;
 import ows.edu.dao.PickingDirectionDao;
 import ows.edu.dao.ReleaseInspectionDao;
+import ows.edu.dao.ReleaseInspectionViewDao;
+import ows.edu.dto.Pager;
 import ows.edu.dto.ReleaseInspection;
+import ows.edu.dto.ReleaseInspectionView;
 import ows.edu.service.ReleaseInspectionService;
 
 @Service
@@ -28,6 +31,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	PickingDirectionDao pickingDirectionDao;
 	@Resource
 	PackingDao packingDao;
+	@Resource
+	ReleaseInspectionViewDao releaseInspectionViewDao;
 	
 	@Override
 	public Map<String, Object> getSummary() {
@@ -100,5 +105,51 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		return list;
 	}
 
+	
+	//현주=============================================================================
+	
+	private String releaseCode ="";
+	
+	public List<ReleaseInspectionView> select(){
+		List<ReleaseInspectionView> list = releaseInspectionViewDao.select();
+		int count = 0;
+		
+		for(int i=0; i<list.size(); i++ ) {
+			if(!list.get(i).getReleaseCode().equals(releaseCode)) {
+				releaseCode = list.get(i).getReleaseCode();
+				count++;
+			}
+			list.get(i).setNo(count);
+		}
+		return list;
+	}
+	
+	public List<ReleaseInspectionView> selectByFilterPage(Pager pager){
+		List<ReleaseInspectionView> list = releaseInspectionViewDao.selectByFilterPage(pager);
+		
+		int count = 0;
+		
+		for(int i=0; i<list.size(); i++ ) {
+			if(!list.get(i).getReleaseCode().equals(releaseCode)) {
+				releaseCode = list.get(i).getReleaseCode();
+				count++;
+			}
+			list.get(i).setNo(count);
+		}		
+		
+		return list;
+	}
+	
+	public int count() {
+		return releaseInspectionViewDao.count();
+	}
+	
+	public List<ReleaseInspectionView> selectByPage(Pager pager){
+		return releaseInspectionViewDao.selectByPage(pager);
+	}
+	
+	public List<ReleaseInspectionView> selectByOrderNo(int orderNo){
+		return releaseInspectionViewDao.selectByOrderNo(orderNo);
+	}
 	
 }

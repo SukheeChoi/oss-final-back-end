@@ -23,7 +23,6 @@ public class AfterPickingController {
 
 	@Resource
 	ReleaseInspectionService releaseInspectionService;
-
 	
 	//주문건수, 피킹지시건수, 출고검수+패킹 건수, 미출고건수, 출고검수 건수, 출고검수 중에서 긴급/일반 건수
 	@GetMapping("/summary")
