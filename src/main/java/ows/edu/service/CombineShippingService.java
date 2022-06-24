@@ -16,15 +16,18 @@ public interface CombineShippingService {
 	public List<Employee> getAssigneeListByDate();
 	
 	// 담당사원 + 날짜정보 필터링 적용한 수령정보 조회.
-	public List<String> getReceiptOrderItemNoList(String employeeId, String[] dateList);
+	public List<String> getReceiptOrderItemNoList(int toDo, String employeeId, String[] dateList);
 	public CombineShipping getAReceipt(String orderItemNo);
 	
 	// 업체정보 + 날짜정보 필터링 적용한 전달정보 조회.
-	public List<String> getDeliveryOrderItemNoList(String employeeId, String[] dateList);
+	public List<String> getDeliveryOrderItemNoList(int toDo, String employeeId, String[] dateList);
 	public CombineShipping getADelivery(String orderItemNo);
 
+	// 수령여부 update.
+	public String updateReceipt(CombineShipping[] combineShippingList);
+
 	// 전달여부 update.
-	public String updateDelivery(CombineShipping[] itemOrderNOList);
+	public String updateDelivery(CombineShipping[] combineShippingList);
 	// 선택된 기간 동안의 수령목록 조회.
 //	public List<CombineShipping> getReceiptListByDate(String[] dateList);
 

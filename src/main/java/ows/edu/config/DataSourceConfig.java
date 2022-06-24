@@ -22,6 +22,7 @@ public class DataSourceConfig {
 //	    config.setJdbcUrl("jdbc:mariadb://kosa1.iptime.org:50121/osstem");
 	    config.setUsername("root");
 //	    config.setPassword("shsh");
+
 //	    config.setPassword("1111");
 	    config.setPassword("mariadb");
 	    config.setMaximumPoolSize(3);
