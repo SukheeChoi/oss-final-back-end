@@ -90,9 +90,9 @@ public class OrderController {
     
     List<OrderView> list = null;
     list = orderViewService.getListByFilter(orderfilter);
-
     Map<String, Object> map = new HashMap<>();
     map.put("list", list);
+    log.info("map : " + map);
     return map;
   }
   
