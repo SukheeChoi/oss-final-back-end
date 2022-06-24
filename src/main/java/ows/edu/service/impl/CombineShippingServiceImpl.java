@@ -1,6 +1,5 @@
 package ows.edu.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -39,7 +38,14 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	@Override
 	public List<String> getReceiptOrderItemNoList(String employeeId, String[] dateList) {
 		log.info("실행");
-		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(employeeId, dateList);
+		String startDate = null;
+		String endDate = null;
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(employeeId, startDate, endDate);
+		
 		return list;
 	}
 	
@@ -53,7 +59,13 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	@Override
 	public List<String> getDeliveryOrderItemNoList(String employeeId, String[] dateList) {
 		log.info("실행");
-		List<String> list = combineShippingDao.selectDeliveryOrderItemNoList(employeeId, dateList);
+		String startDate = null;
+		String endDate = null;
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		List<String> list = combineShippingDao.selectDeliveryOrderItemNoList(employeeId, startDate, endDate);
 		return list;
 	}
 	
@@ -64,11 +76,29 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		return combineShipping;
 	}
 
+	// 수령여부 update: 미출고, 수령여부 컬럼.
+	@Override
+	public String updateReceipt(CombineShipping[] combineShippingList) {
+		String result = "fail";
+		int totalAffectedRows = 0;
+		for(CombineShipping combineShipping : combineShippingList) {
+			int affectedRowNo = combineShippingDao.updateAReceipt(combineShipping);
+			if(affectedRowNo == 1) {
+				totalAffectedRows++;				
+			}
+		}
+		if(totalAffectedRows == combineShippingList.length) {
+			result = "success";
+		}
+		
+		return result;
+	}
+	
 	// 전달여부 update.
 	@Override
 	public String updateDelivery(CombineShipping[] combineShippingList) {
 		log.info("실행");
-		String result = null;
+		String result = "fail";
 		int totalAffectedRows = 0;
 		for(CombineShipping combineShipping : combineShippingList) {
 			int affectedRowNo = combineShippingDao.updateADelivery(combineShipping);
@@ -78,11 +108,10 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		}
 		if(totalAffectedRows == combineShippingList.length) {
 			result = "success";
-		} else {
-			result = "fail";
 		}
 		return result;
 	}
+
 
 //	@Override
 //	public List<CombineShipping> getReceiptListByDate(String[] dateList) {

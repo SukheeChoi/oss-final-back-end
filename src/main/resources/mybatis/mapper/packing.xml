@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.PackingDao">
+	<select id="countPackingNo" resultType="int">
+		SELECT COUNT(*)
+		FROM TB_PAC PA
+		JOIN TB_ORD_ITM OI
+			ON (PA.OI_NO=OI.OI_NO)
+		LEFT JOIN TB_ORD O
+			ON (O.ORD_NO=OI.ORD_NO)
+		WHERE O.ORD_PRC_ORD IS NULL
+	</select>
+	<select id="sumUnreleased" resultType="int">
+		SELECT SUM(PA.PAC_URLS)
+		FROM TB_PAC PA
+		JOIN TB_ORD_ITM OI
+			ON (PA.OI_NO=OI.OI_NO)
+		LEFT JOIN TB_ORD O
+			ON (O.ORD_NO=OI.ORD_NO)
+		WHERE O.ORD_PRC_ORD IS NULL
+	</select>
+</mapper>
+
+

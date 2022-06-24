@@ -23,8 +23,11 @@ public interface CombineShippingService {
 	public List<String> getDeliveryOrderItemNoList(String employeeId, String[] dateList);
 	public CombineShipping getADelivery(String orderItemNo);
 
+	// 수령여부 update.
+	public String updateReceipt(CombineShipping[] combineShippingList);
+
 	// 전달여부 update.
-	public String updateDelivery(CombineShipping[] itemOrderNOList);
+	public String updateDelivery(CombineShipping[] combineShippingList);
 	// 선택된 기간 동안의 수령목록 조회.
 //	public List<CombineShipping> getReceiptListByDate(String[] dateList);
 
