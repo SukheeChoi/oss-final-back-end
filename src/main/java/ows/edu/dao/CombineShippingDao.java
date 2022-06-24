@@ -18,12 +18,14 @@ public interface CombineShippingDao {
 	// 담당자 필터링을 위한 조회.
 	public List<Employee> selectAssigneeListByDate();
 	
-	public List<String> selectReceiptOrderItemNoList(@Param("employeeId") String employeeId
+	public List<String> selectReceiptOrderItemNoList(@Param("toDo") int toDo
+													, @Param("employeeId") String employeeId
 													, @Param("startDate") String startDate
 													, @Param("endDate") String endDate);
 	public CombineShipping selectAReceipt(String orderItemNo);
 	
-	public List<String> selectDeliveryOrderItemNoList(@Param("employeeId") String employeeId
+	public List<String> selectDeliveryOrderItemNoList(@Param("toDo") int toDo
+													, @Param("employeeId") String employeeId
 													, @Param("startDate") String startDate
 													, @Param("endDate") String endDate);
 	public CombineShipping selectADelivery(String orderItemNo);

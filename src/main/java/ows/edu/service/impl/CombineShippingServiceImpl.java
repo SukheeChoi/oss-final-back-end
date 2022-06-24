@@ -36,7 +36,7 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	// '수령' 탭 선택된 경우.
 	@Override
-	public List<String> getReceiptOrderItemNoList(String employeeId, String[] dateList) {
+	public List<String> getReceiptOrderItemNoList(int toDo, String employeeId, String[] dateList) {
 		log.info("실행");
 		String startDate = null;
 		String endDate = null;
@@ -44,7 +44,7 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 			startDate = dateList[0];
 			endDate = dateList[1];
 		}
-		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(employeeId, startDate, endDate);
+		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(toDo, employeeId, startDate, endDate);
 		
 		return list;
 	}
@@ -57,7 +57,7 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	}
 	// '전달' 탭 선택된 경우.
 	@Override
-	public List<String> getDeliveryOrderItemNoList(String employeeId, String[] dateList) {
+	public List<String> getDeliveryOrderItemNoList(int toDo, String employeeId, String[] dateList) {
 		log.info("실행");
 		String startDate = null;
 		String endDate = null;
@@ -65,7 +65,9 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 			startDate = dateList[0];
 			endDate = dateList[1];
 		}
-		List<String> list = combineShippingDao.selectDeliveryOrderItemNoList(employeeId, startDate, endDate);
+		log.info("getDeliveryOrderItemNoList - employeeId.getClass().getName() : " + employeeId.getClass().getName());
+//		log.info("getDeliveryOrderItemNoList - startDate.getClass().getName(): " + startDate.getClass().getName());
+		List<String> list = combineShippingDao.selectDeliveryOrderItemNoList(toDo, employeeId, startDate, endDate);
 		return list;
 	}
 	

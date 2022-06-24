@@ -81,28 +81,15 @@ public class CombineShippingController {
 	
 //	선택된 담당자를 기준으로 수령 목록 조회.
 	@PostMapping("/getReceiptList")
-	public Map<String, Object> geReceiptList(@RequestParam(value="employeeId", defaultValue="null") String employeeId
-			, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
+	public Map<String, Object> geReceiptList(@RequestParam(value="toDo", defaultValue="1") int toDo
+											, @RequestParam(value="employeeId", defaultValue="") String employeeId
+											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
 		
 		if(dateList != null) {
-			if(dateList.length == 1) {
-				//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
-//				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//				String strNowDate = simpleDateFormat.format(new Date()); 
-//				log.info("strNowDate : " + strNowDate);
-//				
-//				String[] strNowDateList = new String[2];
-//				strNowDateList[0] = strNowDate;
-//				strNowDateList[1] = strNowDate;
-				orderItemNoList = combineShippingService.getReceiptOrderItemNoList(employeeId, dateList);
-				log.info("orderItemNoList : " + orderItemNoList);
-			} else {
-				log.info("dateList : " + dateList);
-				orderItemNoList = combineShippingService.getReceiptOrderItemNoList(employeeId, dateList);
-				log.info("orderItemNoList : " + orderItemNoList);
-			}
+			log.info("orderItemNoList : " + orderItemNoList);
+			orderItemNoList = combineShippingService.getReceiptOrderItemNoList(toDo, employeeId, dateList);
 		}
 		
 		Map<String, Object> map = new HashMap<>();
@@ -122,31 +109,17 @@ public class CombineShippingController {
 	}
 //	선택된 담당자를 기준으로 전달 목록 조회.
 	@PostMapping("/getDeliveryList")
-	public Map<String, Object> getDeliveryList(@RequestParam(value="employeeId", defaultValue="null") String employeeId
-												, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
+	public Map<String, Object> getDeliveryList(@RequestParam(value="toDo", defaultValue="1") int toDo
+											, @RequestParam(value="employeeId", defaultValue="") String employeeId
+											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
 		if(dateList != null) {
-			if(dateList.length == 1) {
-				//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
-				//날짜 무관하게 처리되지 않은 목록 조회하는 것으로 로직변경 필요.
-//				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//				String strNowDate = simpleDateFormat.format(new Date()); 
-//				log.info("strNowDate : " + strNowDate);
-//				
-//				String[] strNowDateList = new String[2];
-//				strNowDateList[0] = strNowDate;
-//				strNowDateList[1] = strNowDate;
-				
-//				String[] strNowDateList = new String[0];
-//				int length = strNowDateList.length;
-//				log.info("length : " + length);
-				orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(employeeId, dateList);
-			} else {
-				orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(employeeId, dateList);
-			}
+			//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
+			//날짜 무관하게 처리되지 않은 목록 조회하는 것으로 로직변경 필요.
+			orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(toDo, employeeId, dateList);
 		}
-		
+		log.info("getDeliveryList - orderItemNoList : " + orderItemNoList);
 		Map<String, Object> map = new HashMap<>();
 		if(orderItemNoList.isEmpty()) {
 			map.put("deliveryList", null);
