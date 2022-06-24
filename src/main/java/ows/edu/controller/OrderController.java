@@ -75,13 +75,16 @@ public class OrderController {
   public Map<String, Object> filterList(@RequestParam(value="company") String[] company
                          , @RequestParam(value="shippingway", defaultValue = "null") String[] shippingway
                          , @RequestParam(value="unreleased", defaultValue = "null") String[] unreleased
+                         , @RequestParam(value="searchSelected", defaultValue = "null") String searchSelected
+                         , @RequestParam(value="searchContent", defaultValue = "null") String searchContent
                          , @RequestParam(defaultValue = "1") int pageNo) {
     
     OrderFilter orderfilter = new OrderFilter();
     orderfilter.setCompany(company);
     orderfilter.setShippingway(shippingway);
     orderfilter.setUnreleased(unreleased);
-    
+    orderfilter.setSearchSelected(searchSelected);
+    orderfilter.setSearchContent(searchContent);
     int totalRows = orderViewService.getTotalNum();
     Pager pager = new Pager(5, 5, totalRows, pageNo);
     
@@ -93,5 +96,29 @@ public class OrderController {
     return map;
   }
   
-  
+//  @GetMapping("/ordersearch")
+//  public Map<String, Object> searchList(@RequestParam(value="company") String[] company
+//                         , @RequestParam(value="shippingway", defaultValue = "null") String[] shippingway
+//                         , @RequestParam(value="unreleased", defaultValue = "null") String[] unreleased
+//                         , @RequestParam(value="searchSelected", defaultValue = "null") String searchSelected
+//                         , @RequestParam(value="searchContent", defaultValue = "null") String searchContent
+//                         , @RequestParam(defaultValue = "1") int pageNo) {
+//    
+//    OrderFilter orderfilter = new OrderFilter();
+//    orderfilter.setCompany(company);
+//    orderfilter.setShippingway(shippingway);
+//    orderfilter.setUnreleased(unreleased);
+//    orderfilter.setSearchSelected(searchSelected);
+//    orderfilter.setSearchContent(searchContent);
+//    
+//    int totalRows = orderViewService.getTotalNum();
+//    Pager pager = new Pager(5, 5, totalRows, pageNo);
+//    
+//    List<OrderView> list = null;
+//    list = orderViewService.getListByFilter(orderfilter);
+//
+//    Map<String, Object> map = new HashMap<>();
+//    map.put("list", list);
+//    return map;
+//  }
 }

@@ -100,6 +100,13 @@
          <if test="pickingdirectionUnreleased == 2">   <!-- 미출고  -->
             AND PD_URLS = 1
          </if>
+         
+         <if test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("주문번호")'>
+         	AND ORD_NO LIKE CONCAT('%', #{searchContent}, '%');
+         </if>
+         <if test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("거래처")'>
+         	AND V_NAME LIKE CONCAT('%', #{searchContent}, '%');
+         </if>
 	</select>
 
 </mapper>
