@@ -14,7 +14,7 @@ public class OrderView {
 	private String itemName;
 	private String itemCode;
 	private int orderItemQuantity;
-	private String orderCategory;
+	private String shippingCategory;
 	private String VendorName;
 	private String PickingDirectionAttempt;
 	private String PickingDirectionDate;
