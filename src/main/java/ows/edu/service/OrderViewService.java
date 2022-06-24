@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.OrderViewDao;
 import ows.edu.dto.OrderFilter;
+import ows.edu.dto.OrderStatus;
 import ows.edu.dto.OrderView;
 import ows.edu.dto.Pager;
 
@@ -19,6 +20,18 @@ public class OrderViewService {
   @Autowired
   private OrderViewDao orderViewDao;
 
+//  상단 현황 조회
+  public OrderStatus getStatus() {
+    OrderStatus orderStatus = new OrderStatus();
+    orderStatus.setTotal(orderViewDao.countAll());
+    orderStatus.setOsstem(orderViewDao.countOsstem());
+    orderStatus.setVendorShippingPlus(orderViewDao.countVendorPlus());
+    orderStatus.setVendorShippingDir(orderViewDao.countVendorDir());
+    orderStatus.setUnreleased(orderViewDao.countunleased());
+    log.info(orderStatus);
+    return orderStatus;
+  }
+  
   public List<OrderView> getList() {
     List<OrderView> list = new ArrayList<>();
     list.addAll(orderViewDao.select());
@@ -36,6 +49,7 @@ public class OrderViewService {
   public List<OrderView> getListByFilter(OrderFilter orderfilter) {
     List<OrderView> list = new ArrayList<>();
     //오스템 제품
+    
     if(Arrays.toString(orderfilter.getCompany()).contains("osstemItem")) {
       orderfilter.setItemOSS(1);
     }

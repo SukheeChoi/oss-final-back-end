@@ -14,6 +14,12 @@ public interface OrderViewDao {
   public List<OrderView> select();
   public List<OrderView> selectByFilter(OrderFilter orderfilter);
   public List<OrderView> selectByPage(Pager pager);
-  public OrderStatus selectByStatus();
+  
+  public int countAll();
+  public int countOsstem();
+  public int countVendorPlus();
+  public int countVendorDir();
+  public int countunleased();
+  
   public int count();
 }

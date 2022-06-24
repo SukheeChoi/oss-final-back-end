@@ -23,8 +23,29 @@
 		<result property="recieveDate" column="CS_RCV_DT"/>
 	</resultMap>
 	
-	<select id="selectByStatus" resultType="orderstatus">
+	<!-- 상단 현황 전체 건수 -->
+	<select id="countAll" resultType="int">
+		SELECT count(*) FROM osstem.ord_view
+	</select>
 	
+	<!-- 상단 오스템 전체 건수 -->
+	<select id="countOsstem" resultType="int">
+		SELECT count(*) FROM osstem.ord_view WHERE ITM_OSS = 1
+	</select>
+	
+	<!-- 상단 협력사합배송 전체 건수 -->
+	<select id="countVendorPlus" resultType="int">
+		SELECT count(*) FROM osstem.ord_view WHERE ITM_OSS = 0 AND ORD_SHP_WAY LIKE CONCAT('합배송', '')
+	</select>
+	
+	<!-- 상단 협력사직배송 전체 건수 -->
+	<select id="countVendorDir" resultType="int">
+		SELECT count(*) FROM osstem.ord_view WHERE ITM_OSS = 0 AND ORD_SHP_WAY LIKE CONCAT('직배송', '')
+	</select>
+	
+	<!-- 상단 미출고 전체 건수 -->
+	<select id="countunleased" resultType="int">
+		SELECT count(*) FROM osstem.ord_view WHERE PD_URLS = 1
 	</select>
 	
 	<select id="select" resultMap="orderViewMap">

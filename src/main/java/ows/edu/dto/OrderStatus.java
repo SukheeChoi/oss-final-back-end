@@ -8,4 +8,5 @@ public class OrderStatus {
   private int osstem;
   private int vendorShippingPlus;
   private int vendorShippingDir;
+  private int unreleased;
 }

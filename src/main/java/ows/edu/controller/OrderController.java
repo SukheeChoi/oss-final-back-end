@@ -1,10 +1,10 @@
 package ows.edu.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
-import ows.edu.dto.OrderView;
 import ows.edu.dto.OrderFilter;
+import ows.edu.dto.OrderStatus;
+import ows.edu.dto.OrderView;
 import ows.edu.dto.Pager;
 import ows.edu.service.OrderViewService;
 
@@ -46,6 +47,17 @@ public class OrderController {
   @Autowired
   private OrderViewService orderViewService;
   
+  @GetMapping("/orderStatus")
+  public OrderStatus getStatus() {
+    log.info("실행");
+    
+    OrderStatus orderStatus = orderViewService.getStatus();
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("list", orderStatus);
+    return orderStatus;
+  }
+  
   @GetMapping("/orderview")
   public Map<String, Object> getList(@RequestParam(defaultValue = "1") int pageNo) {
     log.info("실행");
@@ -60,11 +72,11 @@ public class OrderController {
   }
   
   @GetMapping("/orderfilter")
-  public Map<String, Object> filterList(@RequestParam(value="company", defaultValue = "[]") String[] company
-                         , @RequestParam(value="shippingway", defaultValue = "[]") String[] shippingway
-                         , @RequestParam(value="unreleased", defaultValue = "[]") String[] unreleased
+  public Map<String, Object> filterList(@RequestParam(value="company") String[] company
+                         , @RequestParam(value="shippingway", defaultValue = "null") String[] shippingway
+                         , @RequestParam(value="unreleased", defaultValue = "null") String[] unreleased
                          , @RequestParam(defaultValue = "1") int pageNo) {
-    log.info(company);
+    
     OrderFilter orderfilter = new OrderFilter();
     orderfilter.setCompany(company);
     orderfilter.setShippingway(shippingway);
@@ -72,10 +84,12 @@ public class OrderController {
     
     int totalRows = orderViewService.getTotalNum();
     Pager pager = new Pager(5, 5, totalRows, pageNo);
-    List<OrderView> list = orderViewService.getListByFilter(orderfilter);
+    
+    List<OrderView> list = null;
+    list = orderViewService.getListByFilter(orderfilter);
+
     Map<String, Object> map = new HashMap<>();
     map.put("list", list);
-//    map.put("pager", pager);
     return map;
   }
   
