@@ -37,6 +37,14 @@ public class LabelingController {
     return map;
   }
   
+  @GetMapping("/getListLeft")
+  public List<InspectionLabelingWork> getListLeft() {
+    List<InspectionLabelingWork> list = new ArrayList<>();
+    list.addAll(inspectionLabelingService.getLeft());
+    log.info(list);
+    return list;
+  }
+  
   @GetMapping("/getListRight")
   public List<InspectionLabelingView> getListRight(@RequestParam String employeeName
                                                   ,@RequestParam(defaultValue = "null") String searchSelected
@@ -47,13 +55,5 @@ public class LabelingController {
     log.info(list);
     return list;
   }
-  
-  @GetMapping("/getListLeft")
-  public List<InspectionLabelingWork> getListLeft() {
-    List<InspectionLabelingWork> list = new ArrayList<>();
-    list.addAll(inspectionLabelingService.getLeft());
-    log.info(list);
-    return list;
-  }
-  
+
 }

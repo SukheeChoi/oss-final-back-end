@@ -20,6 +20,7 @@ public class InspectionLabelingService {
   public List<InspectionLabelingView> getRight(String employeeName, String searchSelected, String searchContent) {
     List<InspectionLabelingView> list = new ArrayList<>();
     list.addAll(inspectionLabelingDao.searchRight(employeeName, searchSelected, searchContent));
+    
     return list;
   }
   

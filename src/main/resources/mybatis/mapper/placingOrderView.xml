@@ -21,7 +21,7 @@
 	
 	<resultMap id="InspectionLabelingWorkMap" type="InspectionLabelingWork">
 		<result property="placeOrderNo" column="PO_NO"/>
-		<result property="employeeId" column="EMP_ID"/>
+		<result property="employeeName" column="EMP_NAME"/>
 		<result property="receiveMonthDay" column="ILW_RCV_MD"/>
 		<result property="receiveHourMinute" column="ILW_RCV_HM"/>
 		<result property="receiveItem" column="ILW_RCV_ITM"/>
@@ -71,6 +71,10 @@
          </if>
 	</select>
 	
+	<!-- 왼쪽 담당자 기준으로 데이터 가져오기  -->
+	
+	
+	<!-- 왼쪽 업체명 기준으로 데이터 가져오기  -->
 	<select id="searchLeft" resultMap="InspectionLabelingWorkMap">
 		SELECT po.PO_NO
 			 , emp.EMP_NAME
