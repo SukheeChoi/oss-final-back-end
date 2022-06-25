@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.InspectionLabelingDao">
+	<resultMap id="InspectionLabelingViewMap" type="InspectionLabelingView">
+		<result property="placingOrderItemNO" column="POI_NO"/>
+		<result property="vendorName" column="V_NAME"/>
+		<result property="itemName" column="ITM_NAME"/>
+		<result property="itemCode" column="ITM_CODE"/>
+		<result property="placingOrderNo" column="PO_NO"/>
+		<result property="lotCode" column="LOT_CODE"/>
+		<result property="recievedQuantity" column="POI_QTY"/>
+		<result property="InspectionQuantity" column="POI_INSP_QTY"/>
+		<result property="PassedItemQuantity" column="POI_PAS_ITM_QTY"/>
+		<result property="MissingItemQuantity" column="POI_MIS_ITM_QTY"/>
+		<result property="DamagedItemQuantity" column="POI_DMG_QTY"/>
+		<result property="ETCQuantity" column="POI_ETC_QTY"/>
+		<result property="Accepted" column="POI_ACP"/>
+		<result property="LabelingItemQuantity" column="POI_LBL_ITM_QTY"/>
+	</resultMap>
+	
+	<resultMap id="InspectionLabelingWorkMap" type="InspectionLabelingWork">
+		<result property="placeOrderNo" column="PO_NO"/>
+		<result property="employeeId" column="EMP_ID"/>
+		<result property="receiveMonthDay" column="ILW_RCV_MD"/>
+		<result property="receiveHourMinute" column="ILW_RCV_HM"/>
+		<result property="receiveItem" column="ILW_RCV_ITM"/>
+		<result property="receiveQuantity" column="ILW_RCV_QTY"/>
+		<result property="scheduledStartTime" column="ILW_SCH_SRT_TM"/>
+		<result property="scheduledEndTime" column="ILW_SCH_END_TM"/>
+		<result property="startTime" column="ILW_SRT_TM"/>
+		<result property="workTime" column="ILW_WRK_TM"/>
+		<result property="progressRate" column="ILW_PRG_RT"/>
+		<result property="status" column="ILW_STS"/>
+		<result property="lateTime" column="ILW_LT_TM"/>
+		<result property="inspectionQuantity" column="ILW_INSP_QTY"/>
+		<result property="passItemQuantity" column="ILW_PAS_ITM_QTY"/>
+		<result property="labelingItemQuantity" column="ILW_LBL_ITM_QTY"/>
+	</resultMap>
+	
+	<resultMap id="InspectionLabelingStatusMap" type="InspectionLabelingStatus">
+		<result property="receiveItem" column="SUM_RCV_ITM"/>
+		<result property="receiveItemQuantity" column="SUM_RCV_QTY"/>
+		
+		<result property="inspectionItem" column="CNT_INSP_QTY"/>
+		<result property="inspectionItemQuantity" column="SUM_INSP_QTY"/>
+		<result property="labelingItem" column="CNT_LBL_QTY"/>
+		<result property="labelingItemQuantity" column="SUM_LBL_QTY"/>
+		<result property="passedItem" column="CNT_PAS_QTY"/>
+		<result property="passedItemQuantity" column="SUM_PAS_QTY"/>
+		<result property="missingItem" column="CNT_MIS_QTY"/>
+		<result property="missingItemQuantity" column="SUM_MIS_QTY"/>
+		<result property="damagedItem" column="CNT_DMG_QTY"/>
+		<result property="damagedItemQuantity" column="SUM_DMG_QTY"/>
+	</resultMap>
+	
+	<select id="searchRight" parameterType="string" resultMap="InspectionLabelingViewMap">
+		SELECT * FROM osstem.PLC_ORD_VIEW
+		WHERE EMP_NAME = #{employeeName}
+	</select>
+	
+	<select id="searchLeft" resultMap="InspectionLabelingWorkMap">
+		SELECT po.PO_NO
+			 , emp.EMP_NAME
+			 , VND.V_NAME
+		     , lw.ILW_RCV_MD
+		     , lw.ILW_RCV_HM
+		     , lw.ILW_RCV_ITM
+		     , lw.ILW_RCV_QTY
+		     , lw.ILW_SCH_SRT_TM
+		     , lw.ILW_SCH_END_TM
+		     , lw.ILW_SRT_TM
+		     , lw.ILW_WRK_TM
+		     , lw.ILW_PRG_RT
+		     , lw.ILW_STS
+		     , lw.ILW_LT_TM
+		     , lw.ILW_INSP_QTY
+			 , lw.ILW_PAS_ITM_QTY
+		     , lw.ILW_LBL_ITM_QTY
+		FROM TB_INSP_LBL_WRK lw
+		JOIN TB_PLC_ORD po ON lw.PO_NO = po.PO_NO
+		JOIN TB_VND vnd ON vnd.V_NO = po.V_NO
+		JOIN TB_EMP emp ON emp.EMP_ID = lw.EMP_ID
+	</select>
+	
+	<!-- 현황 가져오기(물품수령 품목/개수) -->
+	<select id="searchTotal" resultMap="InspectionLabelingStatusMap">
+		SELECT SUM(ILW_RCV_ITM) AS SUM_RCV_ITM,  SUM(ILW_RCV_QTY) AS SUM_RCV_QTY FROM TB_INSP_LBL_WRK;
+	</select>
+	
+	<!-- 현황 가져오기(검품검수 품목/개수, 라벨링 품목/개수, 양품 품목/개수, 누락 품목/개수, 파손 품목/개수 ) -->
+	<select id="searchStatus" resultMap="InspectionLabelingStatusMap">
+		SELECT COUNT(POI_INSP_QTY) AS CNT_INSP_QTY
+			 , SUM(POI_INSP_QTY) AS SUM_INSP_QTY
+			 , COUNT(POI_LBL_ITM_QTY) AS CNT_LBL_QTY
+		     , SUM(POI_LBL_ITM_QTY) AS SUM_LBL_QTY
+			 , COUNT(POI_PAS_ITM_QTY) AS CNT_PAS_QTY
+		     , SUM(POI_PAS_ITM_QTY) AS SUM_PAS_QTY
+		     , COUNT(CASE WHEN POI_MIS_ITM_QTY THEN 1 END) AS CNT_MIS_QTY
+		     , SUM(POI_MIS_ITM_QTY) AS SUM_MIS_QTY
+		     , COUNT(CASE WHEN POI_DMG_ITM_QTY THEN 1 END) AS CNT_DMG_QTY
+		     , SUM(POI_DMG_ITM_QTY) AS SUM_DMG_QTY
+		FROM PLC_ORD_VIEW
+	</select>
+</mapper>
+

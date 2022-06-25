@@ -86,18 +86,10 @@
 			</if>
 		)
 		 <!-- 긴급 일반  -->               
-<<<<<<< HEAD
          <if test="shippingCategory == 1">   <!-- 긴급 -->
-=======
-         <if test="orderCatagory == 1">   <!-- 긴급 -->
->>>>>>> branch 'master' of http://kosa3.iptime.org:13000/4ever/final-back-end
             AND ORD_SHP_CAT LIKE CONCAT('긴급', '')
          </if>
-<<<<<<< HEAD
          <if test="shippingCategory == 2">   <!-- 일반 --> 
-=======
-         <if test="orderCatagory == 2">   <!-- 일반 --> 
->>>>>>> branch 'master' of http://kosa3.iptime.org:13000/4ever/final-back-end
             AND ORD_SHP_CAT LIKE CONCAT('일반', '')
          </if>
          
