@@ -57,6 +57,18 @@
 	<select id="searchRight" parameterType="string" resultMap="InspectionLabelingViewMap">
 		SELECT * FROM osstem.PLC_ORD_VIEW
 		WHERE EMP_NAME = #{employeeName}
+		 <if test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("업체명")'>
+         	AND V_NAME LIKE CONCAT('%', #{searchContent}, '%');
+         </if>
+         <if test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("발주번호")'>
+         	AND PO_NO LIKE CONCAT('%', #{searchContent}, '%');
+         </if>
+         <if test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("품목명")'>
+         	AND ITM_NAME LIKE CONCAT('%', #{searchContent}, '%');
+         </if>
+         <if test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("품목코드")'>
+         	AND ITM_CODE LIKE CONCAT('%', #{searchContent}, '%');
+         </if>
 	</select>
 	
 	<select id="searchLeft" resultMap="InspectionLabelingWorkMap">

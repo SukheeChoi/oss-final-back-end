@@ -17,9 +17,9 @@ public class InspectionLabelingService {
   @Autowired
   private InspectionLabelingDao inspectionLabelingDao;
   
-  public List<InspectionLabelingView> getRight(String employeeName) {
+  public List<InspectionLabelingView> getRight(String employeeName, String searchSelected, String searchContent) {
     List<InspectionLabelingView> list = new ArrayList<>();
-    list.addAll(inspectionLabelingDao.searchRight(employeeName));
+    list.addAll(inspectionLabelingDao.searchRight(employeeName, searchSelected, searchContent));
     return list;
   }
   

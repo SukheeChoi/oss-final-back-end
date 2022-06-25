@@ -38,9 +38,12 @@ public class LabelingController {
   }
   
   @GetMapping("/getListRight")
-  public List<InspectionLabelingView> getListRight(@RequestParam String employeeName) {
+  public List<InspectionLabelingView> getListRight(@RequestParam String employeeName
+                                                  ,@RequestParam(defaultValue = "null") String searchSelected
+                                                  ,@RequestParam(defaultValue = "null") String searchContent) {
     List<InspectionLabelingView> list = new ArrayList<>();
-    list.addAll(inspectionLabelingService.getRight(employeeName));
+    list.addAll(inspectionLabelingService.getRight(employeeName, searchSelected, searchContent));
+    log.info(searchContent);
     log.info(list);
     return list;
   }

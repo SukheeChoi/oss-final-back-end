@@ -11,12 +11,12 @@ public class InspectionLabelingView { //오른쪽 화면
   private String itemCode;
   private String placingOrderNo;
   private String lotCode;
-  private int recievedQuantity;
-  private int InspectionQuantity;
-  private int PassedItemQuantity;
-  private int MissingItemQuantity;
-  private int DamagedItemQuantity;
-  private int ETCQuantity;
+  private Integer recievedQuantity;
+  private Integer InspectionQuantity;
+  private Integer PassedItemQuantity;
+  private Integer MissingItemQuantity;
+  private Integer DamagedItemQuantity;
+  private Integer ETCQuantity;
   private boolean Accepted;
-  private int LabelingItemQuantity;
+  private Integer LabelingItemQuantity;
 }
