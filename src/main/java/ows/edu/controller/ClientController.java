@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
-import ows.edu.dto.Pager;
+import ows.edu.dto.Client;
 import ows.edu.service.ClientService;
 
 
@@ -27,20 +27,21 @@ public class ClientController {
 	
 	//거래처 목록 불러오기
 	@GetMapping("/")
-	public Map<String, Object> getClientNameList(@RequestParam(value="pageNo", defaultValue="1") int pageNo) {
-		int statusCnt =clientService.status();
-		int totalRows = clientService.count();
-		Pager pager = new Pager(3, 10, totalRows, pageNo);
-
-		List<String> list = new ArrayList<>();
-		list = clientService.selectByPage(pager);
-		
+	public Map<String, Object> getClientNameList() {
 		Map<String, Object> map = new HashMap<>();
-		log.info("clientcontroller : " + list);
+		List<Client> list = clientService.selectList();
 		map.put("list", list);
-		map.put("pager", pager);
-		map.put("statusCnt", statusCnt);
+		log.info("clientcontroller - map: " + map);
 		return map;
+	}
+	
+	@GetMapping("/sts")
+	public Map<String, Object> statusCnt(@RequestParam(value="status", defaultValue="2") int status) {	
+		int statusCnt =clientService.statusCnt(status);
+		
+		Map<String, Object> sMap = new HashMap<>();
+		sMap.put("statusCnt", statusCnt);
+		return sMap;
 	}
 	
 }

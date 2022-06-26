@@ -2,45 +2,64 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.ClientDao">
-	<resultMap id="clientMap" type="client">
-		<!-- <result property="clientNo" column="CLT_NO"/> -->
+	<!-- <resultMap id="clientMap" type="client">
+		<result property="clientNo" column="CLT_NO"/>
 		<result property="clientName" column="CLT_NAME"/>
-		<!-- <result property="employeeId" column="EMP_ID"/> -->
-		<!-- <result property="representative" column="CLT_RPR"/> -->
-		<!-- <result property="representativeContact" column="CNT_RPR_CNT"/> -->
-		<association property="order" javaType="order">
+		<result property="employeeId" column="EMP_ID"/>
+		<result property="representative" column="CLT_RPR"/>
+		<result property="representativeContact" column="CNT_RPR_CNT"/>
+ 		<association property="order" javaType="order">
+		 	<result property="orderNo" column="ORD_NO"/>	
+		 	<result property="date" column="ORD_DT"/>	
+			<result property="shippingDestination" column="ORD_SHP_DEST"/>			
+			<result property="shippingWay" column="ORD_SHP_WAY"/>
 			<result property="status" column="ORD_STS"/>
+			<result property="shippingAddress" column="ORD_SHP_ADDR"/>	
+			<result property="orderWay" column="ORD_ORD_WAY"/>	
+			<result property="shippingCategory" column="ORD_SHP_CAT"/>	
+		</association>
+		<collection column="ORD_STS" property="status" javaType="int" ofType="Map" select="selectList"/>
+		<collection column="ORD_SHP_CAT" property="shippingCategory" javaType="String" ofType="Map" select="selectList"/>
+	</resultMap> -->
+	
+	<resultMap id="clientMap" type="order">
+		<result property="orderNo" column="ORD_NO"/>	
+	 	<result property="date" column="ORD_DT"/>	
+		<result property="shippingDestination" column="ORD_SHP_DEST"/>			
+		<result property="shippingWay" column="ORD_SHP_WAY"/>
+		<result property="status" column="ORD_STS"/>
+		<result property="shippingAddress" column="ORD_SHP_ADDR"/>	
+		<result property="orderWay" column="ORD_ORD_WAY"/>	
+		<result property="shippingCategory" column="ORD_SHP_CAT"/>	
+ 		<association property="client" javaType="client">
+		 	<result property="clientNo" column="CLT_NO"/>
+			<result property="clientName" column="CLT_NAME"/>
+			<result property="employeeId" column="EMP_ID"/>
+			<result property="representative" column="CLT_RPR"/>
+			<result property="representativeContact" column="CNT_RPR_CNT"/>
 		</association>
 	</resultMap>
 	
-	<!-- 고객수취 거래처 조회 -->
-	<select id="count" resultType="int">
+	<!-- 고객수취 거래처와 주문 단계 조회 -->
+<!-- 	<select id="count" resultType="int">
 		SELECT count(*) FROM TB_CLT;
-	</select>
+	</select> -->
 	
-	<select id="selectByPage" resultMap="clientMap">
-		SELECT C.CLT_NAME, O.ORD_STS
+	<select id="selectList" resultMap="clientMap">
+		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO
 		FROM TB_CLT C, TB_ORD O
 		WHERE O.CLT_NO = C.CLT_NO
-			AND C.CLT_NAME="이을치과"
+<!-- 			AND O.ORD_SHP_CAT = #{shippingCategory}
+			AND O.ORD_STS = #{status} -->
 		ORDER BY O.ORD_STS;
 	</select>
 	
-<!-- 	<select id="selectByPage" parameterType="client">
-		SELECT C.CLT_NAME, O.ORD_STS
-		FROM TB_CLT C, TB_ORD O
-		WHERE O.CLT_NO = C.CLT_NO
-			AND O.ORD_SHP_CAT = #{shippingCategory}
-			AND O.ORD_STS = #{status}
-		ORDER BY O.ORD_DT DESC;
-	</select> -->
-	
 	<!-- 주문 단계마다 카운트 --> 
-	<select id="status" resultType="int">
+	<select id="statusCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM TB_CLT C, TB_ORD O
 		WHERE O.CLT_NO = C.CLT_NO
-<!-- 			AND O.ORD_STS=#{status}; -->
+ 			AND O.ORD_STS=#{status};
 	</select>
 
 </mapper>

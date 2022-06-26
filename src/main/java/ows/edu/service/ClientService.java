@@ -6,33 +6,23 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.ClientDao;
-import ows.edu.dto.Pager;
+import ows.edu.dto.Client;
 
 @Service
-@Log4j2
 public class ClientService {
 	@Resource
 	ClientDao clientDao;
 	
-//	public List<Client> getlist(String clientName) {
-//		List<Client> list = new ArrayList<>();
-//	    list.addAll(clientDao.select(clientName));
-////	    log.info("ClientService : " + clientName);
-//	    log.info("ClientService : " + list);
-//	    return list;
-//	};
+//	public int count() {
+//		return clientDao.count();
+//	}
 	
-	public int count() {
-		return clientDao.count();
+	public List<Client> selectList(){
+		return clientDao.selectList();
 	}
 	
-	public List<String> selectByPage(Pager pager){
-		return clientDao.selectByPage(pager);
-	}
-	
-	public int status() {
-		return clientDao.status();
+	public int statusCnt(int status) {
+		return clientDao.statusCnt(status);
 	}
 }
