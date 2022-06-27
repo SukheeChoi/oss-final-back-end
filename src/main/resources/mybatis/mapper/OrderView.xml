@@ -58,6 +58,7 @@
 	
 	<select id="selectByFilter" parameterType="orderfilter" resultMap="orderViewMap">
 		SELECT * FROM osstem.ord_view
+		<if test="company != null and shippingway != null and unreleased != null">
 		WHERE (
 			<!-- 오스템 제품  -->
 			<if test="itemOSS == 1">						
@@ -107,6 +108,7 @@
          <if test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("거래처")'>
          	AND CLT_NAME LIKE CONCAT('%', #{searchContent}, '%');
          </if>
+    	</if>
 	</select>
 
 </mapper>

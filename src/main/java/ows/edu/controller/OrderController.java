@@ -72,7 +72,7 @@ public class OrderController {
   }
   
   @GetMapping("/orderfilter")
-  public Map<String, Object> filterList(@RequestParam(value="company") String[] company
+  public Map<String, Object> filterList(@RequestParam(value="company", defaultValue = "null") String[] company
                          , @RequestParam(value="shippingway", defaultValue = "null") String[] shippingway
                          , @RequestParam(value="unreleased", defaultValue = "null") String[] unreleased
                          , @RequestParam(value="searchSelected", defaultValue = "null") String searchSelected
