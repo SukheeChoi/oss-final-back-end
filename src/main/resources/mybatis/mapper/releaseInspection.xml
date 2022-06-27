@@ -8,14 +8,14 @@
 		<result property="unReleased" column="RI_URLS"/>
 		<result property="employeeName" column="RI_EMP_NAME"/>			
 		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
-		<result property="receiptePrintDate" column="RI_RCPT_PRT_DT"/>
+		<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
 		<result property="releaseInspectionDate" column="RI_DT"/>
 		<result property="releaseInspectionNote" column="RI_NT"/>
 		
 		<association property="release" javaType="release">
 			<result property="releaseNo" column="RLS_NO"/>
 			<result property="invoiceCode" column="RLS_RLS_IVC_CODE"/>
-			<result property="employeeName" column="RLS_EMP_NAME"/>			
+			<result property="employeeName" column="RLS_EMP_NAME"/>	
 			<result property="shippingCompany" column="RLS_SHP_CPN"/>			
 			<result property="note" column="RLS_RLS_NT"/>
 		</association>
@@ -25,7 +25,6 @@
 		</association>
 		<association property="picking" javaType="picking">
 			<result property="pickingNo" column="PIC_NO"/>
-			
 		</association>
 		<association property="vendor" javaType="vendor">
 			<result property="vendorName" column="V_NAME"/>
@@ -40,6 +39,9 @@
 			<result property="unrelease" column="PAC_URLS"/>			
 			<result property="boxQty" column="PAC_BX_QTY"/>			
 			<result property="note" column="PAC_NT"/>		
+		</association>
+		<association property="client" javaType="client">
+			<result property="clientName" column="CLT_NAME"/>		
 		</association>
 	</resultMap>
 	
@@ -117,53 +119,56 @@
 			ON (C.CLT_NO=O.CLT_NO)
 <where>
 	<!-- 배송구분 필터링: 전체/일반/긴급 -->
-<!--    	<if test='(shippingCategory != null) and (shippingCategory.equals("일반"))'>
+   	<if test='(!shippingCategory.equals("")) and (shippingCategory.equals("일반"))'>
 		AND O.ORD_SHP_CAT='일반'
 	</if>
-	<if test='(shippingCategory != null) and (shippingCategory.equals("긴급"))'>
+	<if test='(!shippingCategory.equals("")) and (shippingCategory.equals("긴급"))'>
 		AND O.ORD_SHP_CAT='긴급'
-	</if> -->
+	</if>
 	<!-- 배송방식 필터링: 전체/오스템/합배송 -->
- <!--   	<if test='(shippingWay != null) and (shippingWay.equals("오스템"))'>
+   	<if test='(!shippingWay.equals("")) and (shippingWay.equals("오스템"))'>
 		AND O.ORD_SHP_WAY='오스템'
 	</if>
-	<if test='(shippingWay != null) and (shippingWay.equals("합배송"))'>
+	<if test='(!shippingWay.equals("")) and (shippingWay.equals("합배송"))'>
 		AND O.ORD_SHP_WAY='합배송'
-	</if> -->
+	</if>
 	<!-- 출고/미출고 필터링 -->
-<!--    	<if test='(released != null) and (released.equals("출고"))'>
+   	<if test='(!released.equals("")) and (released.equals("출고"))'>
 		AND R.RLS_DN=1
 	</if>
-	<if test='(released != null) and (released.equals("미출고"))'>
+	<if test='(!released.equals("")) and (released.equals("미출고"))'>
 		AND R.RLS_DN IS NULL
-	</if> -->
+	</if>
 	
 	<!-- assignee 필수여야 작동하는 이유는..? -->
 	<!-- 출고검수/패킹 담당자 필터링 -->
-<!--     <if test='assignee != null'>
-		AND CONCAT(E.EMP_NAME, '') LIKE CONCAT('%',#{assignee},'%')
-	</if> -->
+    <if test='!assignee.equals("")'>
+		<!-- AND CONCAT(E.EMP_NAME, '') LIKE CONCAT('%',#{assignee},'%') -->
+		CONCAT(E.EMP_NAME, '') LIKE CONCAT('%',#{assignee},'%')
+		OR
+		CONCAT(R.RLS_EMP_NAME, '') LIKE CONCAT('%',#{assignee},'%')
+	</if>
 	
 	<!-- 주문번호 필터링 -->
 	<!-- <if test='orderNo != -1'> -->
-	<!-- <if test='!strOrderNo.equals("-1")'> -->
+ 	<if test='!strOrderNo.equals("-1")'>
  		<!-- AND CONCAT(O.ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%') -->
-<!--    		AND CONCAT(O.ORD_NO, '') LIKE CONCAT('%',#{strOrderNo},'%')
-	</if> -->
+   		AND CONCAT(O.ORD_NO, '') LIKE CONCAT('%',#{strOrderNo},'%')
+	</if>
 	
 	<!-- 거래처 필터링 -->
-<!--    	<if test='clientName != null'>
+   	<if test='!clientName.equals("")'>
 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
-	</if> -->
+	</if>
 	
 	<!-- 배송지 필터링 -->
- <!--   	<if test='shippingDestination != null'>
+  	<if test='!shippingDestination.equals("")'>
  		AND O.ORD_SHP_DEST LIKE CONCAT('%',#{shippingDestination},'%')
- 	</if> -->
+ 	</if>
  	<!-- 업체명으로 필터링 -->
-<!--    	<if test='vendorName != null'>
+   	<if test='!vendorName.equals("")'>
    		AND V.V_NAME LIKE CONCAT('%',#{vendorName},'%')
-   	</if> -->
+   	</if>
 	
 </where>
 		ORDER BY R.RLS_NO, I.ITM_NAME

@@ -30,7 +30,8 @@
 		<result property="employeeId" column="EMP_ID"/>
 		<result property="releaseScheduleDate" column="CS_RLS_SCH_DT"/>
 		<result property="receiveDate" column="CS_RCV_DT"/>
-		<result property="releaseQuantity" column="CS_RCV_QTY"/>
+		<result property="releaseQuantity" column="CS_RLS_QTY"/>
+		<result property="receiveQuantity" column="CS_RCV_QTY"/>
 		<result property="deliveryQuantity" column="CS_DLV_QTY"/>
 		
 		<association property="orderItem" javaType="orderItem">
@@ -151,7 +152,8 @@
 	</select>
 	<select id="selectAReceipt" parameterType="string" resultMap="combineShippingMap">
 		SELECT OI.OI_NO, I.ITM_NAME, OI.ITM_CODE
-			, CS.CS_RCV_URLS, CS.CS_RCV_QTY, CS.CS_RCV_CHK
+			, CS.CS_RCV_URLS, CS.CS_RLS_QTY, CS.CS_RCV_QTY
+			, CS.CS_RCV_CHK
 		FROM TB_CMB_SHP CS
 		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
 		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
