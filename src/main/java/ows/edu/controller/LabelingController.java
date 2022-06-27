@@ -5,7 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,9 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.InspectionLabelingStatus;
 import ows.edu.dto.InspectionLabelingView;
-import ows.edu.dto.InspectionLabelingWork;
+import ows.edu.dto.LabelingWorkTime;
 import ows.edu.service.InspectionLabelingService;
-import ows.edu.service.LabelingWorkTimeService;
 
 @RestController
 @Log4j2
@@ -38,11 +41,13 @@ public class LabelingController {
   }
   
   @GetMapping("/getListLeft")
-  public List<InspectionLabelingWork> getListLeft() {
-    List<InspectionLabelingWork> list = new ArrayList<>();
-    list.addAll(inspectionLabelingService.getLeft());
-    log.info(list);
-    return list;
+  public ResponseEntity<String> getListLeft() {
+    log.info(inspectionLabelingService.getLeft());
+    
+    return ResponseEntity
+        .ok()
+        .header(HttpHeaders.CONTENT_TYPE, "application/json")
+        .body(inspectionLabelingService.getLeft());
   }
   
   @GetMapping("/getListRight")

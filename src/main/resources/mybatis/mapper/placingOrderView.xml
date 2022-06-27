@@ -2,6 +2,48 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.InspectionLabelingDao">
+	
+	<resultMap id="LabelingWorkTimeMap" type="LabelingWorkTime">
+		<result property="labelingWorkTimeNo" column="LWT_NO"/>
+		<result property="employeeName" column="EMP_NAME"/>
+		<result property="labelingWorkTimeDate" column="LWT_DT"/>
+		<result property="receiveItem" column="LWT_RCV_ITM"/>
+		<result property="receiveQuantity" column="LWT_RCV_QTY"/>
+		<result property="scheduledStartTime" column="LWT_SCH_STR_TM"/>
+		<result property="scheduledEndTime" column="LWT_SCH_END_TM"/>
+		<result property="totalWorkTime" column="LWT_TTL_WRK_TM"/>
+		<result property="totalProgressRate" column="LWT_TTL_PRG_RT"/>
+		
+		<result property="LWTNine" column="LWT_9"/>
+		<result property="LWTTen" column="LWT_10"/>
+		<result property="LWTEleven" column="LWT_11"/>
+		<result property="LWTThirteen" column="LWT_13"/>
+		<result property="LWTFourteen" column="LWT_14"/>
+		<result property="LWTFifteen" column="LWT_15"/>
+		<result property="LWTSixteen" column="LWT_16"/>
+		<result property="LWTSeventeen" column="LWT_17"/>
+	</resultMap>
+	
+	<resultMap id="InspectionLabelingWorkMap" type="InspectionLabelingWork">
+		<result property="placeOrderNo" column="PO_NO"/>
+		<result property="labelingWorkTimeNo" column="LWT_NO"/>
+		<result property="employeeName" column="V_NAME"/>
+		<result property="receiveMonthDay" column="ILW_RCV_MD"/>
+		<result property="receiveHourMinute" column="ILW_RCV_DT"/>
+		<result property="receiveItem" column="ILW_RCV_ITM"/>
+		<result property="receiveQuantity" column="ILW_RCV_QTY"/>
+		<result property="scheduledStartTime" column="ILW_SCH_SRT_TM"/>
+		<result property="scheduledEndTime" column="ILW_SCH_END_TM"/>
+		<result property="startTime" column="ILW_SRT_TM"/>
+		<result property="workTime" column="ILW_WRK_TM"/>
+		<result property="progressRate" column="ILW_PRG_RT"/>
+		<result property="status" column="ILW_STS"/>
+		<result property="lateTime" column="ILW_LT_TM"/>
+		<result property="inspectionQuantity" column="ILW_INSP_QTY"/>
+		<result property="passItemQuantity" column="ILW_PAS_ITM_QTY"/>
+		<result property="labelingItemQuantity" column="ILW_LBL_ITM_QTY"/>
+	</resultMap>
+	
 	<resultMap id="InspectionLabelingViewMap" type="InspectionLabelingView">
 		<result property="placingOrderItemNO" column="POI_NO"/>
 		<result property="vendorName" column="V_NAME"/>
@@ -17,25 +59,6 @@
 		<result property="ETCQuantity" column="POI_ETC_QTY"/>
 		<result property="Accepted" column="POI_ACP"/>
 		<result property="LabelingItemQuantity" column="POI_LBL_ITM_QTY"/>
-	</resultMap>
-	
-	<resultMap id="InspectionLabelingWorkMap" type="InspectionLabelingWork">
-		<result property="placeOrderNo" column="PO_NO"/>
-		<result property="employeeName" column="EMP_NAME"/>
-		<result property="receiveMonthDay" column="ILW_RCV_MD"/>
-		<result property="receiveHourMinute" column="ILW_RCV_HM"/>
-		<result property="receiveItem" column="ILW_RCV_ITM"/>
-		<result property="receiveQuantity" column="ILW_RCV_QTY"/>
-		<result property="scheduledStartTime" column="ILW_SCH_SRT_TM"/>
-		<result property="scheduledEndTime" column="ILW_SCH_END_TM"/>
-		<result property="startTime" column="ILW_SRT_TM"/>
-		<result property="workTime" column="ILW_WRK_TM"/>
-		<result property="progressRate" column="ILW_PRG_RT"/>
-		<result property="status" column="ILW_STS"/>
-		<result property="lateTime" column="ILW_LT_TM"/>
-		<result property="inspectionQuantity" column="ILW_INSP_QTY"/>
-		<result property="passItemQuantity" column="ILW_PAS_ITM_QTY"/>
-		<result property="labelingItemQuantity" column="ILW_LBL_ITM_QTY"/>
 	</resultMap>
 	
 	<resultMap id="InspectionLabelingStatusMap" type="InspectionLabelingStatus">
@@ -54,6 +77,7 @@
 		<result property="damagedItemQuantity" column="SUM_DMG_QTY"/>
 	</resultMap>
 	
+	<!-- 오른쪽 작업 담당자 기준으로 데이터 가져오기 -->
 	<select id="searchRight" parameterType="string" resultMap="InspectionLabelingViewMap">
 		SELECT * FROM osstem.PLC_ORD_VIEW
 		WHERE EMP_NAME = #{employeeName}
@@ -71,16 +95,46 @@
          </if>
 	</select>
 	
+		<!-- 왼쪽 담당자 기준으로 데이터 가져오기  -->
+	<select id="searchLeftTotal" resultMap="LabelingWorkTimeMap">
+		SELECT SUM(LWT_RCV_ITM) as LWT_RCV_ITM
+			 , SUM(LWT_RCV_QTY) as LWT_RCV_QTY
+			 , MIN(LWT_SCH_STR_TM) as LWT_SCH_STR_TM
+			 , MAX(LWT_SCH_END_TM) as LWT_SCH_END_TM
+			 , avg(LWT_TTL_PRG_RT) as LWT_TTL_PRG_RT
+		 FROM TB_LBL_WRK_TM lwt;
+	</select>
 	<!-- 왼쪽 담당자 기준으로 데이터 가져오기  -->
-	
+	<select id="searchLeftByName" resultMap="LabelingWorkTimeMap">
+		select lwt.LWT_NO
+		     , emp.EMP_name
+			 , lwt.LWT_DT
+			 , lwt.LWT_TTL_PRG_RT
+			 , lwt.LWT_RCV_ITM
+			 , lwt.LWT_RCV_QTY
+			 , lwt.LWT_SCH_STR_TM
+			 , lwt.LWT_SCH_END_TM
+			 , lwt.LWT_TTL_WRK_TM
+		     , lwt.LWT_9
+		     , lwt.LWT_10
+		     , lwt.LWT_11
+		     , lwt.LWT_13
+		     , lwt.LWT_14
+		     , lwt.LWT_15
+		     , lwt.LWT_16
+		     , lwt.LWT_17
+		from TB_LBL_WRK_TM lwt
+		JOIN TB_EMP emp ON emp.EMP_ID = lwt.EMP_ID
+	</select>
 	
 	<!-- 왼쪽 업체명 기준으로 데이터 가져오기  -->
-	<select id="searchLeft" resultMap="InspectionLabelingWorkMap">
+	<select id="searchLeft" parameterType="int" resultMap="InspectionLabelingWorkMap">
 		SELECT po.PO_NO
-			 , emp.EMP_NAME
+			 , lwt.LWT_NO
+		     , emp.EMP_NAME
 			 , VND.V_NAME
 		     , lw.ILW_RCV_MD
-		     , lw.ILW_RCV_HM
+		     , lw.ILW_RCV_DT
 		     , lw.ILW_RCV_ITM
 		     , lw.ILW_RCV_QTY
 		     , lw.ILW_SCH_SRT_TM
@@ -94,13 +148,15 @@
 			 , lw.ILW_PAS_ITM_QTY
 		     , lw.ILW_LBL_ITM_QTY
 		FROM TB_INSP_LBL_WRK lw
+		LEFT JOIN TB_LBL_WRK_TM lwt ON lwt.LWT_NO = lw.LWT_NO
+		LEFT JOIN TB_EMP emp ON emp.EMP_ID = lwt.EMP_ID
 		JOIN TB_PLC_ORD po ON lw.PO_NO = po.PO_NO
 		JOIN TB_VND vnd ON vnd.V_NO = po.V_NO
-		JOIN TB_EMP emp ON emp.EMP_ID = lw.EMP_ID
+		WHERE lwt.LWT_NO = #{labelingWorkTimeNo}
 	</select>
 	
 	<!-- 현황 가져오기(물품수령 품목/개수) -->
-	<select id="searchTotal" resultMap="InspectionLabelingStatusMap">
+	<select id="searchStatusTotal" resultMap="InspectionLabelingStatusMap">
 		SELECT SUM(ILW_RCV_ITM) AS SUM_RCV_ITM,  SUM(ILW_RCV_QTY) AS SUM_RCV_QTY FROM TB_INSP_LBL_WRK;
 	</select>
 	
