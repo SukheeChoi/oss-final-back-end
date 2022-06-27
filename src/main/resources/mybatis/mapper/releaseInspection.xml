@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.ReleaseInspectionDao">
-	
+
  	<resultMap id="afterPickingMap" type="releaseInspection">
 		<result property="releaseInspectionQuantity" column="RI_QTY"/>
 		<result property="unReleased" column="RI_URLS"/>
@@ -174,5 +174,4 @@
 		ORDER BY R.RLS_NO, I.ITM_NAME
  	</select>
 </mapper>
-
 

@@ -10,7 +10,7 @@
 		<result property="itemName" column="ITM_NAME"/>
 		<result property="itemCode" column="ITM_CODE"/>
 		<result property="orderItemQuantity" column="OI_QTY"/>
-		<result property="orderCategory" column="ORD_SHP_CAT"/>
+		<result property="shippingCategory" column="ORD_SHP_CAT"/>
 		<result property="VendorName" column="V_NAME"/>
 		<result property="PickingDirectionAttempt" column="PD_ATM"/>
 		<result property="PickingDirectionDate" column="PD_DT"/>
@@ -86,10 +86,11 @@
 			</if>
 		)
 		 <!-- 긴급 일반  -->               
-         <if test="orderCatagory == 1">   <!-- 긴급 -->
+         <if test="shippingCategory == 1">   <!-- 긴급 -->
             AND ORD_SHP_CAT LIKE CONCAT('긴급', '')
          </if>
-         <if test="orderCatagory == 2">   <!-- 일반 --> 
+
+         <if test="shippingCategory == 2">   <!-- 일반 --> 
             AND ORD_SHP_CAT LIKE CONCAT('일반', '')
          </if>
          
@@ -105,7 +106,7 @@
          	AND ORD_NO LIKE CONCAT('%', #{searchContent}, '%');
          </if>
          <if test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("거래처")'>
-         	AND V_NAME LIKE CONCAT('%', #{searchContent}, '%');
+         	AND CLT_NAME LIKE CONCAT('%', #{searchContent}, '%');
          </if>
 	</select>
 

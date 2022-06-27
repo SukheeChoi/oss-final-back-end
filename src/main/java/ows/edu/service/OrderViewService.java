@@ -69,10 +69,10 @@ public class OrderViewService {
     //긴급 일반 조건 검색
     if(orderfilter.getShippingway().length != 2) {
       if(Arrays.toString(orderfilter.getShippingway()).contains("emergency")) {
-        orderfilter.setOrderCatagory(1);
+        orderfilter.setShippingCategory(1);
       } 
       if(Arrays.toString(orderfilter.getShippingway()).contains("normal")) {
-        orderfilter.setOrderCatagory(2);
+        orderfilter.setShippingCategory(2);
       }
     }
     log.info(orderfilter.getShippingway().length);
