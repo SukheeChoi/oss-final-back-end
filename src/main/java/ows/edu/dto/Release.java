@@ -15,5 +15,7 @@ public class Release {
 	private String note;
 	private String shippingCompany;
 	
+	private String releaseCode;
+	
 	private String employeeName;
 }

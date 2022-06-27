@@ -1,10 +1,10 @@
 package ows.edu.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Arrays;
 
 import javax.annotation.Resource;
 
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.Pager;
+import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleaseInspectionView;
 import ows.edu.service.ReleaseInspectionService;
 
@@ -77,4 +78,48 @@ public class ReleaseInspectionController {
 	}
 	
 	
+	////검수수량, 미출고 수량 업데이트
+	@PostMapping("/RIQtyUpdate")
+	public int releaseInspectionQtyUpdate(@RequestBody HashMap<String, String> codes) {
+		
+//		Map<String, String> map = new HashMap<String, String>();
+//		map.put("rleaseCode", releaseCode);
+//		map.put("barcode", barcode);
+		
+		System.out.println("releaseInspectionQtyUpdate 제발요 ㅜㅜ");
+		System.out.println(codes);
+		
+		int success = releaseInspectionService.releaseInspectionQtyUpdate(codes);
+		System.out.println(success);
+		
+		return success;
+	}
+	
+	@PostMapping("/unRleaseQtyUpdate")
+	public int unRleaseQtyUpdate(@RequestBody HashMap<String, String> codes) {
+		
+		System.out.println("unRleaseQtyUpdate");
+		int success = releaseInspectionService.unRleaseQtyUpdate(codes);
+		
+		return success;
+	}
+	
+	//스캔
+	@GetMapping("/scanBtnClick")
+	public ReleaseInspection scan(@RequestParam String releaseCode) {
+		ReleaseInspection releaseInspection = releaseInspectionService.scan(releaseCode);
+		return releaseInspection;
+	}
+	
+	//현황 (주문건: 1360건 | 피킹완료건: 530건(긴급5건/일반525건) | 출고검수/패킹건: 0건(긴급3건/일반125건))
+	@GetMapping("/releaseInspectionStatus")
+	public Map<String, Object> getTotal(){
+		
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		
+		
+		return map;
+	}
 }

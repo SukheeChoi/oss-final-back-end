@@ -29,6 +29,7 @@ public interface ReleaseInspectionService {
 		);
 	
 	//현주 ====================================================================================================
+	//조회에 과한 내용
 	public List<ReleaseInspectionView> select();
 	
 	public List<ReleaseInspectionView> selectByFilterPage(Pager pager);
@@ -38,4 +39,12 @@ public interface ReleaseInspectionService {
 	public List<ReleaseInspectionView> selectByPage(Pager pager);
 	
 	public List<ReleaseInspectionView> selectByOrderNo(int orderNo);
+	
+	//검수수량, 미출고 수량 업데이트
+	public int releaseInspectionQtyUpdate(Map<String, String> map);
+
+	public int unRleaseQtyUpdate(Map<String, String> map);
+	
+	//스캔
+	public ReleaseInspection scan(String release);
 }

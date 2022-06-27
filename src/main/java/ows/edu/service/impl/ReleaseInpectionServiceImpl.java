@@ -151,5 +151,26 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	public List<ReleaseInspectionView> selectByOrderNo(int orderNo){
 		return releaseInspectionViewDao.selectByOrderNo(orderNo);
 	}
+
+	
+	//검수수량, 미출고 수량 업데이트
+	@Override
+	public int releaseInspectionQtyUpdate(Map<String, String> map) {
+		// TODO Auto-generated method stub
+		return releaseInspectionDao.releaseInspectionQtyUpdate(map);
+	}
+
+	@Override
+	public int unRleaseQtyUpdate(Map<String, String> map) {
+		// TODO Auto-generated method stub
+		return releaseInspectionDao.unRleaseQtyUpdate(map);
+	}
+
+	//스캔
+	@Override
+	public ReleaseInspection scan(String release) {
+		// TODO Auto-generated method stub
+		return releaseInspectionDao.scan(release);
+	}
 	
 }

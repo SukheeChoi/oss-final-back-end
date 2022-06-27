@@ -25,7 +25,6 @@
 		</association>
 		<association property="picking" javaType="picking">
 			<result property="pickingNo" column="PIC_NO"/>
-			
 		</association>
 		<association property="vendor" javaType="vendor">
 			<result property="vendorName" column="V_NAME"/>
@@ -168,5 +167,71 @@
 </where>
 		ORDER BY R.RLS_NO, I.ITM_NAME
  	</select>
+ 	
+
+<!-- ========================================현주======================================== -->
+<!-- UPDATE 테이블이름
+SET 필드이름1=데이터값1, 필드이름2=데이터값2, ...
+WHERE 필드이름=데이터값 -->
+
+	<!-- 검수수량, 미출고수량 업데이트 -->
+	<update id="releaseInspectionQtyUpdate" parameterType="Map">
+		UPDATE TB_RLS_INSP
+		INNER JOIN tb_ord_itm on tb_rls_insp.oi_no = tb_ord_itm.oi_no
+		INNER JOIN tb_ord on TB_ORD_ITM.ord_no = TB_ORD.ord_no
+		INNER JOIN tb_rls on TB_ORD.ord_no = tb_rls.ord_no
+		set tb_rls_insp.ri_qty = if(tb_rls_insp.ri_qty is null, 1, TB_RLS_INSP.ri_qty+1)
+		WHERE TB_RLS.RLS_CODE = #{releaseCode}
+			and TB_RLS_INSP.ri_brcd = #{scannedBarcode};
+	</update>
+	
+	<update id="unRleaseQtyUpdate" parameterType="Map">
+		UPDATE TB_RLS_INSP
+		INNER JOIN tb_ord_itm on tb_rls_insp.oi_no = tb_ord_itm.oi_no
+		INNER JOIN tb_ord on TB_ORD_ITM.ord_no = TB_ORD.ord_no
+		INNER JOIN tb_rls on TB_ORD.ord_no = tb_rls.ord_no
+		set tb_rls_insp.RI_URLS = if(tb_rls_insp.RI_URLS is null, 1, TB_RLS_INSP.RI_URLS+1)
+		WHERE TB_RLS.RLS_CODE = #{releaseCode}
+		and TB_RLS_INSP.ri_brcd = #{scannedBarcode}
+	</update>
+	
+	<resultMap id="releaseInspectionScanMap" type="releaseInspection">
+		<result property="releaseInspectionQuantity" column="RI_QTY"/>
+		<result property="unReleased" column="RI_URLS"/>		
+		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
+		<result property="receiptePrintDate" column="RI_RCPT_PRT_DT"/>
+		<result property="releaseInspectionDate" column="RI_DT"/>
+		<result property="releaseInspectionNote" column="RI_NT"/>	
+		<association property="release" javaType="release">
+			<result property="releaseCode" column="RLS_CODE"/>		
+		</association>
+		<association property="order" javaType="order">		
+			<result property="shippingCategory" column="ORD_SHP_CAT"/>					
+			<result property="orderNo" column="ORD_NO"/>		
+			<result property="clientNo" column="clt_no"/>	
+		</association>
+		<association property="picking" javaType="picking">
+			<result property="pickingQty" column="PIC_QTY"/>
+		</association>
+		<association property="client" javaType="client">
+			<result property="clientName" column="CLT_NAME"/>
+		</association>
+	</resultMap>
+		
+	<!-- scan버튼 눌렀을때 정보 띄우기 -->
+	<select id="scan" parameterType="String" resultMap="releaseInspectionScanMap">
+		select sum(TB_RLS_INSP.RI_QTY) as "RI_QTY", TB_RLS_INSP.RI_DT, TB_RLS_INSP.RI_RLS_PRT_DT, TB_RLS_INSP.RI_RCPT_PRT_DT,
+			TB_RLS_INSP.EMP_ID, TB_RLS_INSP.RI_NT, sum(TB_RLS_INSP.RI_URLS) as "RI_URLS",
+		    tb_ord.ord_no, tb_ord.clt_no, tb_ord.ord_shp_cat,
+		    TB_RLS.rls_code, sum(tb_pic.pic_qty) as "pic_qty", TB_CLT.CLT_NAME
+		from TB_RLS_INSP
+		INNER JOIN tb_ord_itm on tb_rls_insp.oi_no = tb_ord_itm.oi_no
+		inner join tb_pic on tb_pic.oi_no = tb_ord_itm.oi_no
+		INNER JOIN tb_ord on TB_ORD_ITM.ord_no = TB_ORD.ord_no
+		INNER JOIN tb_rls on TB_ORD.ord_no = tb_rls.ord_no
+		inner join tb_clt on tb_ord.clt_no = tb_clt.clt_no
+		WHERE TB_RLS.RLS_CODE = #{releaseCode}
+	</select>
+ 	
 </mapper>
 

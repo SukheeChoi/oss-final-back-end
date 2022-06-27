@@ -1,6 +1,7 @@
 package ows.edu.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -32,5 +33,14 @@ public interface ReleaseInspectionDao {
 		, String vendorName
 	);
 
-
+	//========================현주========================
+	//검수수량 업데이트
+	public int releaseInspectionQtyUpdate(Map<String, String> map);
+	
+	//미출고수량 업데이트
+	public int unRleaseQtyUpdate(Map<String, String> map);
+	
+	//스캔
+	public ReleaseInspection scan(String releaseCode);
 }
+

@@ -25,4 +25,7 @@ public class ReleaseInspection {
 	private Order order;
 	private Employee employee;
 	private Packing packing;
+	
+	private Client client;
+
 }
