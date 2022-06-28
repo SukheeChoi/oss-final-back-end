@@ -26,6 +26,7 @@
 		</association>
 		<association property="picking" javaType="picking">
 			<result property="pickingNo" column="PIC_NO"/>
+			<result property="pickingQuantity" column="PIC_QTY"/>
 		</association>
 		<association property="vendor" javaType="vendor">
 			<result property="vendorName" column="V_NAME"/>
@@ -37,9 +38,10 @@
 			<result property="orderNo" column="ORD_NO"/>			
 		</association>
 		<association property="packing" javaType="packing">
-			<result property="unrelease" column="PAC_URLS"/>			
+			<result property="unrelease" column="PAC_URLS"/>		
+			<!-- <result property="strUnreleased" column="PAC_URLS"/> -->			
 			<result property="boxQty" column="PAC_BX_QTY"/>			
-			<result property="note" column="PAC_NT"/>		
+			<result property="note" column="PAC_NT"/>
 		</association>
 		<association property="client" javaType="client">
 			<result property="clientName" column="CLT_NAME"/>		
@@ -86,8 +88,8 @@
 	</select>
 
  	<select id="selectAfterPickingList" resultMap="afterPickingMap">
-		SELECT R.RLS_NO, I.ITM_NAME, I.ITM_CODE, PI.PIC_NO
-			, RI.RI_QTY, RI_URLS, PA.PAC_URLS, V.V_NAME, O.ORD_SHP_DEST
+		SELECT R.RLS_NO, I.ITM_NAME, I.ITM_CODE, PI.PIC_NO, PI.PIC_QTY
+			, RI.RI_QTY, RI_URLS, IFNULL(PA.PAC_URLS, -1) PAC_URLS, V.V_NAME, O.ORD_SHP_DEST
 		    , O.ORD_SHP_CAT, O.ORD_SHP_WAY, E.EMP_NAME RI_EMP_NAME
 		    , RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_DT, PA.PAC_BX_QTY
 		    , R.RLS_EMP_NAME, R.RLS_SHP_CPN, R.RLS_RLS_IVC_CODE, IFNULL(RI.RI_NT, ' ') RI_NT

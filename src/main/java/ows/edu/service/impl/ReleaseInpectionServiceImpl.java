@@ -14,6 +14,7 @@ import ows.edu.dao.PackingDao;
 import ows.edu.dao.PickingDirectionDao;
 import ows.edu.dao.ReleaseInspectionDao;
 import ows.edu.dao.ReleaseInspectionViewDao;
+import ows.edu.dto.Packing;
 import ows.edu.dto.Pager;
 import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleaseInspectionView;
@@ -102,6 +103,23 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				, shippingDestination
 				, vendorName
 			);
+		Packing pac = null;
+		for(ReleaseInspection ri : list) {
+//			log.info("ri.getUnReleased() : " + ri.getUnReleased());
+			// 패킹 미출고가 0인 경우에는 빈 문자열을 strUnreleased에 할당.
+			if(ri.getPacking().getUnrelease() == -1) {
+				pac = ri.getPacking();
+				pac.setStrUnreleased("-1");
+				ri.setPacking(pac);
+			} else {// 이외에 경우에는 값 그대로는 strUnreleased에 할당.
+				pac = ri.getPacking();
+				pac.setStrUnreleased(String.valueOf(ri.getPacking().getUnrelease()));
+				ri.setPacking(pac);
+			}
+			log.info("ri.getPacking().getUnrelease() : " + ri.getPacking().getUnrelease());			
+			log.info("ri.getPacking().getStrUnreleased() : " + ri.getPacking().getStrUnreleased());			
+			pac = null;
+		}
 		return list;
 	}
 
