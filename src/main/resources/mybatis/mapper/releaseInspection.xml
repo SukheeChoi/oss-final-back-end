@@ -11,6 +11,7 @@
 		<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
 		<result property="releaseInspectionDate" column="RI_DT"/>
 		<result property="releaseInspectionNote" column="RI_NT"/>
+		<result property="orderItemNo" column="OI_NO"/>		
 		
 		<association property="release" javaType="release">
 			<result property="releaseNo" column="RLS_NO"/>
@@ -91,7 +92,7 @@
 		    , RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_DT, PA.PAC_BX_QTY
 		    , R.RLS_EMP_NAME, R.RLS_SHP_CPN, R.RLS_RLS_IVC_CODE, IFNULL(RI.RI_NT, ' ') RI_NT
 		    , IFNULL(PA.PAC_NT, ' ') PAC_NT, IFNULL(R.RLS_RLS_NT, ' ') RLS_RLS_NT
-		    , R.RLS_DN, O.ORD_NO, C.CLT_NAME
+		    , R.RLS_DN, O.ORD_NO, C.CLT_NAME, RI.OI_NO
 		FROM TB_ORD O
 		JOIN (SELECT RLS.RLS_NO RLS_NO, RLS.ORD_NO RLS_ORD_NO, EMP.EMP_NAME RLS_EMP_NAME
 					, RLS_SHP_CPN, RLS.RLS_IVC_CODE RLS_RLS_IVC_CODE, RLS.RLS_NT RLS_RLS_NT
