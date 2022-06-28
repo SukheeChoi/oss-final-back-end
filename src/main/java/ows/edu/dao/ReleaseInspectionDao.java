@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import ows.edu.dto.ReleaseInspection;
+import ows.edu.dto.AfterPicking;
 
 @Mapper
 public interface ReleaseInspectionDao {
@@ -18,7 +18,7 @@ public interface ReleaseInspectionDao {
 	public int countNormalShipping();
 	
 	// 출고검수/패킹 진행 페이지에 대한 전체 조회.
-	public List<ReleaseInspection> selectAfterPickingList(
+	public List<AfterPicking> selectAfterPickingList(
 		String shippingCategory
 		, String shippingWay
 		, String released

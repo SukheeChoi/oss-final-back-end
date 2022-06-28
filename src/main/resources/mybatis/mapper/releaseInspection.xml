@@ -3,16 +3,21 @@
 
 <mapper namespace="ows.edu.dao.ReleaseInspectionDao">
 
- 	<resultMap id="afterPickingMap" type="releaseInspection">
-		<result property="releaseInspectionQuantity" column="RI_QTY"/>
-		<result property="unReleased" column="RI_URLS"/>
-		<result property="employeeName" column="RI_EMP_NAME"/>			
-		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
-		<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
-		<result property="releaseInspectionDate" column="RI_DT"/>
-		<result property="releaseInspectionNote" column="RI_NT"/>
-		<result property="orderItemNo" column="OI_NO"/>		
-		
+ 	<resultMap id="afterPickingMap" type="afterPicking">
+		<result property="strReleaseInspectionUnreleased" column="RI_URLS"/>
+		<result property="strPackingUnreleased" column="PAC_URLS"/>
+ 	
+ 	
+		<association property="releaseInspection" javaType="releaseInspection">
+			<result property="releaseInspectionQuantity" column="RI_QTY"/>
+			<!-- <result property="unReleased" column="RI_URLS"/> -->
+			<result property="employeeName" column="RI_EMP_NAME"/>			
+			<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
+			<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
+			<result property="releaseInspectionDate" column="RI_DT"/>
+			<result property="releaseInspectionNote" column="RI_NT"/>
+			<result property="orderItemNo" column="OI_NO"/>		
+		</association>
 		<association property="release" javaType="release">
 			<result property="releaseNo" column="RLS_NO"/>
 			<result property="invoiceCode" column="RLS_RLS_IVC_CODE"/>
@@ -38,7 +43,7 @@
 			<result property="orderNo" column="ORD_NO"/>			
 		</association>
 		<association property="packing" javaType="packing">
-			<result property="unrelease" column="PAC_URLS"/>		
+			<!-- <result property="unrelease" column="PAC_URLS"/> -->		
 			<!-- <result property="strUnreleased" column="PAC_URLS"/> -->			
 			<result property="boxQty" column="PAC_BX_QTY"/>			
 			<result property="note" column="PAC_NT"/>
@@ -89,7 +94,7 @@
 
  	<select id="selectAfterPickingList" resultMap="afterPickingMap">
 		SELECT R.RLS_NO, I.ITM_NAME, I.ITM_CODE, PI.PIC_NO, PI.PIC_QTY
-			, RI.RI_QTY, RI_URLS, IFNULL(PA.PAC_URLS, -1) PAC_URLS, V.V_NAME, O.ORD_SHP_DEST
+			, RI.RI_QTY, IFNULL(RI.RI_URLS, ' ') RI_URLS, IFNULL(PA.PAC_URLS, ' ') PAC_URLS, V.V_NAME, O.ORD_SHP_DEST
 		    , O.ORD_SHP_CAT, O.ORD_SHP_WAY, E.EMP_NAME RI_EMP_NAME
 		    , RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_DT, PA.PAC_BX_QTY
 		    , R.RLS_EMP_NAME, R.RLS_SHP_CPN, R.RLS_RLS_IVC_CODE, IFNULL(RI.RI_NT, ' ') RI_NT
