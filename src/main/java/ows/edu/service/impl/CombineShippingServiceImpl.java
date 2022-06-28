@@ -21,16 +21,33 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	CombineShippingDao combineShippingDao;
 	
 	@Override
-	public List<Vendor> getVendorList(String[] strNowDateList) {
-		List<Vendor> list = combineShippingDao.getVendorList(strNowDateList);
+	public List<Vendor> getVendorList(int toDo, String[] dateList) {
+		log.info("실행");
+		String startDate = null;
+		String endDate = null;
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		List<Vendor> list = combineShippingDao.getVendorList(toDo, startDate, endDate);
 		return list;
 	}
 	
 	// 담당자 필터링을 위한 조회.
 	@Override
-	public List<Employee> getAssigneeListByDate() {
+	public List<String> getAssigneeListByDate(int toDo, String[] dateList) {
+//		public List<Employee> getAssigneeListByDate(String[] dateList) {
 		log.info("실행");
-		List<Employee> list = combineShippingDao.selectAssigneeListByDate();
+		String startDate = null;
+		String endDate = null;
+		log.info("dateList.length" + dateList.length);
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		List<String> list = combineShippingDao.selectAssigneeListByDate(toDo, startDate, endDate);
+//		List<Employee> list = combineShippingDao.selectAssigneeListByDate(startDate, endDate);
+		log.info("service getAssigneeListByDate - list : " + list);
 		return list;
 	}
 	
@@ -98,17 +115,17 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	// 전달여부 update.
 	@Override
-	public String updateDelivery(CombineShipping[] combineShippingList) {
+	public String updateDelivery(int[] orderItemNoList) {
 		log.info("실행");
 		String result = "fail";
 		int totalAffectedRows = 0;
-		for(CombineShipping combineShipping : combineShippingList) {
-			int affectedRowNo = combineShippingDao.updateADelivery(combineShipping);
+		for(int orderItemNo : orderItemNoList) {
+			int affectedRowNo = combineShippingDao.updateADelivery(orderItemNo);
 			if(affectedRowNo == 1) {
 				totalAffectedRows++;				
 			}
 		}
-		if(totalAffectedRows == combineShippingList.length) {
+		if(totalAffectedRows == orderItemNoList.length) {
 			result = "success";
 		}
 		return result;
