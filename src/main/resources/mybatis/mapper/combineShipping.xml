@@ -67,10 +67,27 @@
 		SELECT DISTINCT V.V_NO, V.V_NAME
 		FROM TB_CMB_SHP CS
 		JOIN TB_VND V ON (CS.V_NO=CS.V_NO)
-		<![CDATA[
-		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{strNowDateList[0]}, '%Y-%m-%d')
-			AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{strNowDateList[1]}, '%Y-%m-%d')
-		]]>
+		<choose>
+			<!-- 수령 할 일: 출고예정 기간 필터링 -->
+			<when test='toDo == 1'>
+			<![CDATA[
+			WHERE DATE_FORMAT(CS_RLS_SCH_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+				AND DATE_FORMAT(CS_RLS_SCH_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+			]]>
+				AND CS.CS_RCV_CHK=0
+				AND CS.CS_DLV_CHK=0
+			</when>
+			<!-- 수령 한 일: 수령한 기간 필터링 -->
+			<otherwise>
+			<![CDATA[
+			WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+				AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+			]]>
+				AND CS.CS_RCV_CHK=1
+				AND CS.CS_DLV_CHK=0
+			</otherwise>
+		</choose>
+		
 	</select>
 	
 	<!-- 담당자별 필터링을 위한 담당자 조회. -->

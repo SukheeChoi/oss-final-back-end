@@ -35,23 +35,15 @@ public class CombineShippingController {
 	//수령 대상 업체 필터링을 위한 조회.
 	//선택된 날짜(parameter로 넘김.) || (parameter X)오늘 날짜에 해당하도록 조회할 것.
 	@PostMapping("/getVendorList")
-	public Map<String, Object> getVendorList(@RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
+	public Map<String, Object> getVendorList(@RequestParam(value="toDo", defaultValue="1") int toDo
+											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
 		Map<String, Object> map = new HashMap<>();
 		List<Vendor> list = new ArrayList<>();
-		log.info("dateList.length : " + dateList.length);
-		if(dateList != null) {
-			if(dateList.length == 1) {
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				String strNowDate = simpleDateFormat.format(new Date()); 
-				log.info("strNowDate : " + strNowDate);
-				String[] strNowDateList = new String[2];
-				strNowDateList[0] = strNowDate;
-				strNowDateList[1] = strNowDate;
-				list = combineShippingService.getVendorList(strNowDateList);
-			} else {
-				list = combineShippingService.getVendorList(dateList);
-			}
-		}
+		log.info("getVendorList - dateList[0] : " + dateList[0]);
+		log.info("getVendorList - dateList.length : " + dateList.length);
+		
+		list = combineShippingService.getVendorList(toDo, dateList);
+		
 		log.info("getVendorList - list.isEmpty() : " + list.isEmpty());
 		if(list.isEmpty()) {
 			map.put("list", null);

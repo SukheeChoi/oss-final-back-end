@@ -11,7 +11,7 @@ import ows.edu.dto.Vendor;
 @Transactional
 public interface CombineShippingService {
 	//수령 대상 업체 조회.(날짜 필터링 동시에 수행.)
-	public List<Vendor> getVendorList(String[] strNowDateList);
+	public List<Vendor> getVendorList(int toDo, String[] dateList);
 	//담당자 필터링을 위한 조회.
 	public List<String> getAssigneeListByDate(int toDo, String[] dateList);
 //	public List<Employee> getAssigneeListByDate(String[] dateList);

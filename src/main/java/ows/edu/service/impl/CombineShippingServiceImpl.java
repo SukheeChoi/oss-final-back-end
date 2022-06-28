@@ -21,8 +21,15 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	CombineShippingDao combineShippingDao;
 	
 	@Override
-	public List<Vendor> getVendorList(String[] strNowDateList) {
-		List<Vendor> list = combineShippingDao.getVendorList(strNowDateList);
+	public List<Vendor> getVendorList(int toDo, String[] dateList) {
+		log.info("실행");
+		String startDate = null;
+		String endDate = null;
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		List<Vendor> list = combineShippingDao.getVendorList(toDo, startDate, endDate);
 		return list;
 	}
 	
