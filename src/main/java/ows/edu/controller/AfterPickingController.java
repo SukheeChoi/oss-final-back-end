@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
-import ows.edu.dto.ReleaseInspection;
+import ows.edu.dto.AfterPicking;
 import ows.edu.service.ReleaseInspectionService;
 
 @RestController
@@ -54,7 +54,7 @@ public class AfterPickingController {
 		log.info("shippingDestination : " + shippingDestination);
 		log.info("vendorName : " + vendorName);
 		Map<String, Object> map = new HashMap<>();
-		List<ReleaseInspection> list = releaseInspectionService
+		List<AfterPicking> list = releaseInspectionService
 				.getAfterPickingList(
 					shippingCategory
 					, shippingWay
