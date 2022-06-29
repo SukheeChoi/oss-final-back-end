@@ -21,7 +21,11 @@ public interface CombineShippingService {
 	public CombineShipping getAReceipt(String orderItemNo);
 	
 	// 업체정보 + 날짜정보 필터링 적용한 전달정보 조회.
-	public Map<String, Object> getDeliveryList(int toDo, String employeeId, String[] dateList);
+	public Map<String, Object> getDeliveryList(int toDo
+											, String employeeId
+											, String[] dateList
+											, int pageNo
+											);
 //	public List<String> getDeliveryOrderItemNoList(int toDo, String employeeId, String[] dateList);
 //	public CombineShipping getADelivery(String orderItemNo);
 

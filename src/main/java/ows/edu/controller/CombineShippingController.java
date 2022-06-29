@@ -1,15 +1,12 @@
 package ows.edu.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.CombineShipping;
-import ows.edu.dto.Employee;
+import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
 
@@ -135,6 +132,7 @@ public class CombineShippingController {
 		Map<String, Object> map = combineShippingService
 									.getDeliveryList(
 											toDo, employeeId, dateList
+											, pageNo
 									);
 		
 		return map;

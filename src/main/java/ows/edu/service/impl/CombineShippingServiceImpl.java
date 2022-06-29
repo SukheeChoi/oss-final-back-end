@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.CombineShippingDao;
 import ows.edu.dto.CombineShipping;
+import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
 
@@ -76,7 +77,8 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	}
 	// '전달' 탭 선택된 경우.
 	@Override
-	public Map<String, Object> getDeliveryList(int toDo, String employeeId, String[] dateList) {
+	public Map<String, Object> getDeliveryList(int toDo, String employeeId
+										, String[] dateList, int pageNo) {
 		log.info("실행");
 		String startDate = null;
 		String endDate = null;
@@ -84,10 +86,20 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 			startDate = dateList[0];
 			endDate = dateList[1];
 		}
+		// pagination을 위한 Pager객체 생성.
+		int totalRows = combineShippingDao
+							.selectCountAllDelivery(
+								toDo, employeeId, startDate, endDate
+							);
+		Pager pager = new Pager(20, 10, totalRows, pageNo);
+		
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
 		List<String> orderItemNoList = new ArrayList<>();
-		orderItemNoList = combineShippingDao.selectDeliveryOrderItemNoList(toDo, employeeId, startDate, endDate);
+		orderItemNoList = combineShippingDao
+				.selectDeliveryOrderItemNoList(toDo, employeeId
+				, startDate, endDate
+				, pager);
 		
 		Map<String, Object> map = new HashMap<>();
 		if(orderItemNoList.isEmpty()) {

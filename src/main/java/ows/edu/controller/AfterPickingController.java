@@ -94,7 +94,6 @@ public class AfterPickingController {
 				, shippingDestination
 				, vendorName
 			);
-		log.info("totalRows : " + totalRows);
 		// pagination을 위한 Pager 객체 생성.
 		Pager pager = new Pager(10, 10, totalRows, pageNo);
 		
@@ -113,7 +112,6 @@ public class AfterPickingController {
 					
 					, pager
 				);
-		log.info("list : " + list);
 		map.put("list", list);
 		return map;
 	}
