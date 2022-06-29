@@ -24,6 +24,18 @@ public interface ReleaseInspectionService {
 			, String shippingDestination
 			, String vendorName
 	);
+	
+	// 출고검수/패킹 진행 페이지에 대한 데이터의 전체 행 수 조회.
+	int getTotalRows(
+			String shippingCategory
+			, String shippingWay
+			, String released
+			, String assignee
+			, int orderNo
+			, String clientName
+			, String shippingDestination
+			, String vendorName
+	);
 
 //	List<AfterPicking> getAfterPickingList(
 	List<HashMap<String, String>> getAfterPickingList(
@@ -35,7 +47,10 @@ public interface ReleaseInspectionService {
 			, String clientName
 			, String shippingDestination
 			, String vendorName
+			
+			, Pager pager
 		);
+	
 	
 	//현주 ====================================================================================================
 	public List<ReleaseInspectionView> select();
@@ -47,5 +62,6 @@ public interface ReleaseInspectionService {
 	public List<ReleaseInspectionView> selectByPage(Pager pager);
 	
 	public List<ReleaseInspectionView> selectByOrderNo(int orderNo);
+
 
 }

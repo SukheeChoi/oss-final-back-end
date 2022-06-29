@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
-import ows.edu.dto.AfterPicking;
+import ows.edu.dto.Pager;
 import ows.edu.service.ReleaseInspectionService;
 
 @RestController
@@ -71,6 +71,7 @@ public class AfterPickingController {
 			, @RequestParam(value="clientName", defaultValue="") String clientName
 			, @RequestParam(value="shippingDestination", defaultValue="") String shippingDestination
 			, @RequestParam(value="vendorName", defaultValue="") String vendorName
+			, @RequestParam(value="pageNo", defaultValue="1") int pageNo
 		) {
 		log.info("shippingCategory : " + shippingCategory);
 		log.info("shippingWay : " + shippingWay);
@@ -80,6 +81,23 @@ public class AfterPickingController {
 		log.info("clientName : " + clientName);
 		log.info("shippingDestination : " + shippingDestination);
 		log.info("vendorName : " + vendorName);
+		log.info("pageNo : " + pageNo);
+		// pagination을 위한 목록의 전체 행 수 조회.
+		int totalRows = releaseInspectionService
+			.getTotalRows(
+				shippingCategory
+				, shippingWay
+				, released
+				, assignee
+				, orderNo
+				, clientName
+				, shippingDestination
+				, vendorName
+			);
+		log.info("totalRows : " + totalRows);
+		// pagination을 위한 Pager 객체 생성.
+		Pager pager = new Pager(10, 10, totalRows, pageNo);
+		
 		Map<String, Object> map = new HashMap<>();
 //		List<AfterPicking> list = releaseInspectionService
 		List<HashMap<String, String>> list = releaseInspectionService
@@ -92,6 +110,8 @@ public class AfterPickingController {
 					, clientName
 					, shippingDestination
 					, vendorName
+					
+					, pager
 				);
 		log.info("list : " + list);
 		map.put("list", list);

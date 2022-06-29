@@ -40,7 +40,7 @@
 			<result property="date" column="PIC_DT"/>
 			<result property="done" column="PIC_DN"/>
 			<result property="pickingQuantity" column="PIC_QTY"/>
-			<result property="unrelease" column="PIC_URLS"/>
+			<!-- <result property="unrelease" column="PIC_URLS"/> -->
 		</association>
 		<association property="releaseInspection" javaType="releaseInspection">
 			<result property="orderItemNo" column="OI_NO"/>
@@ -129,7 +129,8 @@
 	
 	<!-- 배송구분으로 필터링 -->
 	<select id="selectListByShippingCategory" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
+		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO
+		<!-- , PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS --> 
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
 		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
@@ -145,13 +146,13 @@
 						#{shippingCategory}
 					</foreach>
 					)
-				<![CDATA[
+			<!-- 	<![CDATA[
 					AND (PD.PD_URLS >= 1
 					OR PI.PIC_URLS >= 1
 					OR RI.RI_URLS >= 1
 					OR R.RLS_URLS >= 1
 					OR T.TRF_URLS >= 1)
-				]]>
+				]]> -->
 			</when>
 			<otherwise>
 				WHERE O.ORD_SHP_CAT IN (

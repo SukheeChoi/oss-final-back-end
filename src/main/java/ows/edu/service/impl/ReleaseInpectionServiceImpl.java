@@ -96,6 +96,32 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		
 		return list;
 	}
+	
+
+	@Override
+	public int getTotalRows(
+			String shippingCategory
+			, String shippingWay
+			, String released
+			, String assignee
+			, int orderNo
+			, String clientName
+			, String shippingDestination
+			, String vendorName
+	) {
+		
+		return afterPickingViewDao
+				.selectCountAll(
+					shippingCategory
+					, shippingWay
+					, released
+					, assignee
+					, orderNo
+					, clientName
+					, shippingDestination
+					, vendorName
+				);
+	}
 
 	@Override
 //	public List<AfterPicking> getAfterPickingList(
@@ -108,8 +134,10 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		, String clientName
 		, String shippingDestination
 		, String vendorName
+		
+		, Pager pager
 	) {
-		String strOrderNo = Integer.toString(orderNo);
+//		String strOrderNo = Integer.toString(orderNo);
 //		log.info("strOrderNo : " + strOrderNo);
 		
 //		log.info("assignee : " + assignee);
@@ -137,13 +165,14 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				, shippingWay
 				, released
 				, assignee
-//				, orderNo
+				, orderNo
 				
-				, strOrderNo
+//				, strOrderNo
 				
 				, clientName
 				, shippingDestination
 				, vendorName
+				, pager
 			);
 		log.info("ap : " + ap);
 		log.info("ap.size() : " + ap.size());

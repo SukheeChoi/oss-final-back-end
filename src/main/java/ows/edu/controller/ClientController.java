@@ -35,20 +35,20 @@ public class ClientController {
 	public Map<String, Object> getClientNameList(@RequestParam(value="shippingCategory") String shippingCategory,
 												@RequestParam(value="status") int status,
 												@RequestParam(value="unrelease") String unrelease) {
-		log.info("!!!!!!!!!!!!!!!!!!!!!");
-		log.info("clientcontroller - shippingCategory: " + shippingCategory);
-		log.info("clientcontroller - status: " + status);
-		System.out.println("clientcontroller - shippingCategory: " + shippingCategory);
-		System.out.println("clientcontroller - status: " + status);
+		log.info("1 !!!!!!!!!!!!!!!!!!!!!");
+		log.info("2 clientcontroller - shippingCategory: " + shippingCategory);
+		log.info("3 clientcontroller - status: " + status);
+		System.out.println("4 clientcontroller - shippingCategory: " + shippingCategory);
+		System.out.println("5 clientcontroller - status: " + status);
 		String[] scType = shippingCategory.split(",");
 		List<Client> list = null;
 		
 		Map<String, Object> map1 = new HashMap<>();
 		map1.put("shippingCategory", scType);
-		log.info("!!!!!````````````````!!!!!!!!!!!!!!!");
+		log.info("6 !!!!!````````````````!!!!!!!!!!!!!!!");
 		if(status == 0) {
 			list = clientService.selectListByShippingCategory(map1);
-			log.info("list : " + list + "status : " + status);
+			log.info("7 list : " + list + "status : " + status);
 		} else {
 			map1.put("status", status);
 			list = clientService.selectList(map1);
@@ -59,12 +59,12 @@ public class ClientController {
 		map2.put("shippingCategory", shippingCategory);
 		map2.put("status", status);
 		map2.put("unrelease", unrelease);
-		log.info("clientcontroller - list: " + list);
-		System.out.println("clientcontroller - list: " + list);
+		log.info("8 clientcontroller - list: " + list);
+		System.out.println("9 clientcontroller - list: " + list);
 		
-		log.info("clientcontroller - map2: " + map2);
-		log.info("clientcontroller - unrelease: " + unrelease);
-		log.info("!!!!!````````````````!!!!!!!!!!1111111111!!!!!");
+		log.info("10 clientcontroller - map2: " + map2);
+		log.info("11 clientcontroller - unrelease: " + unrelease);
+		log.info("12 !!!!!````````````````!!!!!!!!!!1111111111!!!!!");
 		return map2;
 	}
 	
