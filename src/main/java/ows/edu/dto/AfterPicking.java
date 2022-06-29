@@ -7,6 +7,8 @@ public class AfterPicking {
 	private String strReleaseInspectionUnreleased;
 	private String strPackingUnreleased;
 	private String strAfterPickingUnreleased;
+	private String strBoxQuantity;
+	
 	///
 	private ReleaseInspection releaseInspection;
 	private Release release;

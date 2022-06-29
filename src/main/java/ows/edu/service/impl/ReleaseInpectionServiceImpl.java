@@ -103,6 +103,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				, shippingDestination
 				, vendorName
 			);
+		log.info("list.size() : " + list.size());
 		for(int i=0; i<list.size(); i++) {
 			// packing의 미출고가 null인 경우에는, 출고검수의 미출고를 검토.
 			if(list.get(i).getStrPackingUnreleased().equals(" ")) {
@@ -126,6 +127,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				// strAfterPickingUnreleased에 패킹의 미출고값 할당.
 				list.get(i).setStrAfterPickingUnreleased(list.get(i).getStrPackingUnreleased());
 			}
+			
 			log.info("list.get(i) : " + list.get(i));
 		}
 		return list;
