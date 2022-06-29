@@ -105,31 +105,37 @@ public class CombineShippingController {
 	@PostMapping("/getDeliveryList")
 	public Map<String, Object> getDeliveryList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="employeeId", defaultValue="") String employeeId
-											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
+											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
+											, @RequestParam(value="pageNo", defaultValue="1") int pageNo
+			) {
 		log.info("getDeliveryList - toDo : " + toDo);
 		log.info("getDeliveryList - employeeId : " + employeeId);
 		log.info("getDeliveryList - dateList : " + dateList);
 		
 		// 필요한 OI_NO 조회해서 List로 받아옴.
-		List<String> orderItemNoList = new ArrayList<>();
+//		List<String> orderItemNoList = new ArrayList<>();
 		
 		//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
-		//날짜 무관하게 처리되지 않은 목록 조회하는 것으로 로직변경 필요.
-		orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(toDo, employeeId, dateList);
+//		orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(toDo, employeeId, dateList);
 		
-		log.info("getDeliveryList - orderItemNoList : " + orderItemNoList);
-		Map<String, Object> map = new HashMap<>();
-		if(orderItemNoList.isEmpty()) {
-			map.put("deliveryList", null);
-		} else {
-			List<CombineShipping> deliveryList = new ArrayList<>();
-			for(String orderItemNo : orderItemNoList) {
-				log.info("orderItemNo : " + orderItemNo);
-				deliveryList.add(combineShippingService.getADelivery(orderItemNo));
-				log.info("deliveryList : " + deliveryList);
-			}
-			map.put("deliveryList", deliveryList);
-		}
+//		log.info("getDeliveryList - orderItemNoList : " + orderItemNoList);
+//		Map<String, Object> map = new HashMap<>();
+//		if(orderItemNoList.isEmpty()) {
+//			map.put("deliveryList", null);
+//		} else {
+//			List<CombineShipping> deliveryList = new ArrayList<>();
+//			for(String orderItemNo : orderItemNoList) {
+//				log.info("orderItemNo : " + orderItemNo);
+//				deliveryList.add(combineShippingService.getADelivery(orderItemNo));
+//				log.info("deliveryList : " + deliveryList);
+//			}
+//			map.put("deliveryList", deliveryList);
+//		}
+		
+		Map<String, Object> map = combineShippingService
+									.getDeliveryList(
+											toDo, employeeId, dateList
+									);
 		
 		return map;
 	}
