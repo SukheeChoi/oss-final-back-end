@@ -66,7 +66,7 @@
 	<select id="getVendorList" resultMap="vendorMap">
 		SELECT DISTINCT V.V_NO, V.V_NAME
 		FROM TB_CMB_SHP CS
-		JOIN TB_VND V ON (CS.V_NO=CS.V_NO)
+		JOIN TB_VND V ON (CS.V_NO=V.V_NO)
 		<choose>
 			<!-- 수령 할 일: 출고예정 기간 필터링 -->
 			<when test='toDo == 1'>
@@ -87,7 +87,6 @@
 				AND CS.CS_DLV_CHK=0
 			</otherwise>
 		</choose>
-		
 	</select>
 	
 	<!-- 담당자별 필터링을 위한 담당자 조회. -->
