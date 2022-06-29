@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.AfterPickingViewDao">
+
+	<select id="selectAll" resultType="HashMap">
+		SELECT *
+		FROM AFTERPICKING_VIEW
+		<where>
+			<!-- 배송구분 필터링: 전체/일반/긴급 -->
+		   	<if test='shippingCategory.equals("일반")'>
+				AND ORD_SHP_CAT='일반'
+			</if>
+			<if test='shippingCategory.equals("긴급")'>
+				AND ORD_SHP_CAT='긴급'
+			</if>
+			<!-- 배송방식 필터링: 전체/오스템/합배송 -->
+		   	<if test='shippingWay.equals("오스템")'>
+				AND ORD_SHP_WAY='오스템'
+			</if>
+			<if test='shippingWay.equals("합배송")'>
+				AND ORD_SHP_WAY='합배송'
+			</if>
+			<!-- 출고/미출고 필터링 -->
+		   	<!-- <if test='(!released.equals("")) and (released.equals("출고"))'> -->
+		  	<if test='released.equals("출고")'>
+				AND RLS_DN=1
+			</if>
+			<!-- <if test='(!released.equals("")) and (released.equals("미출고"))'> -->
+			<if test='released.equals("미출고")'>
+				AND ( RLS_DN!=1 OR ISNULL(RLS_DN) )
+			</if>
+			
+			<!-- 출고검수/패킹 담당자 필터링 -->
+		    <if test='!assignee.equals("")'>
+				AND (RI_EMP_NAME = #{assignee} OR RLS_EMP_NAME = #{assignee})
+			</if>
+			
+			<!-- 주문번호 필터링 -->
+			<!-- <if test='orderNo != -1'> -->
+		 	<if test='!strOrderNo.equals("-1")'>
+		   		AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{strOrderNo},'%')
+			</if>
+			
+			<!-- 거래처 필터링 -->
+		   	<if test='!clientName.equals("")'>
+				AND CLT_NAME LIKE CONCAT('%',#{clientName},'%')
+			</if>
+			
+			<!-- 배송지 필터링 -->
+		   	<if test='!shippingDestination.equals("")'>
+		 		AND ORD_SHP_DEST LIKE CONCAT('%',#{shippingDestination},'%')
+		 	</if>
+		 	<!-- 업체명으로 필터링 -->
+		   	<if test='!vendorName.equals("")'>
+		   		AND V_NAME LIKE CONCAT('%',#{vendorName},'%')
+		   	</if> 
+		</where>
+	</select>
+	
+</mapper>
+

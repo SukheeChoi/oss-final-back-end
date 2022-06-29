@@ -9,13 +9,13 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
+import ows.edu.dao.AfterPickingViewDao;
 import ows.edu.dao.OrderDao;
 import ows.edu.dao.PackingDao;
 import ows.edu.dao.PickingDirectionDao;
 import ows.edu.dao.ReleaseInspectionDao;
 import ows.edu.dao.ReleaseInspectionViewDao;
 import ows.edu.dto.AfterPicking;
-import ows.edu.dto.Packing;
 import ows.edu.dto.Pager;
 import ows.edu.dto.ReleaseInspectionView;
 import ows.edu.service.ReleaseInspectionService;
@@ -34,6 +34,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	PackingDao packingDao;
 	@Resource
 	ReleaseInspectionViewDao releaseInspectionViewDao;
+	@Resource
+	AfterPickingViewDao afterPickingViewDao;
 	
 	@Override
 	public Map<String, Object> getSummary() {
@@ -73,7 +75,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	}
 
 	@Override
-	public List<AfterPicking> getAfterPickingList(
+//	public List<AfterPicking> getAfterPickingList(
+	public List<HashMap<String, String>> getAfterPickingList(
 		String shippingCategory
 		, String shippingWay
 		, String released
@@ -89,6 +92,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 //		log.info("assignee : " + assignee);
 //		log.info("clientName : " + clientName);
 //		log.info("shippingDestination : " + shippingDestination);
+//		List<AfterPicking> list = releaseInspectionDao
 		List<AfterPicking> list = releaseInspectionDao
 			.selectAfterPickingList(
 				shippingCategory
@@ -103,7 +107,29 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				, shippingDestination
 				, vendorName
 			);
-		log.info("list.size() : " + list.size());
+		
+		///
+//		List<AfterPickingView> ap = afterPickingViewDao.selectAll();
+		List<HashMap<String, String>> ap = afterPickingViewDao.selectAll(
+				shippingCategory
+				, shippingWay
+				, released
+				, assignee
+//				, orderNo
+				
+				, strOrderNo
+				
+				, clientName
+				, shippingDestination
+				, vendorName
+			);
+		log.info("ap : " + ap);
+		log.info("ap.size() : " + ap.size());
+		for(int i=0; i<ap.size(); i++) {
+			log.info("ap.get("+i+") : " + ap.get(i));
+		}
+		///
+		
 		for(int i=0; i<list.size(); i++) {
 			// packing의 미출고가 null인 경우에는, 출고검수의 미출고를 검토.
 			if(list.get(i).getStrPackingUnreleased().equals(" ")) {
@@ -130,7 +156,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 			
 			log.info("list.get(i) : " + list.get(i));
 		}
-		return list;
+		return ap;
 	}
 
 	

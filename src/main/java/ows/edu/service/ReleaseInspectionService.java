@@ -1,11 +1,11 @@
 package ows.edu.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ows.edu.dto.AfterPicking;
 import ows.edu.dto.Pager;
 import ows.edu.dto.ReleaseInspectionView;
 
@@ -14,7 +14,8 @@ public interface ReleaseInspectionService {
 	
 	Map<String, Object> getSummary();
 
-	List<AfterPicking> getAfterPickingList(
+//	List<AfterPicking> getAfterPickingList(
+	List<HashMap<String, String>> getAfterPickingList(
 			String shippingCategory
 			, String shippingWay
 			, String released

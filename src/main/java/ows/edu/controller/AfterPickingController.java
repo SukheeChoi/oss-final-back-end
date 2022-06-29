@@ -35,6 +35,7 @@ public class AfterPickingController {
 	}
 
 	@PostMapping("/")
+//	public Map<String, Object> getList(
 	public Map<String, Object> getList(
 			@RequestParam(value="shippingCategory", defaultValue="") String shippingCategory
 			, @RequestParam(value="shippingWay", defaultValue="") String shippingWay
@@ -54,7 +55,8 @@ public class AfterPickingController {
 		log.info("shippingDestination : " + shippingDestination);
 		log.info("vendorName : " + vendorName);
 		Map<String, Object> map = new HashMap<>();
-		List<AfterPicking> list = releaseInspectionService
+//		List<AfterPicking> list = releaseInspectionService
+		List<HashMap<String, String>> list = releaseInspectionService
 				.getAfterPickingList(
 					shippingCategory
 					, shippingWay
