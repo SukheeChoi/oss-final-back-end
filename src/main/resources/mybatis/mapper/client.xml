@@ -2,26 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.ClientDao">
-	<!-- <resultMap id="clientMap" type="client">
-		<result property="clientNo" column="CLT_NO"/>
-		<result property="clientName" column="CLT_NAME"/>
-		<result property="employeeId" column="EMP_ID"/>
-		<result property="representative" column="CLT_RPR"/>
-		<result property="representativeContact" column="CNT_RPR_CNT"/>
- 		<association property="order" javaType="order">
-		 	<result property="orderNo" column="ORD_NO"/>	
-		 	<result property="date" column="ORD_DT"/>	
-			<result property="shippingDestination" column="ORD_SHP_DEST"/>			
-			<result property="shippingWay" column="ORD_SHP_WAY"/>
-			<result property="status" column="ORD_STS"/>
-			<result property="shippingAddress" column="ORD_SHP_ADDR"/>	
-			<result property="orderWay" column="ORD_ORD_WAY"/>	
-			<result property="shippingCategory" column="ORD_SHP_CAT"/>	
-		</association>
-		<collection column="ORD_STS" property="status" javaType="int" ofType="Map" select="selectList"/>
-		<collection column="ORD_SHP_CAT" property="shippingCategory" javaType="String" ofType="Map" select="selectList"/>
-	</resultMap> -->
-	
 	<resultMap id="clientMap" type="order">
 		<result property="orderNo" column="ORD_NO"/>	
 	 	<result property="date" column="ORD_DT"/>	
@@ -38,31 +18,149 @@
 			<result property="representative" column="CLT_RPR"/>
 			<result property="representativeContact" column="CNT_RPR_CNT"/>
 		</association>
+		<association property="orderItem" javaType="orderItem">
+			<result property="orderItemNo" column="OI_NO"/>
+			<result property="orderNo" column="ORD_NO"/>
+			<result property="itemCode" column="ITM_CODE"/>
+			<result property="qty" column="OI_QTY"/>
+		</association>
+		<association property="pickingDirection" javaType="pickingDirection">
+			<result property="orderItemNo" column="OI_NO"/>
+			<result property="attempt" column="PD_ATM"/>
+			<result property="date" column="PD_DT"/>
+			<result property="qty" column="PD_QTY"/>
+			<result property="unrelease" column="PD_URLS"/>
+			<result property="employeeId" column="EMP_ID"/>
+		</association>
+		<association property="picking" javaType="picking">
+			<result property="pickingNo" column="PIC_NO"/>
+			<result property="orderItemNo" column="OI_NO"/>
+			<result property="employeeId" column="EMP_ID"/>
+			<result property="locationCode" column="LCT_CODE"/>
+			<result property="date" column="PIC_DT"/>
+			<result property="done" column="PIC_DN"/>
+			<result property="pickingQuantity" column="PIC_QTY"/>
+			<result property="unrelease" column="PIC_URLS"/>
+		</association>
+		<association property="releaseInspection" javaType="releaseInspection">
+			<result property="orderItemNo" column="OI_NO"/>
+			<result property="releaseInspectionQuantity" column="RI_QTY"/>
+			<result property="releaseInspectionDate" column="RI_DT"/>
+			<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
+			<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
+			<result property="employeeId" column="EMP_ID"/>
+			<result property="releaseInspectionBarcode" column="RI_BRCD"/>
+			<result property="releaseInspectionNote" column="RI_NT"/>
+			<result property="unReleased" column="RI_URLS"/>
+		</association>
+		<association property="release" javaType="release">
+			<result property="releaseNo" column="RLS_NO"/>
+			<result property="orderNo" column="ORD_NO"/>
+			<result property="employeeId" column="EMP_ID"/>
+			<result property="releaseDate" column="RLS_DT"/>
+			<result property="releaseDone" column="RLS_DN"/>
+			<result property="invoiceCode" column="RLS_IVC_CODE"/>
+			<result property="note" column="RLS_NT"/>
+			<result property="shippingCompany" column="RLS_SHP_CPN"/>
+			<result property="unrelease" column="RLS_URLS"/>
+			<result property="boxQuantity" column="RLS_BX_QTY"/>
+		</association>
+		<association property="transfer" javaType="transfer">
+			<result property="releaseNo" column="RLS_NO"/>
+			<result property="orderNo" column="ORD_NO"/>
+			<result property="employeeId" column="EMP_ID"/>
+			<result property="transferDate" column="TRF_DT"/>
+			<result property="unrelease" column="TRF_URLS"/>
+		</association>
 	</resultMap>
 	
 	<!-- 고객수취 거래처와 주문 단계 조회 -->
+	<!-- <select id="selectListAll" resultMap="clientMap">
+		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
+		FROM TB_ORD O
+		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
+		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
+		LEFT JOIN TB_PIC_DRC PD ON (OI.OI_NO = PD.OI_NO)
+		LEFT JOIN TB_PIC PI ON (OI.OI_NO = PI.OI_NO)
+		LEFT JOIN TB_RLS_INSP RI ON (OI.OI_NO = RI.OI_NO)
+		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
+		LEFT JOIN TB_TRF T  ON (O.ORD_NO = T.ORD_NO)
+		ORDER BY O.ORD_STS;
+	</select> -->
+	
+	<!-- 배송구분, 회사로 필터링 -->
 	<select id="selectList" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO
-		FROM TB_CLT C, TB_ORD O
-		WHERE O.CLT_NO = C.CLT_NO
-			AND O.ORD_SHP_CAT IN (
-			<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
-				#{shippingCategory}
-			</foreach>
-			) 
-			AND O.ORD_STS = #{status}
+		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
+		FROM TB_ORD O
+		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
+		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
+		LEFT JOIN TB_PIC_DRC PD ON (OI.OI_NO = PD.OI_NO)
+		LEFT JOIN TB_PIC PI ON (OI.OI_NO = PI.OI_NO)
+		LEFT JOIN TB_RLS_INSP RI ON (OI.OI_NO = RI.OI_NO)
+		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
+		LEFT JOIN TB_TRF T  ON (O.ORD_NO = T.ORD_NO)
+ 		<choose>
+			<when test='unrelease == true'>
+				WHERE O.ORD_SHP_CAT IN (
+					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
+						#{shippingCategory}
+					</foreach>
+					)
+				<![CDATA[
+					AND O.ORD_STS = #{status}
+					OR (PD.PD_URLS >= 1
+					OR PI.PIC_URLS >= 1
+					OR RI.RI_URLS >= 1
+					OR R.RLS_URLS >= 1
+					OR T.TRF_URLS >= 1)
+				]]>
+			</when>
+			<otherwise>
+				WHERE O.ORD_SHP_CAT IN (
+					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
+						#{shippingCategory}
+					</foreach>
+					)
+					AND O.ORD_STS = #{status}
+			</otherwise>
+		</choose>
 		ORDER BY O.ORD_STS;
 	</select>
 	
-	<select id="selectListAll" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO
-		FROM TB_CLT C, TB_ORD O
-		WHERE O.CLT_NO = C.CLT_NO
-			AND O.ORD_SHP_CAT IN (
-			<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
-				#{shippingCategory}
-			</foreach>
-			)
+	<!-- 배송구분으로 필터링 -->
+	<select id="selectListByShippingCategory" resultMap="clientMap" parameterType="hashmap">
+		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
+		FROM TB_ORD O
+		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
+		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
+		LEFT JOIN TB_PIC_DRC PD ON (OI.OI_NO = PD.OI_NO)
+		LEFT JOIN TB_PIC PI ON (OI.OI_NO = PI.OI_NO)
+		LEFT JOIN TB_RLS_INSP RI ON (OI.OI_NO = RI.OI_NO)
+		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
+		LEFT JOIN TB_TRF T  ON (O.ORD_NO = T.ORD_NO)
+		<choose>
+			<when test='unrelease == true'>
+				WHERE O.ORD_SHP_CAT IN (
+					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
+						#{shippingCategory}
+					</foreach>
+					)
+				<![CDATA[
+					AND (PD.PD_URLS >= 1
+					OR PI.PIC_URLS >= 1
+					OR RI.RI_URLS >= 1
+					OR R.RLS_URLS >= 1
+					OR T.TRF_URLS >= 1)
+				]]>
+			</when>
+			<otherwise>
+				WHERE O.ORD_SHP_CAT IN (
+				<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
+					#{shippingCategory}
+				</foreach>
+				)
+			</otherwise>
+		</choose>
 		ORDER BY O.ORD_STS;
 	</select>
 	

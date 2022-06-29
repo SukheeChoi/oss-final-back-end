@@ -8,7 +8,5 @@ public class OrderItem {
 	private int orderNo;
 	private String itemCode;
 	private int qty;
-	private int status;
-	
-	
+		
 }
