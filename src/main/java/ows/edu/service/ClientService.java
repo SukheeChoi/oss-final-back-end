@@ -16,13 +16,16 @@ public class ClientService {
 	@Resource
 	ClientDao clientDao;
 	
-	//
+//	public List<Client> selectListAll(){
+//		return clientDao.selectListAll();
+//	};
+	
 	public List<Client> selectList(Map<String, Object> map){
 		return clientDao.selectList(map);
 	}
 	
-	public List<Client> selectListAll(Map<String, Object> map){
-		return clientDao.selectListAll(map);
+	public List<Client> selectListByShippingCategory(Map<String, Object> map){
+		return clientDao.selectListByShippingCategory(map);
 	}
 	
 	public List<Integer> statusCnt() {

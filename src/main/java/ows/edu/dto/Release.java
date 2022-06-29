@@ -11,9 +11,11 @@ public class Release {
 	private String employeeId;
 	private Date releaseDate;
 	private Boolean releaseDone;
-	private String invoiceCode;
-	private String note;
-	private String shippingCompany;
+	private String invoiceCode; //송장번호
+	private String note; //메모
+	private String shippingCompany; //배송회사
+	private int unrelease;
+	private int boxQuantity;
 	
 	private String employeeName;
 }
