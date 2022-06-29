@@ -33,6 +33,32 @@ public class AfterPickingController {
 		
 		return map;
 	}
+	
+	@PostMapping("/assigneeList")
+	public Map<String, Object> getAssigneeList(
+			@RequestParam(value="shippingCategory", defaultValue="") String shippingCategory
+			, @RequestParam(value="shippingWay", defaultValue="") String shippingWay
+			, @RequestParam(value="released", defaultValue="") String released
+			, @RequestParam(value="orderNo", defaultValue="-1") int orderNo
+			, @RequestParam(value="clientName", defaultValue="") String clientName
+			, @RequestParam(value="shippingDestination", defaultValue="") String shippingDestination
+			, @RequestParam(value="vendorName", defaultValue="") String vendorName
+	) {
+		
+		Map<String, Object> map = new HashMap<>();
+		List<String> list = releaseInspectionService.getAssigneeList(
+				shippingCategory
+				, shippingWay
+				, released
+				, orderNo
+				, clientName
+				, shippingDestination
+				, vendorName		
+		);
+		map.put("list", list);
+		
+		return map;
+	}
 
 	@PostMapping("/")
 //	public Map<String, Object> getList(

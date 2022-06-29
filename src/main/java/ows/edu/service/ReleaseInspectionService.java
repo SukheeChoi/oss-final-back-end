@@ -13,6 +13,17 @@ import ows.edu.dto.ReleaseInspectionView;
 public interface ReleaseInspectionService {
 	
 	Map<String, Object> getSummary();
+	
+	// 출고검수/패킹 담당자 이름 목록 조회.
+	List<String> getAssigneeList(
+			String shippingCategory
+			, String shippingWay
+			, String released
+			, int orderNo
+			, String clientName
+			, String shippingDestination
+			, String vendorName
+	);
 
 //	List<AfterPicking> getAfterPickingList(
 	List<HashMap<String, String>> getAfterPickingList(
@@ -36,4 +47,5 @@ public interface ReleaseInspectionService {
 	public List<ReleaseInspectionView> selectByPage(Pager pager);
 	
 	public List<ReleaseInspectionView> selectByOrderNo(int orderNo);
+
 }

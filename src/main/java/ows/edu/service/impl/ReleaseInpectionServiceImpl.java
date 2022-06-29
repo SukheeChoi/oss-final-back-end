@@ -72,6 +72,30 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		
 		return map;
 	}
+	
+	@Override
+	public List<String> getAssigneeList(
+			String shippingCategory
+			, String shippingWay
+			, String released
+			, int orderNo
+			, String clientName
+			, String shippingDestination
+			, String vendorName)
+	{
+		
+		List<String> list = afterPickingViewDao.selectReleaseInspectionEmployeeName(
+				shippingCategory
+				, shippingWay
+				, released
+				, orderNo
+				, clientName
+				, shippingDestination
+				, vendorName
+		);
+		
+		return list;
+	}
 
 	@Override
 //	public List<AfterPicking> getAfterPickingList(
@@ -250,5 +274,6 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	public List<ReleaseInspectionView> selectByOrderNo(int orderNo){
 		return releaseInspectionViewDao.selectByOrderNo(orderNo);
 	}
+
 	
 }

@@ -21,4 +21,14 @@ public interface AfterPickingViewDao {
 			, String vendorName
 		);
 
+	public List<String> selectReleaseInspectionEmployeeName(
+			String shippingCategory
+			, String shippingWay
+			, String released
+			, int orderNo
+			, String clientName
+			, String shippingDestination
+			, String vendorName
+		);
+
 }
