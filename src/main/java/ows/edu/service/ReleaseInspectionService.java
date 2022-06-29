@@ -5,14 +5,16 @@ import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ows.edu.dto.ReleaseInspection;
+import ows.edu.dto.AfterPicking;
+import ows.edu.dto.Pager;
+import ows.edu.dto.ReleaseInspectionView;
 
 @Transactional
 public interface ReleaseInspectionService {
 	
 	Map<String, Object> getSummary();
 
-	List<ReleaseInspection> getAfterPickingList(
+	List<AfterPicking> getAfterPickingList(
 			String shippingCategory
 			, String shippingWay
 			, String released
@@ -22,6 +24,15 @@ public interface ReleaseInspectionService {
 			, String shippingDestination
 			, String vendorName
 		);
-
 	
+	//현주 ====================================================================================================
+	public List<ReleaseInspectionView> select();
+	
+	public List<ReleaseInspectionView> selectByFilterPage(Pager pager);
+
+	public int count();
+	
+	public List<ReleaseInspectionView> selectByPage(Pager pager);
+	
+	public List<ReleaseInspectionView> selectByOrderNo(int orderNo);
 }

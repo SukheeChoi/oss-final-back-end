@@ -107,6 +107,7 @@
          <if test="shippingCategory == 1">   <!-- 긴급 -->
             AND ORD_SHP_CAT LIKE CONCAT('긴급', '')
          </if>
+
          <if test="shippingCategory == 2">   <!-- 일반 --> 
             AND ORD_SHP_CAT LIKE CONCAT('일반', '')
          </if>

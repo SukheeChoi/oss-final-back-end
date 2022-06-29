@@ -30,7 +30,8 @@
 		<result property="employeeId" column="EMP_ID"/>
 		<result property="releaseScheduleDate" column="CS_RLS_SCH_DT"/>
 		<result property="receiveDate" column="CS_RCV_DT"/>
-		<result property="releaseQuantity" column="CS_RCV_QTY"/>
+		<result property="releaseQuantity" column="CS_RLS_QTY"/>
+		<result property="receiveQuantity" column="CS_RCV_QTY"/>
 		<result property="deliveryQuantity" column="CS_DLV_QTY"/>
 		
 		<association property="orderItem" javaType="orderItem">
@@ -66,20 +67,56 @@
 		SELECT DISTINCT V.V_NO, V.V_NAME
 		FROM TB_CMB_SHP CS
 		JOIN TB_VND V ON (CS.V_NO=CS.V_NO)
-		<![CDATA[
-		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{strNowDateList[0]}, '%Y-%m-%d')
-			AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{strNowDateList[1]}, '%Y-%m-%d')
-		]]>
+		<choose>
+			<!-- 수령 할 일: 출고예정 기간 필터링 -->
+			<when test='toDo == 1'>
+			<![CDATA[
+			WHERE DATE_FORMAT(CS_RLS_SCH_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+				AND DATE_FORMAT(CS_RLS_SCH_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+			]]>
+				AND CS.CS_RCV_CHK=0
+				AND CS.CS_DLV_CHK=0
+			</when>
+			<!-- 수령 한 일: 수령한 기간 필터링 -->
+			<otherwise>
+			<![CDATA[
+			WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+				AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+			]]>
+				AND CS.CS_RCV_CHK=1
+				AND CS.CS_DLV_CHK=0
+			</otherwise>
+		</choose>
+		
 	</select>
 	
 	<!-- 담당자별 필터링을 위한 담당자 조회. -->
-	<select id="selectAssigneeListByDate" resultMap="employeeMap">
-		SELECT DISTINCT E.EMP_ID, E.EMP_NAME
+	<!-- <select id="selectAssigneeListByDate" resultMap="employeeMap"> -->
+	<select id="selectAssigneeListByDate" resultType="string">
+		<!-- SELECT DISTINCT E.EMP_ID, E.EMP_NAME -->
+		SELECT DISTINCT E.EMP_NAME
 		FROM TB_CMB_SHP CS
 		JOIN TB_EMP E ON (CS.EMP_ID=E.EMP_ID)
-		WHERE DATE_FORMAT(CS.CS_RCV_DT, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
+		<choose>
+		<!-- 전달 할 일: 수령한 기간 필터링 -->
+		<when test='toDo == 1'>
+			<![CDATA[
+			WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+				AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+			]]>
 			AND CS.CS_RCV_CHK=1
 			AND CS.CS_DLV_CHK=0
+		</when>
+		<!-- 전달 한 일: 전달한 기간 필터링 -->
+		<otherwise>
+			<![CDATA[
+			WHERE DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+				AND DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+			]]>
+			AND CS.CS_RCV_CHK=1
+			AND CS.CS_DLV_CHK=1
+		</otherwise>
+		</choose>
 		ORDER BY E.EMP_NAME
 	</select>
 
@@ -151,7 +188,8 @@
 	</select>
 	<select id="selectAReceipt" parameterType="string" resultMap="combineShippingMap">
 		SELECT OI.OI_NO, I.ITM_NAME, OI.ITM_CODE
-			, CS.CS_RCV_URLS, CS.CS_RCV_QTY, CS.CS_RCV_CHK
+			, CS.CS_RCV_URLS, CS.CS_RLS_QTY, CS.CS_RCV_QTY
+			, CS.CS_RCV_CHK
 		FROM TB_CMB_SHP CS
 		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
 		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
@@ -164,22 +202,22 @@
 		SELECT OI.OI_NO
 		FROM TB_CMB_SHP CS
 		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
-		<where>
 			<!-- toDo != 1 : 한 일(수령O && 전달O) (기간 기준: 수령일) -->
 			<choose>
 				<when test="toDo != 1">
-					<!-- id(o) + date(x) : id 기준으로 미완료 전체. -->
+					<where>
+					<!-- id(o) + date(x) : id 기준으로 완료 전체. -->
 					<if test='(!employeeId.equals("")) and (startDate == null)'>
 						AND CS.EMP_ID=#{employeeId}
 					</if>
-					<!-- id(x) + date(o) : 미완료 전체를 기간으로 필터링. -->
+					<!-- id(x) + date(o) : 완료 전체를 기간으로 필터링. -->
 					<if test='(employeeId.equals("")) and (startDate != null)'>
 			 			<![CDATA[
 						AND DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
 						AND DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
 						]]>
 					</if>
-					<!-- id(o) + date(o) : 미완료 전체를 id와 기간으로 필터링. -->
+					<!-- id(o) + date(o) : 완료 전체를 id와 기간으로 필터링. -->
 		 			<if test='(!employeeId.equals("")) and (startDate != null)'>
 						AND CS.EMP_ID=#{employeeId}
 						<![CDATA[
@@ -187,13 +225,15 @@
 						AND DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
 						]]>
 					</if>
-					<!-- WHERE절 불필요. : id(x) + date(x) : 미완료 전체. -->
+					<!-- WHERE절 불필요. : id(x) + date(x) : 완료 전체. -->
 					AND CS.CS_RCV_CHK=1
 					AND CS.CS_DLV_CHK=1
+				</where>
 				</when>
 				
 				<!-- toDo == 1 : 할 일. (수령O && 전달X) (기간 기준: 수령일) -->
 				<otherwise>
+				<where>
 					<!-- id(o) + date(x) : id 기준으로 한 일 전체. -->
 					<if test='(!employeeId.equals("")) and (startDate == null)'>
 						AND CS.EMP_ID=#{employeeId}
@@ -216,14 +256,14 @@
 					<!-- WHERE절 불필요. : id(x) + date(x) : 미완료 전체. -->
 					AND CS.CS_RCV_CHK=1
 					AND CS.CS_DLV_CHK=0
+				</where>
 				</otherwise>
 			</choose>
-		</where>
 	</select>
 	<select id="selectADelivery" parameterType="string" resultMap="combineShippingMap">
 		SELECT OI.ORD_NO, R.RLS_NO, I.ITM_NAME, OI.ITM_CODE
-			, CS.CS_DLV_URLS, CS.CS_DLV_QTY
-			, OI.OI_QTY, CS.CS_DLV_CHK
+			, CS.CS_DLV_URLS, CS.CS_RCV_QTY, CS.CS_DLV_QTY
+			, OI.OI_QTY, CS.CS_DLV_CHK, OI.OI_NO
 		FROM TB_CMB_SHP CS
 		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
 		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
@@ -236,16 +276,24 @@
 		UPDATE TB_CMB_SHP
 		SET CS_RCV_URLS=#{receiveUnrelease}
 			, CS_RCV_CHK=1
+			, CS_RCV_DT=DATE_FORMAT(CURDATE(), '%Y-%m-%d')
 		WHERE OI_NO=#{orderItemNo}
 	</update>
 	
 	<!-- 전달항목 정보 update. -->
-	<update id="updateADelivery" parameterType="combineShipping">
+<!-- 	<update id="updateADelivery" parameterType="combineShipping"> -->
+	<update id="updateADelivery" parameterType="int">
 		UPDATE TB_CMB_SHP
+		SET CS_DLV_QTY=CS_RCV_QTY
+		    , CS_DLV_URLS=0
+		    , CS_DLV_CHK=1
+		    , CS_DLV_DT=DATE_FORMAT(CURDATE(), '%Y-%m-%d')
+		WHERE OI_NO=#{orderItemNo}
+<!-- 		UPDATE TB_CMB_SHP
 		SET CS_DLV_QTY=#{deliveryQuantity}
 		    , CS_DLV_URLS=#{deliveryUnrelease}
 		    , CS_DLV_CHK=#{deliverCheck}
-		WHERE OI_NO=#{orderItemNo}
+		WHERE OI_NO=#{orderItemNo} -->
 	</update>
 	
 	<select id="getReceiptListByDate" resultMap="combineShippingMap">

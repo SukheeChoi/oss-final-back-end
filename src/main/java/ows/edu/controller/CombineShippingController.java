@@ -35,23 +35,15 @@ public class CombineShippingController {
 	//수령 대상 업체 필터링을 위한 조회.
 	//선택된 날짜(parameter로 넘김.) || (parameter X)오늘 날짜에 해당하도록 조회할 것.
 	@PostMapping("/getVendorList")
-	public Map<String, Object> getVendorList(@RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
+	public Map<String, Object> getVendorList(@RequestParam(value="toDo", defaultValue="1") int toDo
+											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
 		Map<String, Object> map = new HashMap<>();
 		List<Vendor> list = new ArrayList<>();
-		log.info("dateList.length : " + dateList.length);
-		if(dateList != null) {
-			if(dateList.length == 1) {
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				String strNowDate = simpleDateFormat.format(new Date()); 
-				log.info("strNowDate : " + strNowDate);
-				String[] strNowDateList = new String[2];
-				strNowDateList[0] = strNowDate;
-				strNowDateList[1] = strNowDate;
-				list = combineShippingService.getVendorList(strNowDateList);
-			} else {
-				list = combineShippingService.getVendorList(dateList);
-			}
-		}
+		log.info("getVendorList - dateList[0] : " + dateList[0]);
+		log.info("getVendorList - dateList.length : " + dateList.length);
+		
+		list = combineShippingService.getVendorList(toDo, dateList);
+		
 		log.info("getVendorList - list.isEmpty() : " + list.isEmpty());
 		if(list.isEmpty()) {
 			map.put("list", null);
@@ -66,16 +58,20 @@ public class CombineShippingController {
 	
 //	'전달'탭 선택시에 표시되는 합배송 담당직원의 목록 조회.
 //	당일의 '전달'사항을 할일로 가진 모든 담당자 조회.
-//	수령1 + 전달0인 행들의 모든 EMP_ID기준으로 중복없이 정렬해서,EMP_ID와 EMP_NAME 전달.
-	@GetMapping("/getAssignee")
-	public Map<String, Object> getAssignee() {
+//	수령1 + 전달0인 행들의 모든 EMP_NAME을 중복없이 정렬해서 전달.
+	@PostMapping("/getAssignee")
+	public Map<String, Object> getAssignee(@RequestParam(value="toDo", defaultValue="1") int toDo
+											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
+		
 		Map<String, Object> map = new HashMap<>();
-		List<Employee> list = combineShippingService.getAssigneeListByDate();
+		List<String> list = combineShippingService.getAssigneeListByDate(toDo, dateList);
+//		List<Employee> list = combineShippingService.getAssigneeListByDate(dateList);
 		if(list.isEmpty()) {
 			map.put("list", null);
 		} else {
 			map.put("list", list);
 		}
+		log.info("map" + map);
 		return map;
 	}
 	
@@ -84,6 +80,9 @@ public class CombineShippingController {
 	public Map<String, Object> geReceiptList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="employeeId", defaultValue="") String employeeId
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
+		log.info("getReceiptList - toDo : " + toDo);
+		log.info("getReceiptList - employeeId : " + employeeId);
+		log.info("getReceiptList - dateList : " + dateList);
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
 		
@@ -112,13 +111,17 @@ public class CombineShippingController {
 	public Map<String, Object> getDeliveryList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="employeeId", defaultValue="") String employeeId
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
+		log.info("getDeliveryList - toDo : " + toDo);
+		log.info("getDeliveryList - employeeId : " + employeeId);
+		log.info("getDeliveryList - dateList : " + dateList);
+		
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
-		if(dateList != null) {
-			//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
-			//날짜 무관하게 처리되지 않은 목록 조회하는 것으로 로직변경 필요.
-			orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(toDo, employeeId, dateList);
-		}
+		
+		//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
+		//날짜 무관하게 처리되지 않은 목록 조회하는 것으로 로직변경 필요.
+		orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(toDo, employeeId, dateList);
+		
 		log.info("getDeliveryList - orderItemNoList : " + orderItemNoList);
 		Map<String, Object> map = new HashMap<>();
 		if(orderItemNoList.isEmpty()) {
@@ -152,11 +155,12 @@ public class CombineShippingController {
 // OI_NO를 기준으로
 // CS_DLV_QTY, CS_DLV_URLS, CS_DLV_CHK update.
 	@PutMapping("/delivery")
-	public Map<String, String> updateDelivery(@RequestBody CombineShipping[] combineShippingList) {
-		log.info("combineShippingList.length : " + combineShippingList.length);
+	public Map<String, String> updateDelivery(@RequestBody int[] orderItemNoList) {
+//		public Map<String, String> updateDelivery(@RequestBody CombineShipping[] combineShippingList) {
+		log.info("orderItemList.length : " + orderItemNoList.length);
 
 		Map<String, String> resultMap = new HashMap<>();
-		String result = combineShippingService.updateDelivery(combineShippingList);
+		String result = combineShippingService.updateDelivery(orderItemNoList);
 		resultMap.put("result", result);
 		return resultMap;
 	}

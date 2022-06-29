@@ -1,16 +1,17 @@
 package ows.edu.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
 import ows.edu.dto.Client;
-import ows.edu.dto.Pager;
 
 @Mapper
 public interface ClientDao {
-  public Client searchByNo(int clientNo);
-  
-  public int count();
-  public List<String> selectByPage(Pager pager);
+	public List<Client> selectList(Map<String, Object> map);
+	
+	public List<Client> selectListAll(Map<String, Object> map);
+	
+	public int statusCnt(int status);
 }

@@ -2,20 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.ReleaseInspectionDao">
-	
- 	<resultMap id="afterPickingMap" type="releaseInspection">
-		<result property="releaseInspectionQuantity" column="RI_QTY"/>
-		<result property="unReleased" column="RI_URLS"/>
-		<result property="employeeName" column="RI_EMP_NAME"/>			
-		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
-		<result property="receiptePrintDate" column="RI_RCPT_PRT_DT"/>
-		<result property="releaseInspectionDate" column="RI_DT"/>
-		<result property="releaseInspectionNote" column="RI_NT"/>
-		
+
+ 	<resultMap id="afterPickingMap" type="afterPicking">
+		<result property="strReleaseInspectionUnreleased" column="RI_URLS"/>
+		<result property="strPackingUnreleased" column="PAC_URLS"/>
+		<result property="strBoxQuantity" column="PAC_BX_QTY"/>
+ 	
+ 	
+		<association property="releaseInspection" javaType="releaseInspection">
+			<result property="releaseInspectionQuantity" column="RI_QTY"/>
+			<!-- <result property="unReleased" column="RI_URLS"/> -->
+			<result property="employeeName" column="RI_EMP_NAME"/>			
+			<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
+			<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
+			<result property="releaseInspectionDate" column="RI_DT"/>
+			<result property="releaseInspectionNote" column="RI_NT"/>
+			<result property="orderItemNo" column="OI_NO"/>		
+		</association>
 		<association property="release" javaType="release">
 			<result property="releaseNo" column="RLS_NO"/>
 			<result property="invoiceCode" column="RLS_RLS_IVC_CODE"/>
-			<result property="employeeName" column="RLS_EMP_NAME"/>			
+			<result property="employeeName" column="RLS_EMP_NAME"/>	
 			<result property="shippingCompany" column="RLS_SHP_CPN"/>			
 			<result property="note" column="RLS_RLS_NT"/>
 		</association>
@@ -25,7 +32,7 @@
 		</association>
 		<association property="picking" javaType="picking">
 			<result property="pickingNo" column="PIC_NO"/>
-			
+			<result property="pickingQuantity" column="PIC_QTY"/>
 		</association>
 		<association property="vendor" javaType="vendor">
 			<result property="vendorName" column="V_NAME"/>
@@ -37,9 +44,13 @@
 			<result property="orderNo" column="ORD_NO"/>			
 		</association>
 		<association property="packing" javaType="packing">
-			<result property="unrelease" column="PAC_URLS"/>			
-			<result property="boxQty" column="PAC_BX_QTY"/>			
-			<result property="note" column="PAC_NT"/>		
+			<!-- <result property="unrelease" column="PAC_URLS"/> -->		
+			<!-- <result property="strUnreleased" column="PAC_URLS"/> -->			
+			<!-- <result property="boxQty" column="PAC_BX_QTY"/> -->		
+			<result property="note" column="PAC_NT"/>
+		</association>
+		<association property="client" javaType="client">
+			<result property="clientName" column="CLT_NAME"/>		
 		</association>
 	</resultMap>
 	
@@ -83,13 +94,13 @@
 	</select>
 
  	<select id="selectAfterPickingList" resultMap="afterPickingMap">
-		SELECT R.RLS_NO, I.ITM_NAME, I.ITM_CODE, PI.PIC_NO
-			, RI.RI_QTY, RI_URLS, PA.PAC_URLS, V.V_NAME, O.ORD_SHP_DEST
+		SELECT R.RLS_NO, I.ITM_NAME, I.ITM_CODE, PI.PIC_NO, PI.PIC_QTY
+			, RI.RI_QTY, IFNULL(RI.RI_URLS, ' ') RI_URLS, IFNULL(PA.PAC_URLS, ' ') PAC_URLS, V.V_NAME, O.ORD_SHP_DEST
 		    , O.ORD_SHP_CAT, O.ORD_SHP_WAY, E.EMP_NAME RI_EMP_NAME
-		    , RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_DT, PA.PAC_BX_QTY
+		    , RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_DT, IFNULL(PA.PAC_BX_QTY, ' ') PAC_BX_QTY
 		    , R.RLS_EMP_NAME, R.RLS_SHP_CPN, R.RLS_RLS_IVC_CODE, IFNULL(RI.RI_NT, ' ') RI_NT
 		    , IFNULL(PA.PAC_NT, ' ') PAC_NT, IFNULL(R.RLS_RLS_NT, ' ') RLS_RLS_NT
-		    , R.RLS_DN, O.ORD_NO, C.CLT_NAME
+		    , R.RLS_DN, O.ORD_NO, C.CLT_NAME, RI.OI_NO
 		FROM TB_ORD O
 		JOIN (SELECT RLS.RLS_NO RLS_NO, RLS.ORD_NO RLS_ORD_NO, EMP.EMP_NAME RLS_EMP_NAME
 					, RLS_SHP_CPN, RLS.RLS_IVC_CODE RLS_RLS_IVC_CODE, RLS.RLS_NT RLS_RLS_NT
@@ -117,57 +128,57 @@
 			ON (C.CLT_NO=O.CLT_NO)
 <where>
 	<!-- 배송구분 필터링: 전체/일반/긴급 -->
-<!--    	<if test='(shippingCategory != null) and (shippingCategory.equals("일반"))'>
+   	<if test='shippingCategory.equals("일반")'>
 		AND O.ORD_SHP_CAT='일반'
 	</if>
-	<if test='(shippingCategory != null) and (shippingCategory.equals("긴급"))'>
+	<if test='shippingCategory.equals("긴급")'>
 		AND O.ORD_SHP_CAT='긴급'
-	</if> -->
+	</if>
 	<!-- 배송방식 필터링: 전체/오스템/합배송 -->
- <!--   	<if test='(shippingWay != null) and (shippingWay.equals("오스템"))'>
+   	<if test='shippingWay.equals("오스템")'>
 		AND O.ORD_SHP_WAY='오스템'
 	</if>
-	<if test='(shippingWay != null) and (shippingWay.equals("합배송"))'>
+	<if test='shippingWay.equals("합배송")'>
 		AND O.ORD_SHP_WAY='합배송'
-	</if> -->
+	</if>
 	<!-- 출고/미출고 필터링 -->
-<!--    	<if test='(released != null) and (released.equals("출고"))'>
+   	<!-- <if test='(!released.equals("")) and (released.equals("출고"))'> -->
+  	<if test='released.equals("출고")'>
 		AND R.RLS_DN=1
 	</if>
-	<if test='(released != null) and (released.equals("미출고"))'>
-		AND R.RLS_DN IS NULL
-	</if> -->
+	<!-- <if test='(!released.equals("")) and (released.equals("미출고"))'> -->
+	<if test='released.equals("미출고")'>
+		AND ( R.RLS_DN!=1 OR ISNULL(R.RLS_DN) )
+	</if>
 	
-	<!-- assignee 필수여야 작동하는 이유는..? -->
 	<!-- 출고검수/패킹 담당자 필터링 -->
-<!--     <if test='assignee != null'>
-		AND CONCAT(E.EMP_NAME, '') LIKE CONCAT('%',#{assignee},'%')
-	</if> -->
+    <if test='!assignee.equals("")'>
+		AND (E.EMP_NAME = #{assignee} OR R.RLS_EMP_NAME = #{assignee})
+	</if>
 	
 	<!-- 주문번호 필터링 -->
 	<!-- <if test='orderNo != -1'> -->
-	<!-- <if test='!strOrderNo.equals("-1")'> -->
- 		<!-- AND CONCAT(O.ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%') -->
-<!--    		AND CONCAT(O.ORD_NO, '') LIKE CONCAT('%',#{strOrderNo},'%')
-	</if> -->
+ 	<if test='!strOrderNo.equals("-1")'>
+ 		AND CONCAT(O.ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%')
+   		AND CONCAT(O.ORD_NO, '') LIKE CONCAT('%',#{strOrderNo},'%')
+	</if>
 	
 	<!-- 거래처 필터링 -->
-<!--    	<if test='clientName != null'>
+   	<if test='!clientName.equals("")'>
 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
-	</if> -->
+	</if>
 	
 	<!-- 배송지 필터링 -->
- <!--   	<if test='shippingDestination != null'>
+   	<if test='!shippingDestination.equals("")'>
  		AND O.ORD_SHP_DEST LIKE CONCAT('%',#{shippingDestination},'%')
- 	</if> -->
+ 	</if>
  	<!-- 업체명으로 필터링 -->
-<!--    	<if test='vendorName != null'>
+   	<if test='!vendorName.equals("")'>
    		AND V.V_NAME LIKE CONCAT('%',#{vendorName},'%')
-   	</if> -->
+   	</if> 
 	
 </where>
 		ORDER BY R.RLS_NO, I.ITM_NAME
  	</select>
 </mapper>
-
 
