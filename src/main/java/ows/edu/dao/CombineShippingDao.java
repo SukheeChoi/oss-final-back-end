@@ -22,10 +22,16 @@ public interface CombineShippingDao {
 												, @Param("startDate") String startDate
 												, @Param("endDate") String endDate);
 	
+	public int selectCountAllReceipt(@Param("toDo") int toDo
+									, @Param("employeeId") String employeeId
+									, @Param("startDate") String startDate
+									, @Param("endDate") String endDate);
+	
 	public List<String> selectReceiptOrderItemNoList(@Param("toDo") int toDo
 													, @Param("employeeId") String employeeId
 													, @Param("startDate") String startDate
-													, @Param("endDate") String endDate);
+													, @Param("endDate") String endDate
+													, @Param("pager") Pager pager);
 	public CombineShipping selectAReceipt(String orderItemNo);
 	
 	public int selectCountAllDelivery(@Param("toDo") int toDo
@@ -46,7 +52,6 @@ public interface CombineShippingDao {
 	
 	// 전달여부 update.
 	public int updateADelivery(int orderItemNo);
-
 
 //	public List<CombineShipping> getReceiptListByDate(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }

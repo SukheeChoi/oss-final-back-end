@@ -56,25 +56,57 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	// '수령' 탭 선택된 경우.
 	@Override
-	public List<String> getReceiptOrderItemNoList(int toDo, String employeeId, String[] dateList) {
+	public Map<String, Object> getReceiptList(int toDo
+									, String employeeId
+									, String[] dateList
+									, int pageNo
+		) {
 		log.info("실행");
+		
 		String startDate = null;
 		String endDate = null;
 		if(dateList.length == 2) {
 			startDate = dateList[0];
 			endDate = dateList[1];
 		}
-		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(toDo, employeeId, startDate, endDate);
+		// pagination을 위한 Pager객체 생성.
+		int totalRows = combineShippingDao
+				.selectCountAllReceipt(
+					toDo, employeeId, startDate, endDate
+				);
+		Pager pager = new Pager(20, 10, totalRows, pageNo);
 		
-		return list;
+		List<String> orderItemNoList = combineShippingDao
+									.selectReceiptOrderItemNoList(
+											toDo
+											, employeeId
+											, startDate
+											, endDate
+											, pager
+									);
+		
+		Map<String, Object> map = new HashMap<>();
+		if(orderItemNoList.isEmpty()) {
+			map.put("receiptList", null);
+		} else {
+			List<CombineShipping> receiptList = new ArrayList<>();
+			for(String orderItemNo : orderItemNoList) {
+				log.info("orderItemNo : " + orderItemNo);
+				receiptList.add(combineShippingDao.selectAReceipt(orderItemNo));
+			}
+			log.info("receiptList : " + receiptList);
+			map.put("receiptList", receiptList);
+		}
+		
+		return map;
 	}
 	
-	@Override
-	public CombineShipping getAReceipt(String orderItemNo) {
-		log.info("실행");
-		CombineShipping combineShipping = combineShippingDao.selectAReceipt(orderItemNo);
-		return combineShipping;
-	}
+//	@Override
+//	public CombineShipping getAReceipt(String orderItemNo) {
+//		log.info("실행");
+//		CombineShipping combineShipping = combineShippingDao.selectAReceipt(orderItemNo);
+//		return combineShipping;
+//	}
 	// '전달' 탭 선택된 경우.
 	@Override
 	public Map<String, Object> getDeliveryList(int toDo, String employeeId

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.CombineShipping;
-import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
 
@@ -71,31 +70,21 @@ public class CombineShippingController {
 	@PostMapping("/getReceiptList")
 	public Map<String, Object> geReceiptList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="employeeId", defaultValue="") String employeeId
-											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
+											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
+											, @RequestParam(value="pageNo", defaultValue="1") int pageNo){
 		log.info("getReceiptList - toDo : " + toDo);
 		log.info("getReceiptList - employeeId : " + employeeId);
 		log.info("getReceiptList - dateList : " + dateList);
 		// 필요한 OI_NO 조회해서 List로 받아옴.
-		List<String> orderItemNoList = new ArrayList<>();
-		
-		if(dateList != null) {
-			log.info("orderItemNoList : " + orderItemNoList);
-			orderItemNoList = combineShippingService.getReceiptOrderItemNoList(toDo, employeeId, dateList);
-		}
-		
 		Map<String, Object> map = new HashMap<>();
-		if(orderItemNoList.isEmpty()) {
-			map.put("receiptList", null);
-		} else {
-			List<CombineShipping> receiptList = new ArrayList<>();
-			for(String orderItemNo : orderItemNoList) {
-				log.info("orderItemNo : " + orderItemNo);
-				receiptList.add(combineShippingService.getAReceipt(orderItemNo));
-			}
-			log.info("receiptList : " + receiptList);
-			map.put("receiptList", receiptList);
-		}
 		
+		map = combineShippingService
+				.getReceiptList(
+					toDo
+					, employeeId
+					, dateList
+					, pageNo
+				);
 		return map;
 	}
 //	선택된 담당자를 기준으로 전달 목록 조회.
@@ -108,27 +97,7 @@ public class CombineShippingController {
 		log.info("getDeliveryList - toDo : " + toDo);
 		log.info("getDeliveryList - employeeId : " + employeeId);
 		log.info("getDeliveryList - dateList : " + dateList);
-		
-		// 필요한 OI_NO 조회해서 List로 받아옴.
-//		List<String> orderItemNoList = new ArrayList<>();
-		
-		//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
-//		orderItemNoList = combineShippingService.getDeliveryOrderItemNoList(toDo, employeeId, dateList);
-		
-//		log.info("getDeliveryList - orderItemNoList : " + orderItemNoList);
-//		Map<String, Object> map = new HashMap<>();
-//		if(orderItemNoList.isEmpty()) {
-//			map.put("deliveryList", null);
-//		} else {
-//			List<CombineShipping> deliveryList = new ArrayList<>();
-//			for(String orderItemNo : orderItemNoList) {
-//				log.info("orderItemNo : " + orderItemNo);
-//				deliveryList.add(combineShippingService.getADelivery(orderItemNo));
-//				log.info("deliveryList : " + deliveryList);
-//			}
-//			map.put("deliveryList", deliveryList);
-//		}
-		
+
 		Map<String, Object> map = combineShippingService
 									.getDeliveryList(
 											toDo, employeeId, dateList
