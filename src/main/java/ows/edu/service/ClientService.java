@@ -1,34 +1,35 @@
 package ows.edu.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.ClientDao;
-import ows.edu.dto.Pager;
+import ows.edu.dto.Client;
 
 @Service
-@Log4j2
 public class ClientService {
 	@Resource
 	ClientDao clientDao;
 	
-//	public List<Client> getlist(String clientName) {
-//		List<Client> list = new ArrayList<>();
-//	    list.addAll(clientDao.select(clientName));
-////	    log.info("ClientService : " + clientName);
-//	    log.info("ClientService : " + list);
-//	    return list;
-//	};
-	
-	public int count() {
-		return clientDao.count();
+	//
+	public List<Client> selectList(Map<String, Object> map){
+		return clientDao.selectList(map);
 	}
 	
-	public List<String> selectByPage(Pager pager){
-		return clientDao.selectByPage(pager);
+	public List<Client> selectListAll(Map<String, Object> map){
+		return clientDao.selectListAll(map);
+	}
+	
+	public List<Integer> statusCnt() {
+		List<Integer> list = new ArrayList<>();
+		for(int i=1; i<=5; i++) {
+			list.add(clientDao.statusCnt(i));
+		}
+		return list;
 	}
 }
