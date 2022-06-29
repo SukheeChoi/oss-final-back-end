@@ -39,19 +39,14 @@ public class CombineShippingController {
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
 		Map<String, Object> map = new HashMap<>();
 		List<Vendor> list = new ArrayList<>();
-		log.info("getVendorList - dateList[0] : " + dateList[0]);
-		log.info("getVendorList - dateList.length : " + dateList.length);
 		
 		list = combineShippingService.getVendorList(toDo, dateList);
 		
-		log.info("getVendorList - list.isEmpty() : " + list.isEmpty());
 		if(list.isEmpty()) {
 			map.put("list", null);
 		} else {
 			map.put("list", list);
 		}
-		log.info("getVendorList : " + list);
-		log.info("getVendorList.size() : " + list.size());
 		
 		return map;
 	}

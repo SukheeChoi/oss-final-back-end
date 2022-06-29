@@ -84,7 +84,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 			, String vendorName)
 	{
 		
-		List<String> list = afterPickingViewDao.selectReleaseInspectionEmployeeName(
+		List<String> list = afterPickingViewDao
+			.selectReleaseInspectionEmployeeName(
 				shippingCategory
 				, shippingWay
 				, released
@@ -92,7 +93,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				, clientName
 				, shippingDestination
 				, vendorName
-		);
+			);
 		
 		return list;
 	}
@@ -137,28 +138,6 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		
 		, Pager pager
 	) {
-//		String strOrderNo = Integer.toString(orderNo);
-//		log.info("strOrderNo : " + strOrderNo);
-		
-//		log.info("assignee : " + assignee);
-//		log.info("clientName : " + clientName);
-//		log.info("shippingDestination : " + shippingDestination);
-//		List<AfterPicking> list = releaseInspectionDao
-//			.selectAfterPickingList(
-//				shippingCategory
-//				, shippingWay
-//				, released
-//				, assignee
-////				, orderNo
-//				
-//				, strOrderNo
-//				
-//				, clientName
-//				, shippingDestination
-//				, vendorName
-//			);
-		
-		///
 //		List<AfterPickingView> ap = afterPickingViewDao.selectAll();
 		List<HashMap<String, String>> ap = afterPickingViewDao.selectAll(
 				shippingCategory
@@ -166,9 +145,6 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				, released
 				, assignee
 				, orderNo
-				
-//				, strOrderNo
-				
 				, clientName
 				, shippingDestination
 				, vendorName
