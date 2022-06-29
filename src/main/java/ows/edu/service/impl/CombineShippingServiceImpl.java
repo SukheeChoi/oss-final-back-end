@@ -1,6 +1,5 @@
 package ows.edu.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -22,24 +21,48 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	CombineShippingDao combineShippingDao;
 	
 	@Override
-	public List<Vendor> getVendorList(String[] strNowDateList) {
-		List<Vendor> list = combineShippingDao.getVendorList(strNowDateList);
+	public List<Vendor> getVendorList(int toDo, String[] dateList) {
+		log.info("실행");
+		String startDate = null;
+		String endDate = null;
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		List<Vendor> list = combineShippingDao.getVendorList(toDo, startDate, endDate);
 		return list;
 	}
 	
 	// 담당자 필터링을 위한 조회.
 	@Override
-	public List<Employee> getAssigneeListByDate() {
+	public List<String> getAssigneeListByDate(int toDo, String[] dateList) {
+//		public List<Employee> getAssigneeListByDate(String[] dateList) {
 		log.info("실행");
-		List<Employee> list = combineShippingDao.selectAssigneeListByDate();
+		String startDate = null;
+		String endDate = null;
+		log.info("dateList.length" + dateList.length);
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		List<String> list = combineShippingDao.selectAssigneeListByDate(toDo, startDate, endDate);
+//		List<Employee> list = combineShippingDao.selectAssigneeListByDate(startDate, endDate);
+		log.info("service getAssigneeListByDate - list : " + list);
 		return list;
 	}
 	
 	// '수령' 탭 선택된 경우.
 	@Override
-	public List<String> getReceiptOrderItemNoList(String employeeId, String[] dateList) {
+	public List<String> getReceiptOrderItemNoList(int toDo, String employeeId, String[] dateList) {
 		log.info("실행");
-		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(employeeId, dateList);
+		String startDate = null;
+		String endDate = null;
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(toDo, employeeId, startDate, endDate);
+		
 		return list;
 	}
 	
@@ -51,9 +74,17 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	}
 	// '전달' 탭 선택된 경우.
 	@Override
-	public List<String> getDeliveryOrderItemNoList(String employeeId, String[] dateList) {
+	public List<String> getDeliveryOrderItemNoList(int toDo, String employeeId, String[] dateList) {
 		log.info("실행");
-		List<String> list = combineShippingDao.selectDeliveryOrderItemNoList(employeeId, dateList);
+		String startDate = null;
+		String endDate = null;
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		log.info("getDeliveryOrderItemNoList - employeeId.getClass().getName() : " + employeeId.getClass().getName());
+//		log.info("getDeliveryOrderItemNoList - startDate.getClass().getName(): " + startDate.getClass().getName());
+		List<String> list = combineShippingDao.selectDeliveryOrderItemNoList(toDo, employeeId, startDate, endDate);
 		return list;
 	}
 	
@@ -64,25 +95,42 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		return combineShipping;
 	}
 
-	// 전달여부 update.
+	// 수령여부 update: 미출고, 수령여부 컬럼.
 	@Override
-	public String updateDelivery(CombineShipping[] combineShippingList) {
-		log.info("실행");
-		String result = null;
+	public String updateReceipt(CombineShipping[] combineShippingList) {
+		String result = "fail";
 		int totalAffectedRows = 0;
 		for(CombineShipping combineShipping : combineShippingList) {
-			int affectedRowNo = combineShippingDao.updateADelivery(combineShipping);
+			int affectedRowNo = combineShippingDao.updateAReceipt(combineShipping);
 			if(affectedRowNo == 1) {
 				totalAffectedRows++;				
 			}
 		}
 		if(totalAffectedRows == combineShippingList.length) {
 			result = "success";
-		} else {
-			result = "fail";
+		}
+		
+		return result;
+	}
+	
+	// 전달여부 update.
+	@Override
+	public String updateDelivery(int[] orderItemNoList) {
+		log.info("실행");
+		String result = "fail";
+		int totalAffectedRows = 0;
+		for(int orderItemNo : orderItemNoList) {
+			int affectedRowNo = combineShippingDao.updateADelivery(orderItemNo);
+			if(affectedRowNo == 1) {
+				totalAffectedRows++;				
+			}
+		}
+		if(totalAffectedRows == orderItemNoList.length) {
+			result = "success";
 		}
 		return result;
 	}
+
 
 //	@Override
 //	public List<CombineShipping> getReceiptListByDate(String[] dateList) {

@@ -1,6 +1,8 @@
 package ows.edu.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -14,15 +16,20 @@ public class ClientService {
 	@Resource
 	ClientDao clientDao;
 	
-//	public int count() {
-//		return clientDao.count();
-//	}
-	
-	public List<Client> selectList(){
-		return clientDao.selectList();
+	//
+	public List<Client> selectList(Map<String, Object> map){
+		return clientDao.selectList(map);
 	}
 	
-	public int statusCnt(int status) {
-		return clientDao.statusCnt(status);
+	public List<Client> selectListAll(Map<String, Object> map){
+		return clientDao.selectListAll(map);
+	}
+	
+	public List<Integer> statusCnt() {
+		List<Integer> list = new ArrayList<>();
+		for(int i=1; i<=5; i++) {
+			list.add(clientDao.statusCnt(i));
+		}
+		return list;
 	}
 }

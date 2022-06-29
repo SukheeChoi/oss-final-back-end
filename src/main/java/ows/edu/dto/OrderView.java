@@ -14,11 +14,16 @@ public class OrderView {
 	private String itemName;
 	private String itemCode;
 	private int orderItemQuantity;
-	private String orderCategory;
+	private String shippingCategory;
 	private String VendorName;
 	private String PickingDirectionAttempt;
 	private String PickingDirectionDate;
 	private String PickingDirectionQuantity;
 	private String PickingDirectionUnrelease;
+	private String orderShippingWay;
+	private String orderCheckDate;
+	private int releaseQuantity;
+	private String releaseScheduleDate;
+	private String recieveDate;
 	
 }
