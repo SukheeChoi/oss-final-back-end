@@ -82,20 +82,6 @@ public class AfterPickingController {
 		log.info("shippingDestination : " + shippingDestination);
 		log.info("vendorName : " + vendorName);
 		log.info("pageNo : " + pageNo);
-		// pagination을 위한 목록의 전체 행 수 조회.
-		int totalRows = releaseInspectionService
-			.getTotalRows(
-				shippingCategory
-				, shippingWay
-				, released
-				, assignee
-				, orderNo
-				, clientName
-				, shippingDestination
-				, vendorName
-			);
-		// pagination을 위한 Pager 객체 생성.
-		Pager pager = new Pager(10, 10, totalRows, pageNo);
 		
 		Map<String, Object> map = new HashMap<>();
 //		List<AfterPicking> list = releaseInspectionService
@@ -110,7 +96,7 @@ public class AfterPickingController {
 					, shippingDestination
 					, vendorName
 					
-					, pager
+					, pageNo
 				);
 		map.put("list", list);
 		return map;
