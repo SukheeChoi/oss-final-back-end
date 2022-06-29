@@ -52,13 +52,13 @@
 		<result property="placingOrderNo" column="PO_NO"/>
 		<result property="lotCode" column="LOT_CODE"/>
 		<result property="recievedQuantity" column="POI_QTY"/>
-		<result property="InspectionQuantity" column="POI_INSP_QTY"/>
-		<result property="PassedItemQuantity" column="POI_PAS_ITM_QTY"/>
-		<result property="MissingItemQuantity" column="POI_MIS_ITM_QTY"/>
-		<result property="DamagedItemQuantity" column="POI_DMG_QTY"/>
-		<result property="ETCQuantity" column="POI_ETC_QTY"/>
+		<result property="inspectionQuantity" column="POI_INSP_QTY"/>
+		<result property="passedItemQuantity" column="POI_PAS_ITM_QTY"/>
+		<result property="missingItemQuantity" column="POI_MIS_ITM_QTY"/>
+		<result property="damagedItemQuantity" column="POI_DMG_ITM_QTY"/>
+		<result property="etcQuantity" column="POI_ETC_QTY"/>
 		<result property="Accepted" column="POI_ACP"/>
-		<result property="LabelingItemQuantity" column="POI_LBL_ITM_QTY"/>
+		<result property="labelingItemQuantity" column="POI_LBL_ITM_QTY"/>
 	</resultMap>
 	
 	<resultMap id="InspectionLabelingStatusMap" type="InspectionLabelingStatus">
