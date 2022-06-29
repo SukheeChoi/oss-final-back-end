@@ -11,16 +11,32 @@
 		<result property="itemCode" column="ITM_CODE"/>
 		<result property="orderItemQuantity" column="OI_QTY"/>
 		<result property="shippingCategory" column="ORD_SHP_CAT"/>
-		<result property="VendorName" column="V_NAME"/>
-		<result property="PickingDirectionAttempt" column="PD_ATM"/>
-		<result property="PickingDirectionDate" column="PD_DT"/>
-		<result property="PickingDirectionQuantity" column="PD_QTY"/>
-		<result property="PickingDirectionUnrelease" column="PD_URLS"/>
+		<result property="vendorName" column="V_NAME"/>
+		
+		<result property="pickingDirectionAttempt" column="PD_ATM"/>
+		<result property="pickingDirectionDate" column="PD_DT"/>
+		<result property="pickingDirectionQuantity" column="PD_QTY"/>
+		<result property="pickingDirectionUnrelease" column="PD_URLS"/>
+		
+		<result property="pickingEmployee" column="PIC_NAME"/>
+		<result property="pickingQuantity" column="PIC_QTY"/>
+		<result property="pickingDate" column="PIC_DT"/>
+		<result property="pickingUnrelease" column="PIC_URLS"/>
+		
 		<result property="orderShippingWay" column="ORD_SHP_WAY"/>
 		<result property="orderCheckDate" column="CS_ORD_CHK_DT"/>
 		<result property="releaseQuantity" column="CS_RCV_QTY"/>
 		<result property="releaseScheduleDate" column="CS_RLS_SCH_DT"/>
 		<result property="recieveDate" column="CS_RCV_DT"/>
+		
+		<result property="packingInspectionEmployee" column="RI_NAME"/>
+		<result property="inspectionDate" column="RI_DT"/>
+		
+		<result property="releaseEmployee" column="RLS_NAME"/>
+		<result property="releaseDate" column="RLS_DT"/>
+		
+		<result property="transferEmployee" column="TRF_NAME"/>
+		<result property="transferDate" column="TRF_DT"/>
 	</resultMap>
 	
 	<!-- 상단 현황 전체 건수 -->
@@ -45,7 +61,8 @@
 	
 	<!-- 상단 미출고 전체 건수 -->
 	<select id="countunleased" resultType="int">
-		SELECT count(*) FROM osstem.ord_view WHERE PD_URLS = 1
+		SELECT COUNT(*) FROM osstem.ord_view
+		WHERE PD_URLS >= 1 OR PIC_URLS >= 1 OR RI_URLS >= 1 OR RLS_URLS >= 1 OR TRF_URLS >= 1
 	</select>
 	
 	<select id="select" resultMap="orderViewMap">
