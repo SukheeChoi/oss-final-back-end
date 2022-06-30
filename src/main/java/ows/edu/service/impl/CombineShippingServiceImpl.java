@@ -86,17 +86,18 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 									);
 		
 		Map<String, Object> map = new HashMap<>();
-		if(orderItemNoList.isEmpty()) {
-			map.put("receiptList", null);
-		} else {
-			List<CombineShipping> receiptList = new ArrayList<>();
-			for(String orderItemNo : orderItemNoList) {
-				log.info("orderItemNo : " + orderItemNo);
-				receiptList.add(combineShippingDao.selectAReceipt(orderItemNo));
-			}
-			log.info("receiptList : " + receiptList);
-			map.put("receiptList", receiptList);
-		}
+//		if(orderItemNoList.isEmpty()) {
+//			map.put("receiptList", null);
+//		} else {
+//			List<CombineShipping> receiptList = new ArrayList<>();
+//			for(String orderItemNo : orderItemNoList) {
+//				log.info("orderItemNo : " + orderItemNo);
+//				receiptList.add(combineShippingDao.selectAReceipt(orderItemNo));
+//			}
+//			log.info("receiptList : " + receiptList);
+//			map.put("receiptList", receiptList);
+//		}
+			map.put("receiptList", orderItemNoList);
 		
 		return map;
 	}
@@ -125,26 +126,25 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 							);
 		Pager pager = new Pager(20, 10, totalRows, pageNo);
 		
-		// 필요한 OI_NO 조회해서 List로 받아옴.
-		//날짜 필터링이 선택되지 않은 경우이므로, 당일의 정보만을 조회.
-		List<String> orderItemNoList = new ArrayList<>();
+		List<CombineShipping> orderItemNoList = new ArrayList<>();
 		orderItemNoList = combineShippingDao
 				.selectDeliveryOrderItemNoList(toDo, employeeId
 				, startDate, endDate
 				, pager);
 		
 		Map<String, Object> map = new HashMap<>();
-		if(orderItemNoList.isEmpty()) {
-			map.put("deliveryList", null);
-		} else {
-			List<CombineShipping> deliveryList = new ArrayList<>();
-			for(String orderItemNo : orderItemNoList) {
-				log.info("orderItemNo : " + orderItemNo);
-				deliveryList.add(combineShippingDao.selectADelivery(orderItemNo));
-				log.info("deliveryList : " + deliveryList);
-			}
-			map.put("deliveryList", deliveryList);
-		}
+//		if(orderItemNoList.isEmpty()) {
+//			map.put("deliveryList", null);
+//		} else {
+//			List<CombineShipping> deliveryList = new ArrayList<>();
+//			for(String orderItemNo : orderItemNoList) {
+//				log.info("orderItemNo : " + orderItemNo);
+//				deliveryList.add(combineShippingDao.selectADelivery(orderItemNo));
+//				log.info("deliveryList : " + deliveryList);
+//			}
+//			map.put("deliveryList", deliveryList);
+//		}
+			map.put("deliveryList", orderItemNoList);
 		
 		
 		return map;

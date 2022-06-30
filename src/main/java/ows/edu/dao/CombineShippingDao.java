@@ -40,7 +40,7 @@ public interface CombineShippingDao {
 									, @Param("endDate") String endDate);
 
 	
-	public List<String> selectDeliveryOrderItemNoList(@Param("toDo") int toDo
+	public List<CombineShipping> selectDeliveryOrderItemNoList(@Param("toDo") int toDo
 													, @Param("employeeId") String employeeId
 													, @Param("startDate") String startDate
 													, @Param("endDate") String endDate
