@@ -78,7 +78,7 @@ public class OrderController {
                          , @RequestParam(value="searchSelected", defaultValue = "null") String searchSelected
                          , @RequestParam(value="searchContent", defaultValue = "null") String searchContent
                          , @RequestParam(defaultValue = "1") int pageNo
-                         , @RequestParam(defaultValue = "17") int pageSize) {
+                         , @RequestParam(defaultValue = "5") int pageSize) {
     
     OrderFilter orderfilter = new OrderFilter();
     orderfilter.setCompany(company);

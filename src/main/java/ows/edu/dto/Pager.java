@@ -45,7 +45,7 @@ public class Pager {
 		startRowIndex = startRowNo - 1;
 		endRowNo = pageNo * rowsPerPage;
 		endRowIndex = endRowNo - 1;
-		offset= (pageNo - 1) * rowsPerPage ;
+		offset = (pageNo - 1) * rowsPerPage ;
 	}
 }
 
