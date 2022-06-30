@@ -42,5 +42,8 @@ public interface ReleaseInspectionDao {
 	
 	//스캔
 	public ReleaseInspection scan(String releaseCode);
+	
+	//출고검수수량 업데이트
+	public int update(Map<String, Integer> map);
 }
 

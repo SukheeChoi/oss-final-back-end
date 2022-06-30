@@ -14,6 +14,7 @@ import ows.edu.dao.PackingDao;
 import ows.edu.dao.PickingDirectionDao;
 import ows.edu.dao.ReleaseInspectionDao;
 import ows.edu.dao.ReleaseInspectionViewDao;
+import ows.edu.dto.Box;
 import ows.edu.dto.Pager;
 import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleaseInspectionView;
@@ -171,6 +172,23 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	public ReleaseInspection scan(String release) {
 		// TODO Auto-generated method stub
 		return releaseInspectionDao.scan(release);
+	}
+
+	@Override
+	public int update(List<Box> boxArrays) {
+		int updateCount = 0;
+		System.out.println("========update=========");
+		for(Box boxArray : boxArrays) {
+			
+			Map<String, Integer> map = new HashMap<>();
+			map.put("releaseInspectionQty", boxArray.getReleaseInspectionQty());
+			System.out.println(boxArray.getReleaseInspectionQty());
+			map.put("orderItemNo", boxArray.getOrderItemNo());
+			System.out.println(boxArray.getOrderItemNo());
+			updateCount =+ releaseInspectionDao.update(map);
+		}
+			
+		return updateCount; 
 	}
 	
 }

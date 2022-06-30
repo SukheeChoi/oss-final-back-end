@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ows.edu.dao.ReleaseInspectionViewDao;
+import ows.edu.dto.Box;
 import ows.edu.dto.Pager;
 import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleaseInspectionView;
@@ -47,4 +48,7 @@ public interface ReleaseInspectionService {
 	
 	//스캔
 	public ReleaseInspection scan(String release);
+	
+	//출고검수수량 업데이트
+	public int update(List<Box> boxArray);
 }

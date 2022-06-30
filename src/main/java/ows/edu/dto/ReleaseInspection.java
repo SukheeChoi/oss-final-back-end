@@ -10,7 +10,7 @@ public class ReleaseInspection {
 	private int releaseInspectionQuantity;
 	private Date releaseInspectionDate;
 	private Date releasePrintDate;
-	private Date receiptePrintDate;
+	private Date receiptPrintDate;
 	private String employeeId;
 	private long releaseInspectionBarcode;
 	private String releaseInspectionNote;
@@ -27,5 +27,5 @@ public class ReleaseInspection {
 	private Packing packing;
 	
 	private Client client;
-
+ 
 }

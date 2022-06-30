@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.BoxDao">
+
+	<insert id="insert" parameterType="box">
+<!-- 		update tb_box set
+			rls_code = #{releaseCode},
+			box_num = #{boxNumber},
+			itm_code = #{itemCode},
+			itm_name = #{itemName},
+			ri_qty = #{releaseInspectionQty},
+			pic_qty = #{pickingQty},
+			oi_qty = #{pickingDone} -->
+			
+		insert into tb_box(rls_code, box_num, itm_code, itm_name, ri_qty, pic_qty, oi_qty, oi_no)
+		values (#{releaseCode},#{boxNumber},#{itemCode},#{itemName},#{releaseInspectionQty},#{pickingQty},#{orderItemQty},#{orderItemNo})		
+	</insert>
+
+
+
+</mapper>
+

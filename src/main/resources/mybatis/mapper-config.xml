@@ -34,6 +34,7 @@
 		<typeAlias type="ows.edu.dto.Vendor" alias="vendor"/>
 		<typeAlias type="ows.edu.dto.Pager" alias="pager"/>
 		<typeAlias type="ows.edu.dto.Board" alias="board"/>
+		<typeAlias type="ows.edu.dto.Box" alias="box"/>
 	</typeAliases>	
 </configuration>
 

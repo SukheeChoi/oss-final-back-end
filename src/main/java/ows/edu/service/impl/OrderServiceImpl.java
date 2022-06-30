@@ -27,5 +27,47 @@ public class OrderServiceImpl implements OrderService {
 	public int getTotalOrders() {
 		return orderDao.count();
 	}
+
+	@Override
+	public int count() {
+		// TODO Auto-generated method stub
+		return orderDao.count();
+	}
+
+	@Override
+	public int pickingDoneCount() {
+		// TODO Auto-generated method stub
+		return orderDao.pickingDoneCount();
+	}
+
+	@Override
+	public int pickDnCommonCount() {
+		// TODO Auto-generated method stub
+		return orderDao.pickDnCommonCount();
+	}
+
+	@Override
+	public int pickDnEmergencyCount() {
+		// TODO Auto-generated method stub
+		return orderDao.pickDnEmergencyCount();
+	}
+
+	@Override
+	public int rlsInspPackingCount() {
+		// TODO Auto-generated method stub
+		return orderDao.rlsInspPackingCount();
+	}
+
+	@Override
+	public int rlsInspPackCommonCount() {
+		// TODO Auto-generated method stub
+		return orderDao.rlsInspPackCommonCount();
+	}
+
+	@Override
+	public int rlsInspPackEmergencyCount() {
+		// TODO Auto-generated method stub
+		return orderDao.rlsInspPackEmergencyCount();
+	}
 	
 }

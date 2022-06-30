@@ -84,6 +84,9 @@ public class CombineShippingController {
 	public Map<String, Object> geReceiptList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="employeeId", defaultValue="") String employeeId
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
+		log.info("getReceiptList - toDo : " + toDo);
+		log.info("getReceiptList - employeeId : " + employeeId);
+		log.info("getReceiptList - dateList : " + dateList);
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
 		
@@ -112,6 +115,10 @@ public class CombineShippingController {
 	public Map<String, Object> getDeliveryList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="employeeId", defaultValue="") String employeeId
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
+		log.info("getDeliveryList - toDo : " + toDo);
+		log.info("getDeliveryList - employeeId : " + employeeId);
+		log.info("getDeliveryList - dateList : " + dateList);
+		
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		List<String> orderItemNoList = new ArrayList<>();
 		if(dateList != null) {

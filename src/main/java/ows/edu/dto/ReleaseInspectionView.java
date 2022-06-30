@@ -31,6 +31,7 @@ public class ReleaseInspectionView {
 	//Release
 	private String releaseCode;
 	private int done;
+	private int boxQty;
 	
 	//ReleaseInspection
 	private int releaseInspectionQuantity;
@@ -42,9 +43,6 @@ public class ReleaseInspectionView {
 	
 	//picking
 	private int pickingQty;
-	
-	//packing
-	private int boxQty;
 	
 	//vendor
 	private String vendorName;

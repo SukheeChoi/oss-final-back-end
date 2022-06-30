@@ -36,20 +36,23 @@ public class AfterPickingController {
 
 	@PostMapping("/")
 	public Map<String, Object> getList(
-			@RequestParam(value="shippingCategory", defaultValue="null") String shippingCategory
-			, @RequestParam(value="shippingWay", defaultValue="null") String shippingWay
-			, @RequestParam(value="released", defaultValue="null") String released
-			, @RequestParam(value="assignee", defaultValue="null") String assignee
+			@RequestParam(value="shippingCategory", defaultValue="") String shippingCategory
+			, @RequestParam(value="shippingWay", defaultValue="") String shippingWay
+			, @RequestParam(value="released", defaultValue="") String released
+			, @RequestParam(value="assignee", defaultValue="") String assignee
 			, @RequestParam(value="orderNo", defaultValue="-1") int orderNo
-			, @RequestParam(value="clientName", defaultValue="null") String clientName
-			, @RequestParam(value="shippingDestination", defaultValue="null") String shippingDestination
-			, @RequestParam(value="vendorName", defaultValue="null") String vendorName
+			, @RequestParam(value="clientName", defaultValue="") String clientName
+			, @RequestParam(value="shippingDestination", defaultValue="") String shippingDestination
+			, @RequestParam(value="vendorName", defaultValue="") String vendorName
 		) {
 		log.info("shippingCategory : " + shippingCategory);
+		log.info("shippingWay : " + shippingWay);
 		log.info("released : " + released);
 		log.info("assignee : " + assignee);
 		log.info("orderNo : " + orderNo);
-//		log.info("shippingDestination : " + shippingDestination);
+		log.info("clientName : " + clientName);
+		log.info("shippingDestination : " + shippingDestination);
+		log.info("vendorName : " + vendorName);
 		Map<String, Object> map = new HashMap<>();
 		List<ReleaseInspection> list = releaseInspectionService
 				.getAfterPickingList(
@@ -62,7 +65,7 @@ public class AfterPickingController {
 					, shippingDestination
 					, vendorName
 				);
-		
+		log.info("list : " + list);
 		map.put("list", list);
 		return map;
 	}

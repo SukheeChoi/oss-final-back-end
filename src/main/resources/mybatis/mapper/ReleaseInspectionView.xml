@@ -19,6 +19,7 @@
 		<result property="vendorNo" column="V_NO"/>
 		<result property="releaseCode" column="RLS_CODE"/>
 		<result property="done" column="RLS_DN"/>
+		<result property="boxQty" column="RLS_BX_QTY"/>
 		<result property="releaseInspectionQuantity" column="RI_QTY"/>
 		<result property="note" column="RI_NT"/>
 		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
@@ -26,7 +27,6 @@
 		<result property="releaseInspectionBarcode" column="RI_BRCD"/>
 		<result property="unReleased" column="RI_URLS"/>
 		<result property="pickingQty" column="PIC_QTY"/>
-		<result property="boxQty" column="PAC_BX_QTY"/>
 		<result property="vendorName" column="V_NAME"/>
 		<result property="employeeName" column="EMP_NAME"/>
 		<result property="clientName" column="CLT_NAME"/>
@@ -41,8 +41,8 @@
 		  @rownum:=@rownum+1, A.* 
 		FROM 
 		  (		
-		  	SELECT CLT_NAME, ORD_SHP_CAT, ORD_SHP_WAY, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE,
-			PIC_QTY, RI_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
+		  	SELECT CLT_NAME, ORD_SHP_CAT, ORD_SHP_WAY, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, OI_NO, V_NAME, ITM_NAME, ITM_CODE,
+			PIC_QTY, RI_QTY, EMP_NAME, RI_RLS_PRT_DT, RLS_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
 			FROM rls_insp_view) A, 
 		  (SELECT @ROWNUM := 0) R
 		 ORDER BY CLT_NAME DESC
@@ -53,8 +53,8 @@
 		  @rownum:=@rownum+1, A.* 
 		FROM 
 		  (		
-		  	SELECT CLT_NAME, ORD_SHP_CAT, ORD_SHP_WAY, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE,
-			PIC_QTY, RI_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
+		  	SELECT CLT_NAME, ORD_SHP_CAT, ORD_SHP_WAY, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, OI_NO, V_NAME, ITM_NAME, ITM_CODE,
+			PIC_QTY, RI_QTY, EMP_NAME, RI_RLS_PRT_DT, RLS_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
 			FROM rls_insp_view) A, 
 		  (SELECT @ROWNUM := 0) R
 		Where ORD_SHP_CAT IN
