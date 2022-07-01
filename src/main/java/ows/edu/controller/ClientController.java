@@ -31,21 +31,53 @@ public class ClientController {
 //		return list;
 //	}
 	
-	@GetMapping("/getFilterList")
-	public Map<String, Object> getClientNameList(@RequestParam(value="shippingCategory") String shippingCategory,
-												@RequestParam(value="status") int status,
-												@RequestParam(value="unrelease") String unrelease) {
-		log.info("!!!!!!!!!!!!!!!!!!!!!");
-		log.info("clientcontroller - shippingCategory: " + shippingCategory);
-		log.info("clientcontroller - status: " + status);
-		System.out.println("clientcontroller - shippingCategory: " + shippingCategory);
-		System.out.println("clientcontroller - status: " + status);
+	@PostMapping("/getFilterList")
+	public Map<String, Object> getClientNameList(@RequestParam(value="shippingCategory", defaultValue="") String shippingCategory,
+												@RequestParam(value="status", defaultValue="") int status,
+												@RequestParam(value="unreleaseChk", defaultValue="false") String unreleaseChk,
+												@RequestParam(value="orderNo", required=false) String orderNo,
+												@RequestParam(value="clientName", required=false) String clientName) {
+
+//		log.info("clientcontroller - shippingCategory: " + shippingCategory);
+//		log.info("clientcontroller - status: " + status);
+//		log.info("clientcontroller - unreleaseChk: " + unreleaseChk);
+//		log.info("clientcontroller - orderNo: " + orderNo);
+//		log.info("clientcontroller - clientName: " + clientName);
+		
+//		Map<String, Object> map = new HashMap<>();
+//		List<Client> list = null;
+//		
+//		if(status == 0) {
+//			list = clientService.selectListByShippingCategory(
+//						shippingCategory,
+//						unreleaseChk,
+//						orderNo,
+//						clientName
+//					);
+//		} else {
+//			list = clientService.selectList(
+//						shippingCategory,
+//						status,
+//						unreleaseChk,
+//						orderNo,
+//						clientName
+//					);
+//		}
+//		
+//		log.info("list : " + list);
+//		map.put("list", list);
+//		return map;
+		
 		String[] scType = shippingCategory.split(",");
 		List<Client> list = null;
 		
 		Map<String, Object> map1 = new HashMap<>();
 		map1.put("shippingCategory", scType);
-		log.info("!!!!!````````````````!!!!!!!!!!!!!!!");
+		map1.put("unreleaseChk", unreleaseChk);
+		map1.put("orderNo", orderNo);
+		map1.put("clientName", clientName);
+		log.info("clientcontroller - map1: " + map1);
+
 		if(status == 0) {
 			list = clientService.selectListByShippingCategory(map1);
 			log.info("list : " + list + "status : " + status);
@@ -56,25 +88,24 @@ public class ClientController {
 		
 		Map<String, Object> map2 = new HashMap<>();
 		map2.put("list", list);
-		map2.put("shippingCategory", shippingCategory);
-		map2.put("status", status);
-		map2.put("unrelease", unrelease);
+		log.info("clientcontroller - shippingCategory: " + shippingCategory);
+		log.info("clientcontroller - status: " + status);
+		log.info("clientcontroller - unreleaseChk: " + unreleaseChk);
+		log.info("clientcontroller - orderNo: " + orderNo);
+		log.info("clientcontroller - clientName: " + clientName);
 		log.info("clientcontroller - list: " + list);
-		System.out.println("clientcontroller - list: " + list);
-		
 		log.info("clientcontroller - map2: " + map2);
-		log.info("clientcontroller - unrelease: " + unrelease);
-		log.info("!!!!!````````````````!!!!!!!!!!1111111111!!!!!");
+		log.info("ClientService - map " + map2.keySet());
 		return map2;
 	}
 	
 	@GetMapping("/sts")
 	public Map<String, Object> statusCnt() {	
-		List<Integer> statusCnt =clientService.statusCnt();
+		List<Integer> statusCnt = clientService.statusCnt();
 		
-		Map<String, Object> sMap = new HashMap<>();
-		sMap.put("statusCnt", statusCnt);
-		return sMap;
+		Map<String, Object> map = new HashMap<>();
+		map.put("statusCnt", statusCnt);
+		return map;
 	}
 	
 }

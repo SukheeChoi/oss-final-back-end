@@ -98,32 +98,36 @@
 		LEFT JOIN TB_PIC PI ON (OI.OI_NO = PI.OI_NO)
 		LEFT JOIN TB_RLS_INSP RI ON (OI.OI_NO = RI.OI_NO)
 		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
-		LEFT JOIN TB_TRF T  ON (O.ORD_NO = T.ORD_NO)
+		LEFT JOIN TB_TRF T ON (O.ORD_NO = T.ORD_NO)
  		<choose>
-			<when test='unrelease == true'>
+			<when test='unreleaseChk.equals("true")'>
 				WHERE O.ORD_SHP_CAT IN (
 					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
 						#{shippingCategory}
 					</foreach>
 					)
-				<![CDATA[
 					AND O.ORD_STS = #{status}
-					OR (PD.PD_URLS >= 1
-					OR PI.PIC_URLS >= 1
-					OR RI.RI_URLS >= 1
-					OR R.RLS_URLS >= 1
-					OR T.TRF_URLS >= 1)
-				]]>
+					AND (PD.PD_URLS != 0
+					OR PI.PIC_URLS != 0
+					OR RI.RI_URLS != 0
+					OR R.RLS_URLS != 0
+					OR T.TRF_URLS != 0)
 			</when>
-			<otherwise>
+			<when test='unreleaseChk.equals("false")'>
 				WHERE O.ORD_SHP_CAT IN (
 					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
 						#{shippingCategory}
 					</foreach>
 					)
 					AND O.ORD_STS = #{status}
-			</otherwise>
+			</when>
 		</choose>
+		<if test='!orderNo.equals("")'>
+			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
+		</if>
+	   	<if test='!clientName.equals("")'>
+	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
+	 	</if>
 		ORDER BY O.ORD_STS;
 	</select>
 	
@@ -139,28 +143,32 @@
 		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
 		LEFT JOIN TB_TRF T  ON (O.ORD_NO = T.ORD_NO)
 		<choose>
-			<when test='unrelease == true'>
+			<when test='unreleaseChk.equals("true")'>
 				WHERE O.ORD_SHP_CAT IN (
-					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
+					<foreach collection="shippingCategory" item="shippingCategory" separator=",">
 						#{shippingCategory}
 					</foreach>
 					)
-				<![CDATA[
-					AND (PD.PD_URLS >= 1
-					OR PI.PIC_URLS >= 1
-					OR RI.RI_URLS >= 1
-					OR R.RLS_URLS >= 1
-					OR T.TRF_URLS >= 1)
-				]]>
+					AND (PD.PD_URLS != 0
+					OR PI.PIC_URLS != 0
+					OR RI.RI_URLS != 0
+					OR R.RLS_URLS != 0
+					OR T.TRF_URLS != 0)
 			</when>
-			<otherwise>
+			<when test='unreleaseChk.equals("false")'>
 				WHERE O.ORD_SHP_CAT IN (
-				<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
+				<foreach collection="shippingCategory" item="shippingCategory" separator=",">
 					#{shippingCategory}
 				</foreach>
 				)
-			</otherwise>
+			</when>
 		</choose>
+		<if test='!orderNo.equals("")'>
+			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
+		</if>
+	   	<if test='!clientName.equals("")'>
+	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
+	 	</if>
 		ORDER BY O.ORD_STS;
 	</select>
 	
