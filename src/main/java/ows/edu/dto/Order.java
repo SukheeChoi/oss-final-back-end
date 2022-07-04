@@ -14,6 +14,7 @@ public class Order {
 	private String shippingAddress;		//주소
 	private String orderWay;			//주문방법
 	private String shippingCategory; //배송방식(긴급/일반)
+	private boolean orderUnrelease;
 	
 	private Client client;
 	private OrderItem orderItem;

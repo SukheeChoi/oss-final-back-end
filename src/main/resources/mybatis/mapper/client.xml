@@ -11,6 +11,7 @@
 		<result property="shippingAddress" column="ORD_SHP_ADDR"/>	
 		<result property="orderWay" column="ORD_ORD_WAY"/>	
 		<result property="shippingCategory" column="ORD_SHP_CAT"/>	
+		<result property="orderUnrelease" column="ORD_URLS"/>	
  		<association property="client" javaType="client">
 		 	<result property="clientNo" column="CLT_NO"/>
 			<result property="clientName" column="CLT_NAME"/>
@@ -73,24 +74,10 @@
 			<result property="unrelease" column="TRF_URLS"/>
 		</association>
 	</resultMap>
-	
-	<!-- 고객수취 거래처와 주문 단계 조회 -->
-	<!-- <select id="selectListAll" resultMap="clientMap">
-		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
-		FROM TB_ORD O
-		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
-		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
-		LEFT JOIN TB_PIC_DRC PD ON (OI.OI_NO = PD.OI_NO)
-		LEFT JOIN TB_PIC PI ON (OI.OI_NO = PI.OI_NO)
-		LEFT JOIN TB_RLS_INSP RI ON (OI.OI_NO = RI.OI_NO)
-		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
-		LEFT JOIN TB_TRF T  ON (O.ORD_NO = T.ORD_NO)
-		ORDER BY O.ORD_STS;
-	</select> -->
-	
-	<!-- 배송구분, 회사로 필터링 -->
+
+	<!-- 배송구분, 회사, 미출고로 필터링 -->
 	<select id="selectList" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
+		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, O.ORD_URLS, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
 		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
@@ -98,39 +85,42 @@
 		LEFT JOIN TB_PIC PI ON (OI.OI_NO = PI.OI_NO)
 		LEFT JOIN TB_RLS_INSP RI ON (OI.OI_NO = RI.OI_NO)
 		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
-		LEFT JOIN TB_TRF T  ON (O.ORD_NO = T.ORD_NO)
+		LEFT JOIN TB_TRF T ON (O.ORD_NO = T.ORD_NO)
  		<choose>
-			<when test='unrelease == true'>
+			<when test='unreleaseChk.equals("true")'>
 				WHERE O.ORD_SHP_CAT IN (
 					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
 						#{shippingCategory}
 					</foreach>
 					)
-				<![CDATA[
 					AND O.ORD_STS = #{status}
-					OR (PD.PD_URLS >= 1
-					OR PI.PIC_URLS >= 1
-					OR RI.RI_URLS >= 1
-					OR R.RLS_URLS >= 1
-					OR T.TRF_URLS >= 1)
-				]]>
+					AND (PD.PD_URLS != 0
+					OR PI.PIC_URLS != 0
+					OR RI.RI_URLS != 0
+					OR R.RLS_URLS != 0
+					OR T.TRF_URLS != 0)
 			</when>
-			<otherwise>
+			<when test='unreleaseChk.equals("false")'>
 				WHERE O.ORD_SHP_CAT IN (
 					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
 						#{shippingCategory}
 					</foreach>
 					)
 					AND O.ORD_STS = #{status}
-			</otherwise>
+			</when>
 		</choose>
-		ORDER BY O.ORD_STS;
+<!-- 		<if test='!orderNo.equals("")'>
+			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
+		</if>
+	   	<if test='!clientName.equals("")'>
+	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
+	 	</if> -->
+		ORDER BY O.ORD_URLS DESC, O.ORD_STS;
 	</select>
 	
 	<!-- 배송구분으로 필터링 -->
 	<select id="selectListByShippingCategory" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO
-		<!-- , PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS --> 
+		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, O.ORD_URLS, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
 		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
@@ -140,29 +130,33 @@
 		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
 		LEFT JOIN TB_TRF T  ON (O.ORD_NO = T.ORD_NO)
 		<choose>
-			<when test='unrelease == true'>
+			<when test='unreleaseChk.equals("true")'>
 				WHERE O.ORD_SHP_CAT IN (
-					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
+					<foreach collection="shippingCategory" item="shippingCategory" separator=",">
 						#{shippingCategory}
 					</foreach>
 					)
-			<!-- 	<![CDATA[
-					AND (PD.PD_URLS >= 1
-					OR PI.PIC_URLS >= 1
-					OR RI.RI_URLS >= 1
-					OR R.RLS_URLS >= 1
-					OR T.TRF_URLS >= 1)
-				]]> -->
+					AND (PD.PD_URLS != 0
+					OR PI.PIC_URLS != 0
+					OR RI.RI_URLS != 0
+					OR R.RLS_URLS != 0
+					OR T.TRF_URLS != 0)
 			</when>
-			<otherwise>
+			<when test='unreleaseChk.equals("false")'>
 				WHERE O.ORD_SHP_CAT IN (
-				<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
+				<foreach collection="shippingCategory" item="shippingCategory" separator=",">
 					#{shippingCategory}
 				</foreach>
 				)
-			</otherwise>
+			</when>
 		</choose>
-		ORDER BY O.ORD_STS;
+<!-- 		<if test='!orderNo.equals("")'>
+			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
+		</if>
+	   	<if test='!clientName.equals("")'>
+	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
+	 	</if> -->
+		ORDER BY O.ORD_URLS DESC, O.ORD_STS;
 	</select>
 	
 	<!-- 주문 단계마다 카운트 --> 
