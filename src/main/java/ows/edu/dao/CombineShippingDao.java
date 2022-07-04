@@ -27,12 +27,11 @@ public interface CombineShippingDao {
 									, @Param("startDate") String startDate
 									, @Param("endDate") String endDate);
 	
-	public List<String> selectReceiptOrderItemNoList(@Param("toDo") int toDo
-													, @Param("employeeId") String employeeId
+	public List<String> selectReceiptList(@Param("toDo") int toDo
+													, @Param("vendorName") String vendorName
 													, @Param("startDate") String startDate
 													, @Param("endDate") String endDate
 													, @Param("pager") Pager pager);
-	public CombineShipping selectAReceipt(String orderItemNo);
 	
 	public int selectCountAllDelivery(@Param("toDo") int toDo
 									, @Param("employeeId") String employeeId
@@ -40,12 +39,11 @@ public interface CombineShippingDao {
 									, @Param("endDate") String endDate);
 
 	
-	public List<CombineShipping> selectDeliveryOrderItemNoList(@Param("toDo") int toDo
-													, @Param("employeeId") String employeeId
+	public List<CombineShipping> selectDeliveryList(@Param("toDo") int toDo
+													, @Param("employeeName") String employeeName
 													, @Param("startDate") String startDate
 													, @Param("endDate") String endDate
 													, @Param("pager") Pager pager);
-	public CombineShipping selectADelivery(String orderItemNo);
 
 	// 수령여부 update.
 	public int updateAReceipt(CombineShipping combineShipping);

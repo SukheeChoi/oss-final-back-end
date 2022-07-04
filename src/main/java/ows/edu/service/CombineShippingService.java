@@ -18,19 +18,16 @@ public interface CombineShippingService {
 	
 	// 담당사원 + 날짜정보 필터링 적용한 수령정보 조회.
 	public Map<String, Object> getReceiptList(int toDo
-												, String employeeId
+												, String vendorName
 												, String[] dateList
 												, int pageNo);
-//	public CombineShipping getAReceipt(String orderItemNo);
 	
 	// 업체정보 + 날짜정보 필터링 적용한 전달정보 조회.
 	public Map<String, Object> getDeliveryList(int toDo
-											, String employeeId
+											, String employeeName
 											, String[] dateList
 											, int pageNo
 											);
-//	public List<String> getDeliveryOrderItemNoList(int toDo, String employeeId, String[] dateList);
-//	public CombineShipping getADelivery(String orderItemNo);
 
 	// 수령여부 update.
 	public String updateReceipt(CombineShipping[] combineShippingList);

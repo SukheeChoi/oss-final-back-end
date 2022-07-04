@@ -69,11 +69,11 @@ public class CombineShippingController {
 //	선택된 담당자를 기준으로 수령 목록 조회.
 	@PostMapping("/getReceiptList")
 	public Map<String, Object> geReceiptList(@RequestParam(value="toDo", defaultValue="1") int toDo
-											, @RequestParam(value="employeeId", defaultValue="") String employeeId
+											, @RequestParam(value="vendorName", defaultValue="전체") String vendorName
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
 											, @RequestParam(value="pageNo", defaultValue="1") int pageNo){
 		log.info("getReceiptList - toDo : " + toDo);
-		log.info("getReceiptList - employeeId : " + employeeId);
+		log.info("getReceiptList - vendorName : " + vendorName);
 		log.info("getReceiptList - dateList : " + dateList);
 		// 필요한 OI_NO 조회해서 List로 받아옴.
 		Map<String, Object> map = new HashMap<>();
@@ -81,7 +81,7 @@ public class CombineShippingController {
 		map = combineShippingService
 				.getReceiptList(
 					toDo
-					, employeeId
+					, vendorName
 					, dateList
 					, pageNo
 				);
@@ -90,17 +90,17 @@ public class CombineShippingController {
 //	선택된 담당자를 기준으로 전달 목록 조회.
 	@PostMapping("/getDeliveryList")
 	public Map<String, Object> getDeliveryList(@RequestParam(value="toDo", defaultValue="1") int toDo
-											, @RequestParam(value="employeeId", defaultValue="") String employeeId
+											, @RequestParam(value="employeeName", defaultValue="전체") String employeeName
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
 											, @RequestParam(value="pageNo", defaultValue="1") int pageNo
 			) {
 		log.info("getDeliveryList - toDo : " + toDo);
-		log.info("getDeliveryList - employeeId : " + employeeId);
+		log.info("getDeliveryList - employeeName : " + employeeName);
 		log.info("getDeliveryList - dateList : " + dateList);
 
 		Map<String, Object> map = combineShippingService
 									.getDeliveryList(
-											toDo, employeeId, dateList
+											toDo, employeeName, dateList
 											, pageNo
 									);
 		

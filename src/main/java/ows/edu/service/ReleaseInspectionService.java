@@ -24,6 +24,19 @@ public interface ReleaseInspectionService {
 			, String shippingDestination
 			, String vendorName
 	);
+	
+	int getTotalRows(
+			String shippingCategory
+			, String shippingWay
+			, String released
+			, String assignee
+			, int orderNo
+			, String clientName
+			, String shippingDestination
+			, String vendorName
+			
+			, int pageNo
+	);
 
 //	List<AfterPicking> getAfterPickingList(
 	List<HashMap<String, String>> getAfterPickingList(
@@ -36,7 +49,8 @@ public interface ReleaseInspectionService {
 			, String shippingDestination
 			, String vendorName
 			
-			, int pageNo
+//			, int pageNo
+			, Pager pager
 		);
 	
 	

@@ -97,20 +97,19 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		
 		return list;
 	}
-
+	
 	@Override
-//	public List<AfterPicking> getAfterPickingList(
-	public List<HashMap<String, String>> getAfterPickingList(
-		String shippingCategory
-		, String shippingWay
-		, String released
-		, String assignee
-		, int orderNo
-		, String clientName
-		, String shippingDestination
-		, String vendorName
-		
-		, int pageNo
+	public int getTotalRows(
+			String shippingCategory
+			, String shippingWay
+			, String released
+			, String assignee
+			, int orderNo
+			, String clientName
+			, String shippingDestination
+			, String vendorName
+			
+			, int pageNo
 	) {
 		
 		// pagination을 위한 목록의 전체 행 수 조회.
@@ -127,7 +126,42 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 					);
 				
 		// pagination을 위한 Pager 객체 생성.
-		Pager pager = new Pager(10, 10, totalRows, pageNo);
+//		Pager pager = new Pager(10, 10, totalRows, pageNo);
+		
+		return totalRows;
+	}
+
+	@Override
+//	public List<AfterPicking> getAfterPickingList(
+	public List<HashMap<String, String>> getAfterPickingList(
+		String shippingCategory
+		, String shippingWay
+		, String released
+		, String assignee
+		, int orderNo
+		, String clientName
+		, String shippingDestination
+		, String vendorName
+		
+//		, int pageNo
+		, Pager pager
+	) {
+		
+		// pagination을 위한 목록의 전체 행 수 조회.
+//		int totalRows = afterPickingViewDao
+//				.selectCountAll(
+//						shippingCategory
+//						, shippingWay
+//						, released
+//						, assignee
+//						, orderNo
+//						, clientName
+//						, shippingDestination
+//						, vendorName
+//					);
+//				
+//		// pagination을 위한 Pager 객체 생성.
+//		Pager pager = new Pager(10, 10, totalRows, pageNo);
 		
 //		List<AfterPickingView> ap = afterPickingViewDao.selectAll();
 		List<HashMap<String, String>> ap = afterPickingViewDao.selectAll(
@@ -139,6 +173,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				, clientName
 				, shippingDestination
 				, vendorName
+//				, pager
 				, pager
 			);
 		

@@ -72,6 +72,7 @@ public class AfterPickingController {
 			, @RequestParam(value="shippingDestination", defaultValue="") String shippingDestination
 			, @RequestParam(value="vendorName", defaultValue="") String vendorName
 			, @RequestParam(value="pageNo", defaultValue="1") int pageNo
+			, @RequestParam(value="pageSize", defaultValue="10") int pageSize
 		) {
 		log.info("shippingCategory : " + shippingCategory);
 		log.info("shippingWay : " + shippingWay);
@@ -82,6 +83,25 @@ public class AfterPickingController {
 		log.info("shippingDestination : " + shippingDestination);
 		log.info("vendorName : " + vendorName);
 		log.info("pageNo : " + pageNo);
+		
+		
+		//pager 객체 생성.
+		int totalRows = releaseInspectionService
+				.getTotalRows(
+						shippingCategory
+						, shippingWay
+						, released
+						, assignee
+						, orderNo
+						, clientName
+						, shippingDestination
+						, vendorName
+						
+						, pageNo
+				);
+		
+//		// pagination을 위한 Pager 객체 생성.
+		Pager pager = new Pager(pageSize, 10, totalRows, pageNo);
 		
 		Map<String, Object> map = new HashMap<>();
 //		List<AfterPicking> list = releaseInspectionService
@@ -96,8 +116,11 @@ public class AfterPickingController {
 					, shippingDestination
 					, vendorName
 					
-					, pageNo
+//					, pageNo
+					, pager
 				);
+		
+		map.put("pager", pager);
 		map.put("list", list);
 		return map;
 	}
