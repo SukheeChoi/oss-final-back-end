@@ -127,7 +127,7 @@
 		<where>
 			<choose>
 				<!-- 수령 한 일: (수령O && 전달X) -->
-				<when test="toDo != 1">
+				<when test='toDo != 1'>
 					<!-- id(o) + date(x) : id 기준으로 미완료 전체. -->
 					<if test='(!employeeId.equals("")) and (startDate == null)'>
 						AND CS.EMP_ID=#{employeeId}
