@@ -166,10 +166,10 @@
          </if>
          
          <!-- 출고 미출고  -->         
-         <if test="of.pickingdirectionUnreleased == 1">   <!-- 출고 -->
+         <if test='of.pickingdirectionUnreleased == 1'>   <!-- 출고 -->
             AND PD_URLS = 0
          </if>
-         <if test="of.pickingdirectionUnreleased == 2">   <!-- 미출고  -->
+         <if test='of.pickingdirectionUnreleased == 2'>   <!-- 미출고  -->
             AND PD_URLS = 1
          </if>
          
@@ -179,7 +179,7 @@
          <if test='!of.searchSelected.equals("null") and !of.searchContent.equals("null") and of.searchSelected.equals("거래처")'>
          	AND CLT_NAME LIKE CONCAT('%', #{of.searchContent}, '%')
          </if>
-         LIMIT #{pager.rowsPerPage} OFFSET #{pager.offset}
+         LIMIT #{pager.rowsPerPage} OFFSET #{pager.startRowIndex}
     	</if>
     	
 	</select>
