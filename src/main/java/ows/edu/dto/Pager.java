@@ -43,7 +43,7 @@ public class Pager {
 		startRowNo = (pageNo - 1) * rowsPerPage + 1;
 		startRowIndex = startRowNo - 1;
 		endRowNo = pageNo * rowsPerPage;
-		endRowIndex = endRowNo - 1; 
+		endRowIndex = endRowNo - 1;
 	}
 }
 
