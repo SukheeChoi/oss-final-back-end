@@ -63,35 +63,47 @@
 	<select id="sumUnreleased" resultType="int">
 		SELECT COUNT(*)
 		FROM (
-			SELECT SUM(RI.RI_URLS) AS SUM_RI_URLS
-		    FROM TB_RLS_INSP RI
-		    JOIN TB_ORD_ITM OI
+			SELECT O.ORD_STS ORD_STS
+				, SUM(RI.RI_URLS) AS SUM_RI_URLS
+			FROM TB_RLS_INSP RI
+			JOIN TB_ORD_ITM OI
 				ON (RI.OI_NO = OI.OI_NO)
 			JOIN TB_ORD O
 				ON (OI.ORD_NO = O.ORD_NO)
 			GROUP BY O.ORD_NO
 		) SQ
-		WHERE SQ.SUM_RI_URLS > 0
+		WHERE SQ.ORD_STS = 5
+			AND SQ.SUM_RI_URLS > 0
 	</select>
 	<select id="countExpressShipping" resultType="int">
 		SELECT COUNT(*)
-		FROM TB_RLS_INSP RI
-		JOIN TB_ORD_ITM OI
-			ON (RI.OI_NO=OI.OI_NO)
-		LEFT JOIN TB_ORD O
-			ON (O.ORD_NO=OI.ORD_NO)
-		WHERE O.ORD_PRC_ORD IS NULL 
-			AND O.ORD_SHP_CAT='긴급'
+		FROM (
+			SELECT O.ORD_STS ORD_STS
+				, O.ORD_SHP_CAT AS ORD_CAT
+		    FROM TB_PAC PA
+		    JOIN TB_ORD_ITM OI
+				ON (PA.OI_NO = OI.OI_NO)
+			JOIN TB_ORD O
+				ON (OI.ORD_NO = O.ORD_NO)
+			GROUP BY O.ORD_NO
+		) SQ
+		WHERE SQ.ORD_STS = 5
+			AND SQ.ORD_CAT='긴급'
 	</select>
 	<select id="countNormalShipping" resultType="int">
 		SELECT COUNT(*)
-		FROM TB_RLS_INSP RI
-		JOIN TB_ORD_ITM OI
-			ON (RI.OI_NO=OI.OI_NO)
-		LEFT JOIN TB_ORD O
-			ON (O.ORD_NO=OI.ORD_NO)
-		WHERE O.ORD_PRC_ORD IS NULL 
-			AND O.ORD_SHP_CAT='일반'
+		FROM (
+			SELECT O.ORD_STS ORD_STS
+				, O.ORD_SHP_CAT AS ORD_CAT
+		    FROM TB_PAC PA
+		    JOIN TB_ORD_ITM OI
+				ON (PA.OI_NO = OI.OI_NO)
+			JOIN TB_ORD O
+				ON (OI.ORD_NO = O.ORD_NO)
+			GROUP BY O.ORD_NO
+		) SQ
+		WHERE SQ.ORD_STS = 5
+			AND SQ.ORD_CAT='일반'
 	</select>
 
  	<select id="selectAfterPickingList" resultMap="afterPickingMap">

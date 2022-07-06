@@ -14,15 +14,17 @@
 	<select id="sumUnreleased" resultType="int">
 		SELECT COUNT(*)
 		FROM (
-			SELECT SUM(PA.PAC_URLS) AS SUM_PAC_URLS
-		    FROM TB_PAC PA
-		    JOIN TB_ORD_ITM OI
+			SELECT O.ORD_STS ORD_STS
+				, SUM(PA.PAC_URLS) AS SUM_PAC_URLS
+			FROM TB_PAC PA
+			JOIN TB_ORD_ITM OI
 				ON (PA.OI_NO = OI.OI_NO)
 			JOIN TB_ORD O
 				ON (OI.ORD_NO = O.ORD_NO)
 			GROUP BY O.ORD_NO
 		) SQ
-		WHERE SQ.SUM_PAC_URLS > 0
+		WHERE SQ.ORD_STS = 3
+			AND SQ.SUM_PAC_URLS > 0
 	</select>
 </mapper>
 
