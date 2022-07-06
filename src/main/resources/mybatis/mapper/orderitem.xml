@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.OrderDao">
-	<select id="countProgressOrder" resultType="int">
-		SELECT COUNT(*)
-		FROM TB_ORD
-		WHERE ORD_PRC_ORD IS NULL
+	<select id="select" resultType="Order">
+
 	</select>
+
 </mapper>
+<!-- view와 rownum을 동시에 사용할 생각인데, 그럼 resulttype은 어떻게 해야하는지 고민하기. -->
 

@@ -10,4 +10,5 @@ public class Transfer {
 	private int orderNo;
 	private String employeeId;
 	private Date transferDate;
+	private int unrelease;
 }

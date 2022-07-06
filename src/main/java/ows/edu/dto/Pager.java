@@ -17,7 +17,10 @@ public class Pager {
 	private int startRowIndex;	//페이지의 시작 행 인덱스(0, ..., n-1) for mysql
 	private int endRowNo;		//페이지의 마지막 행 번호
 	private int endRowIndex;	//페이지의 마지막 행 인덱스
-
+	
+	//필터조건
+	private String[] newGroup;
+ 
 	public Pager(int rowsPerPage, int pagesPerGroup, int totalRows, int pageNo) {
 		this.rowsPerPage = rowsPerPage;
 		this.pagesPerGroup = pagesPerGroup;
@@ -40,7 +43,7 @@ public class Pager {
 		startRowNo = (pageNo - 1) * rowsPerPage + 1;
 		startRowIndex = startRowNo - 1;
 		endRowNo = pageNo * rowsPerPage;
-		endRowIndex = endRowNo - 1; 
+		endRowIndex = endRowNo - 1;
 	}
 }
 

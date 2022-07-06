@@ -10,19 +10,20 @@ public class ReleaseInspection {
 	private int releaseInspectionQuantity;
 	private Date releaseInspectionDate;
 	private Date releasePrintDate;
-	private Date receiptePrintDate;
+	private Date receiptPrintDate;
 	private String employeeId;
-	private int releaseInspectionBarcode;
+	private long releaseInspectionBarcode;
 	private String releaseInspectionNote;
 	private int unReleased;
 	
 	private String employeeName;
 	
-	private Release release;
-	private Item item;
-	private Picking picking;
-	private Vendor vendor;
-	private Order order;
-	private Employee employee;
-	private Packing packing;
+//	private Release release;
+//	private Item item;
+//	private Picking picking;
+//	private Vendor vendor;
+//	private Order order;
+//	private Employee employee;
+//	private Packing packing;
+//	private Client client;
 }
