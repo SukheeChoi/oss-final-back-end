@@ -9,9 +9,9 @@ import ows.edu.dto.Client;
 
 @Mapper
 public interface ClientDao {
-	public List<Client> selectList(Map<String, Object> map);
+	public List<Client> getList(Map<String, Object> map);
 	
-	public List<Client> selectListByShippingCategory(Map<String, Object> map);
+	public List<Client> getListByShippingCategory(Map<String, Object> map);
 	
-	public int statusCnt(int status);
+	public int getstatusCnt(int status);
 }
