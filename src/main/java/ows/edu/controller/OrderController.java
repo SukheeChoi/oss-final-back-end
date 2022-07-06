@@ -1,6 +1,5 @@
 package ows.edu.controller;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +30,6 @@ public class OrderController {
   //주문확인 현황
   @GetMapping("/orderStatus")
   public OrderStatus getStatus() {
-    log.info("실행");
-    
     OrderStatus orderStatus = orderViewService.getStatus();
     
     Map<String, Object> map = new HashMap<>();
@@ -41,33 +38,19 @@ public class OrderController {
   }
   
   //조건에 맞게 주문확인 리스트 보내주는 컨트롤러
-  @GetMapping("/orderfilter")
-  public Map<String, Object> getfilterList(@RequestParam(value="company", defaultValue = "null") String[] company
-                         , @RequestParam(value="shippingway", defaultValue = "null") String[] shippingway
-                         , @RequestParam(value="unreleased", defaultValue = "null") String[] unreleased
-                         , @RequestParam(value="searchSelected", defaultValue = "null") String searchSelected
-                         , @RequestParam(value="searchContent", defaultValue = "null") String searchContent
+  @GetMapping("/orderFilter")
+  public Map<String, Object> getfilterList(OrderFilter orderFilter
                          , @RequestParam(defaultValue = "1") int pageNo
                          , @RequestParam(defaultValue = "5") int pageSize) {
     
-    OrderFilter orderfilter = new OrderFilter();
-    orderfilter.setCompany(company);
-    orderfilter.setShippingway(shippingway);
-    orderfilter.setUnreleased(unreleased);
-    orderfilter.setSearchSelected(searchSelected);
-    orderfilter.setSearchContent(searchContent);
-    
-    log.info(orderfilter);
-    int totalRows = orderViewService.getTotalNum(orderfilter);
+    int totalRows = orderViewService.getTotalNum(orderFilter);
     Pager pager = new Pager(pageSize, 5, totalRows, pageNo);
-    log.info(pager);
     
-    List<OrderView> list = null;
-    list = orderViewService.getListByFilter(orderfilter, pager);
+    List<OrderView> list = orderViewService.getListByFilter(orderFilter, pager);
+    
     Map<String, Object> map = new HashMap<>();
     map.put("data", list);
     map.put("totalCount", totalRows);
-    log.info("map : " + map);
     return map;
   }
   

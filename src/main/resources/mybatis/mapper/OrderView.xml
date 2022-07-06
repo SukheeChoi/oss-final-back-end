@@ -117,10 +117,10 @@
             AND PD_URLS = 1
          </if>
          
-         <if test='!of.searchSelected.equals("null") and !of.searchContent.equals("null") and of.searchSelected.equals("주문번호")'>
+         <if test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("주문번호")'>
          	AND ORD_NO LIKE CONCAT('%', #{of.searchContent}, '%');
          </if>
-         <if test='!of.searchSelected.equals("null") and !of.searchContent.equals("null") and of.searchSelected.equals("거래처")'>
+         <if test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("거래처")'>
          	AND CLT_NAME LIKE CONCAT('%', #{of.searchContent}, '%');
          </if>
     	</if>
@@ -173,11 +173,11 @@
             AND PD_URLS = 1
          </if>
          
-         <if test='!of.searchSelected.equals("null") and !of.searchContent.equals("null") and of.searchSelected.equals("주문번호")'>
-         	AND ORD_NO LIKE CONCAT('%', #{of.searchContent}, '%')
+         <if test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("주문번호")'>
+         	AND ORD_NO LIKE CONCAT('%', #{of.searchContent}, '%');
          </if>
-         <if test='!of.searchSelected.equals("null") and !of.searchContent.equals("null") and of.searchSelected.equals("거래처")'>
-         	AND CLT_NAME LIKE CONCAT('%', #{of.searchContent}, '%')
+         <if test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("거래처")'>
+         	AND CLT_NAME LIKE CONCAT('%', #{of.searchContent}, '%');
          </if>
          LIMIT #{pager.rowsPerPage} OFFSET #{pager.startRowIndex}
     	</if>

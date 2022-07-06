@@ -28,7 +28,6 @@ public class OrderViewService {
     orderStatus.setVendorShippingPlus(orderViewDao.countVendorPlus());
     orderStatus.setVendorShippingDir(orderViewDao.countVendorDir());
     orderStatus.setUnreleased(orderViewDao.countunleased());
-    log.info(orderStatus);
     return orderStatus;
   }
   
@@ -50,8 +49,10 @@ public class OrderViewService {
     return orderViewDao.count(orderfilter);
   }
   
-  //데이터 정제 함수
+  //데이터 정제
   private OrderFilter setData(OrderFilter orderfilter) {
+    
+    //회사 제품 조건 검색
     String[] company = orderfilter.getCompany();
     //오스템 제품
     if(Arrays.asList(company).contains("osstemItem")) {
