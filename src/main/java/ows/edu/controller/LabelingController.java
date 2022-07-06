@@ -5,17 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
+import ows.edu.dto.InspectionLabeling;
 import ows.edu.dto.InspectionLabelingStatus;
 import ows.edu.dto.InspectionLabelingView;
 import ows.edu.dto.LabelingWorkTime;
@@ -33,7 +30,6 @@ public class LabelingController {
   //현황 가져오기
   @GetMapping("/getStatus")
   public Map<String, Object> getStatus() {
-    log.info("실행");
     
     InspectionLabelingStatus inspectionLabelingStatus = inspectionLabelingService.getStatus();
     
@@ -43,33 +39,31 @@ public class LabelingController {
   }
   
   //당일 트리 그리드 데이터 
-  @GetMapping("/getListLeft")
-  public ResponseEntity<String> getListLeft() {
-    log.info(inspectionLabelingService.getLeft());
+  @GetMapping("/getTreeList")
+  public Map<String, Object> getTreeList() {
+
+    List<LabelingWorkTime> data = new ArrayList<>();
+    data.add(inspectionLabelingService.getTreeList());
     
-    return ResponseEntity
-        .ok()
-        .header(HttpHeaders.CONTENT_TYPE, "application/json")
-        .body(inspectionLabelingService.getLeft());
+    Map<String, Object> map = new HashMap<>();
+    map.put("data", data);
+    return map;
   }
   
   //담당자별 검품검수 및 라벨링 내역
-  @GetMapping("/getListRight")
-  public Map<String, Object> getListRight(@RequestParam String employeeName
-                                                  ,@RequestParam(defaultValue = "null") String searchSelected
-                                                  ,@RequestParam(defaultValue = "null") String searchContent
+  @GetMapping("/getListByEmployeeName")
+  public Map<String, Object> getListByEmployeeName(InspectionLabeling inspectionLabeling
                                                   , @RequestParam(defaultValue = "1") int pageNo
                                                   , @RequestParam(defaultValue = "5") int pageSize) {
     
-    int totalRows = inspectionLabelingService.getTotalNum(employeeName, searchSelected, searchContent);
-    Pager pager = new Pager(pageSize, 5, totalRows, pageNo);
-    log.info(pager);
+    int totalCount = inspectionLabelingService.getTotalNum(inspectionLabeling);
+    Pager pager = new Pager(pageSize, 5, totalCount, pageNo);
     
-    List<InspectionLabelingView> list = new ArrayList<>();
-    list.addAll(inspectionLabelingService.getRight(employeeName, searchSelected, searchContent, pager));
+    List<InspectionLabelingView> data = inspectionLabelingService.getListByEmployeeName(inspectionLabeling, pager);
+    
     Map<String, Object> map = new HashMap<>();
-    map.put("data", list);
-    map.put("totalCount", totalRows);
+    map.put("data", data);
+    map.put("totalCount", totalCount);
     log.info("map : " + map);
     return map;
   }
