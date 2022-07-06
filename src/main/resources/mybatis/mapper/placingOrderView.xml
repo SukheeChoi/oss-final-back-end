@@ -84,7 +84,7 @@
 		<result property="damagedItemQuantity" column="SUM_DMG_QTY" />
 	</resultMap>
 
-	<select id="countRight" resultType="int">
+	<select id="countDetailByEmployeeName" resultType="int">
 		SELECT count(*) FROM osstem.PLC_ORD_VIEW
 		WHERE EMP_NAME =
 		#{employeeName}
@@ -107,30 +107,30 @@
 	</select>
 
 	<!-- 오른쪽 작업 담당자 기준으로 데이터 가져오기 -->
-	<select id="searchAllRight" resultMap="InspectionLabelingViewMap">
+	<select id="searchAllDetailByEmployeeName" resultMap="InspectionLabelingViewMap">
 		SELECT * FROM osstem.PLC_ORD_VIEW
-		WHERE EMP_NAME = #{employeeName}
+		WHERE EMP_NAME = #{il.employeeName}
 		<if
-			test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("업체명")'>
-			AND V_NAME LIKE CONCAT('%', #{searchContent}, '%')
+			test='il.searchSelected != null and il.searchContent != null and il.searchSelected.equals("업체명")'>
+			AND V_NAME LIKE CONCAT('%', #{il.searchContent}, '%')
 		</if>
 		<if
-			test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("발주번호")'>
-			AND PO_NO LIKE CONCAT('%', #{searchContent}, '%')
+			test='il.searchSelected != null and il.searchContent != null and il.searchSelected.equals("발주번호")'>
+			AND PO_NO LIKE CONCAT('%', #{il.searchContent}, '%')
 		</if>
 		<if
-			test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("품목명")'>
-			AND ITM_NAME LIKE CONCAT('%', #{searchContent}, '%')
+			test='il.searchSelected != null and il.searchContent != null and il.searchSelected.equals("품목명")'>
+			AND ITM_NAME LIKE CONCAT('%', #{il.searchContent}, '%')
 		</if>
 		<if
-			test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("품목코드")'>
-			AND ITM_CODE LIKE CONCAT('%', #{searchContent}, '%')
+			test='il.searchSelected != null and il.searchContent != null and il.searchSelected.equals("품목코드")'>
+			AND ITM_CODE LIKE CONCAT('%', #{il.searchContent}, '%')
 		</if>
 		LIMIT #{pager.rowsPerPage} OFFSET #{pager.startRowIndex}
 	</select>
 
 	<!-- 왼쪽 전체 데이터 가져오기 -->
-	<select id="searchAllLeftTotal" resultMap="LabelingWorkTimeMap">
+	<select id="searchAllByTotal" resultMap="LabelingWorkTimeMap">
 		SELECT SUM(LWT_RCV_ITM)
 		as LWT_RCV_ITM
 		, SUM(LWT_RCV_QTY) as LWT_RCV_QTY
@@ -152,7 +152,7 @@
 	</select>
 	
 	<!-- 왼쪽 담당자 기준으로 데이터 가져오기 -->
-	<select id="searchAllLeftByName" resultMap="LabelingWorkTimeMap">
+	<select id="searchAllByName" resultMap="LabelingWorkTimeMap">
 		select lwt.LWT_NO
 		     , emp.EMP_name
 			 , DATE_FORMAT(lwt.LWT_DT, '%m-%d') as LWT_DT
@@ -177,7 +177,7 @@
 	</select>
 
 	<!-- 왼쪽 업체명 기준으로 데이터 가져오기 -->
-	<select id="searchAllLeft" parameterType="int"
+	<select id="searchAllByEmployeeName" parameterType="int"
 		resultMap="InspectionLabelingWorkMap">
 		SELECT po.PO_NO
 		, lwt.LWT_NO
