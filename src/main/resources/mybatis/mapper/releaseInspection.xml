@@ -56,21 +56,22 @@
 	
 	<select id="countReleaseInspection" resultType="int">
 		SELECT COUNT(*)
-		FROM TB_RLS_INSP RI
-		JOIN TB_ORD_ITM OI
-			ON (RI.OI_NO=OI.OI_NO)
-		LEFT JOIN TB_ORD O
-			ON (O.ORD_NO=OI.ORD_NO)    
-		WHERE O.ORD_PRC_ORD IS NULL
+		FROM TB_ORD
+		WHERE ORD_STS = 5
 	</select>
+	<!-- TB_RLS_INSP의 ORD_NO별 SUM(RI_URLS) > 0 인 건수 집계. -->
 	<select id="sumUnreleased" resultType="int">
-		SELECT SUM(RI.RI_URLS)
-		FROM TB_RLS_INSP RI
-		JOIN TB_ORD_ITM OI
-			ON (RI.OI_NO=OI.OI_NO)
-		LEFT JOIN TB_ORD O
-			ON (O.ORD_NO=OI.ORD_NO)
-		WHERE O.ORD_PRC_ORD IS NULL
+		SELECT COUNT(*)
+		FROM (
+			SELECT SUM(RI.RI_URLS) AS SUM_RI_URLS
+		    FROM TB_RLS_INSP RI
+		    JOIN TB_ORD_ITM OI
+				ON (RI.OI_NO = OI.OI_NO)
+			JOIN TB_ORD O
+				ON (OI.ORD_NO = O.ORD_NO)
+			GROUP BY O.ORD_NO
+		) SQ
+		WHERE SQ.SUM_RI_URLS > 0
 	</select>
 	<select id="countExpressShipping" resultType="int">
 		SELECT COUNT(*)

@@ -42,21 +42,22 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		// (현재는 데이터가 정확하지 않은 상태라 JOIN을 이용.)
 		
 		Map<String, Object> map = new HashMap<>();
-		// 주문건수 조회.
+		// 주문건수 조회.(TB_ORD에서 ORD_STS > 0 건수 집계)
 		int progressOrderNo  = orderDao.countProgressOrder();
 		map.put("progressOrderNo", progressOrderNo);
-		// 피킹지시 건수 조회.(ORD_PRC_ORD IS NULL && )
+		// 피킹지시 건수 조회.(TB_ORD에서 ORD_STS = 2 건수 집계)
 		int pickingDirectionNo = pickingDirectionDao.countPickingDirection();
 		map.put("pickingDirectionNo", pickingDirectionNo);
-		// 출고검수 + 패킹 건수 조회.(출고검수가 완료되어야 패킹을 진행하기 때문에 출고검수 건수를 사용.)
+		// 출고검수/패킹 건수 조회.(TB_ORD에서 ORD_STS = 5 건수 집계)
+		// 출고검수와 패킹은 동일한 담당자가 연달아 작업한다는 가정으로, ORD_STS에서 같은 상태값(5)으로 표기.
 		int releaseInspectionNo = releaseInspectionDao.countReleaseInspection();
-//		int packingNo = packingDao.countPackingNo();
 		map.put("releaseInspectionNo", releaseInspectionNo);
 		// 미출고 건수 조회.(
 		// 	이전 단계의 미출고가 0건이 되어야 다음 단계로 진행할 수 있기 때문에
 		// 	현재 처리단계를 확인하지 않고, 출고검수 미출고와 패킹의 미출고 건수를 합함.
 		//	null 주의. 
 		// )
+		// TB_RLS_INSP의 ORD_NO별 SUM(RI_URLS) > 0 인 건수 집계.
 		int releaseInspectionUnreleased = releaseInspectionDao.sumUnreleased();
 		int packingUnreleased = packingDao.sumUnreleased();
 		int unreleasedNo = releaseInspectionUnreleased + packingUnreleased;

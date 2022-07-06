@@ -4,12 +4,8 @@
 <mapper namespace="ows.edu.dao.PickingDirectionDao">
 	<select id="countPickingDirection" resultType="int" >
 		SELECT COUNT(*)
-		FROM TB_PIC_DRC PD
-		JOIN TB_ORD_ITM OI
-			ON (PD.OI_NO=OI.OI_NO)
-		LEFT JOIN TB_ORD O
-			ON (O.ORD_NO=OI.ORD_NO)
-		WHERE O.ORD_PRC_ORD IS NULL
+		FROM TB_ORD
+		WHERE ORD_STS = 2
 	</select>
 </mapper>
 
