@@ -31,13 +31,27 @@ public class OrderViewService {
     return orderStatus;
   }
   
-  //조건에 맞는 리스트(리팩토링 필요)
+  //조건에 맞는 리스트
   public List<OrderView> getListByFilter(OrderFilter orderfilter, Pager pager) {
     List<OrderView> list = new ArrayList<>();
     
     orderfilter = setData(orderfilter);
     
     list.addAll(orderViewDao.selectByFilter(orderfilter, pager));
+    
+    //주문 상태에 맞게 미출고 처리
+    for(OrderView ov : list) {
+      //피킹 지시 단계
+      if(ov.getOrderStatus() == 2) {
+        ov.setPickingDirectionUnrelease(ov.getUnrelease());
+        
+        //피킹 단계
+      } else if(ov.getOrderStatus() >= 3) {
+        ov.setPickingDirectionUnrelease(0);
+        ov.setPickingUnrelease(ov.getUnrelease());
+      }
+    }
+    
     return list;
   }
   

@@ -14,6 +14,8 @@ public class OrderView {
 	private int orderItemQuantity;             //주문수량
 	private String shippingCategory;           //배송구분
 	private String vendorName;                 //업체명
+	private int orderStatus;                   //주문상태 구분
+	private Integer unrelease;                 //미출고
 	
 	private Integer pickingDirectionAttempt;   //피킹지시 차수
 	private String pickingDirectionDate;       //피킹지시 지시일시
@@ -21,9 +23,9 @@ public class OrderView {
 	private Integer pickingDirectionUnrelease; //피킹지시 미출고
 	
 	private String pickingEmployee;            //피킹 담당자
-	private String pickingQuantity;            //피킹 수량
+	private Integer pickingQuantity;           //피킹 수량
 	private String pickingDate;                //피킹 일시
-	private String pickingUnrelease;           //피킹 미출고
+	private Integer pickingUnrelease;          //피킹 미출고
 	
 	private String orderShippingWay;           //협력사 배송방식
 	private String orderCheckDate;             //협력사 주문확인 일시
@@ -37,7 +39,7 @@ public class OrderView {
   private String releaseEmployee;            //출고 담당자
   private String releaseDate;                //출고 일시
 	
-  private String transferEmployee;  //출고검수패킹 담당자
-  private String transferDate;             //출고검수패킹 검수일시
+  private String transferEmployee;           //출고검수패킹 담당자
+  private String transferDate;               //출고검수패킹 검수일시
 	
 }

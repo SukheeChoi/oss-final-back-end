@@ -27,11 +27,13 @@ public class InspectionLabelingService {
   public LabelingWorkTime getTreeList() {
 
     int labelingWorkTimeNo = 0;
-
+    int totalitem = 0;
+    int totalQuantity = 0;
+    
     // 2번째 담당자별 리스트
     List<LabelingWorkTime> employeeList = new ArrayList<>();
     employeeList.addAll(inspectionLabelingDao.searchAllByName());
-
+    
     for (LabelingWorkTime employee : employeeList) {
 
       // 담당자별 예정 시간 정제
