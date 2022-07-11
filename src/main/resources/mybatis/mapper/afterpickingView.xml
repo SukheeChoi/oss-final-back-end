@@ -2,9 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.AfterPickingViewDao">
+<!-- V_AFT_PIC 생성 코드 -->
+<!-- 
+USE FOUREVER;
+CREATE OR REPLACE VIEW V_AFT_PIC AS
+	(
+	SELECT O.ORD_SHP_DEST, O.ORD_SHP_CAT, O.ORD_SHP_WAY, O.ORD_NO
+		, OI.ITM_CODE, OI.OI_URLS_QTY
+		, I.ITM_NAME, I.ITM_OSS
+		, C.CLT_NAME
+		, PI.PIC_QTY
+		, RI.EMP_ID RI_EMP_ID, RI.RI_QTY, RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_NT, RI.RI_DT
+		, R.RLS_CODE, R.EMP_ID R_EMP_ID, R.RLS_SHP_CPN, R.RLS_IVC_CODE, R.RLS_BX_QTY, R.RLS_NT
+		, I.V_NO
+	FROM TB_ORD O
+	RIGHT JOIN TB_ORD_ITM OI
+		ON (O.ORD_NO=OI.ORD_NO)
+	LEFT JOIN TB_ITM I
+		ON (OI.ITM_CODE=I.ITM_CODE)
+	LEFT JOIN TB_CLT C
+		ON (O.CLT_NO=C.CLT_NO)
+	LEFT JOIN TB_PIC PI
+		ON (OI.OI_NO=PI.OI_NO)
+	LEFT JOIN TB_RLS_INSP RI
+		ON (OI.OI_NO=RI.OI_NO)
+	LEFT JOIN TB_RLS R
+		ON (O.ORD_NO=R.ORD_NO)
+	WHERE O.ORD_STS IN (4, 5, 6)
+	)
+;
+ -->
+
 	<select id="selectCountAll" resultType="int">
 		SELECT COUNT(*)
-		FROM AFTERPICKING_VIEW
+		FROM V_AFT_PIC
 		<where>
 			<!-- 배송구분 필터링: 전체/일반/긴급 -->
 		   	<if test='shippingCategory.equals("일반")'>
@@ -13,7 +44,7 @@
 			<if test='shippingCategory.equals("긴급")'>
 				AND ORD_SHP_CAT='긴급'
 			</if>
-			<!-- 배송방식 필터링: 전체/오스템/합배송 -->
+			<!-- 배송방식 필터링: 전체/오스템/합배송(협력사 제외.) -->
 		   	<if test='shippingWay.equals("오스템")'>
 				AND ORD_SHP_WAY='오스템'
 			</if>
@@ -21,13 +52,11 @@
 				AND ORD_SHP_WAY='합배송'
 			</if>
 			<!-- 출고/미출고 필터링 -->
-		   	<!-- <if test='(!released.equals("")) and (released.equals("출고"))'> -->
 		  	<if test='released.equals("출고")'>
-				AND RLS_DN=1
+				AND ( OI_URLS_QTY = 0 OR ISNULL(OI_URLS_QTY) )
 			</if>
-			<!-- <if test='(!released.equals("")) and (released.equals("미출고"))'> -->
 			<if test='released.equals("미출고")'>
-				AND ( RLS_DN!=1 OR ISNULL(RLS_DN) )
+				AND OI_URLS_QTY > 0
 			</if>
 			<!-- 출고검수/패킹 담당자 필터링 -->
 		    <if test='!assignee.equals("")'>
@@ -57,7 +86,7 @@
 
 	<select id="selectReleaseInspectionEmployeeName" resultType="string">
 		SELECT DISTINCT RI_EMP_NAME
-		FROM AFTERPICKING_VIEW
+		FROM V_AFT_PIC
 		<where>
 			<!-- 배송구분 필터링: 전체/일반/긴급 -->
 		   	<if test='shippingCategory.equals("일반")'>
@@ -66,7 +95,7 @@
 			<if test='shippingCategory.equals("긴급")'>
 				AND ORD_SHP_CAT='긴급'
 			</if>
-			<!-- 배송방식 필터링: 전체/오스템/합배송 -->
+			<!-- 배송방식 필터링: 전체/오스템/합배송(협력사 제외.) -->
 		   	<if test='shippingWay.equals("오스템")'>
 				AND ORD_SHP_WAY='오스템'
 			</if>
@@ -74,15 +103,17 @@
 				AND ORD_SHP_WAY='합배송'
 			</if>
 			<!-- 출고/미출고 필터링 -->
-		   	<!-- <if test='(!released.equals("")) and (released.equals("출고"))'> -->
 		  	<if test='released.equals("출고")'>
-				AND RLS_DN=1
+				AND ( OI_URLS_QTY = 0 OR ISNULL(OI_URLS_QTY) )
 			</if>
-			<!-- <if test='(!released.equals("")) and (released.equals("미출고"))'> -->
 			<if test='released.equals("미출고")'>
-				AND ( RLS_DN!=1 OR ISNULL(RLS_DN) )
+				AND OI_URLS_QTY > 0
 			</if>
-			
+			<!-- 출고검수/패킹 담당자 필터링 -->
+		    <if test='!assignee.equals("")'>
+				AND RI_EMP_NAME = #{assignee}
+				<!-- AND (RI_EMP_NAME = #{assignee} OR RLS_EMP_NAME = #{assignee}) -->
+			</if>
 			<!-- 주문번호 필터링 -->
 			<if test='orderNo != -1'>
 		   		AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%')
@@ -108,54 +139,52 @@
 	<select id="selectAll" resultType="HashMap">
 		SELECT @ROWNUM := @ROWNUM+1 AS ROWNUM, SQ.*
 		FROM(
-			SELECT * FROM AFTERPICKING_VIEW
+			SELECT * FROM V_AFT_PIC
 			<where>
-				<!-- 배송구분 필터링: 전체/일반/긴급 -->
-			   	<if test='shippingCategory.equals("일반")'>
-					AND ORD_SHP_CAT='일반'
-				</if>
-				<if test='shippingCategory.equals("긴급")'>
-					AND ORD_SHP_CAT='긴급'
-				</if>
-				<!-- 배송방식 필터링: 전체/오스템/합배송 -->
-			   	<if test='shippingWay.equals("오스템")'>
-					AND ORD_SHP_WAY='오스템'
-				</if>
-				<if test='shippingWay.equals("합배송")'>
-					AND ORD_SHP_WAY='합배송'
-				</if>
-				<!-- 출고/미출고 필터링 -->
-			  	<if test='released.equals("출고")'>
-					AND RLS_DN=1
-				</if>
-				<if test='released.equals("미출고")'>
-					AND ( RLS_DN!=1 OR ISNULL(RLS_DN) )
-				</if>
-				
-				<!-- 출고검수/패킹 담당자 필터링 -->
-			    <if test='!assignee.equals("")'>
-					AND RI_EMP_NAME = #{assignee}
-				</if>
-				
-				<!-- 주문번호 필터링 -->
-				<if test='orderNo != -1'>
-			 	<!-- <if test='!strOrderNo.equals("-1")'> -->
-			   		AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%')
-				</if>
-				
-				<!-- 거래처 필터링 -->
-			   	<if test='!clientName.equals("")'>
-					AND CLT_NAME LIKE CONCAT('%',#{clientName},'%')
-				</if>
-				
-				<!-- 배송지 필터링 -->
-			   	<if test='!shippingDestination.equals("")'>
-			 		AND ORD_SHP_DEST LIKE CONCAT('%',#{shippingDestination},'%')
-			 	</if>
-			 	<!-- 업체명으로 필터링 -->
-			   	<if test='!vendorName.equals("")'>
-			   		AND V_NAME LIKE CONCAT('%',#{vendorName},'%')
-			   	</if>
+			<!-- 배송구분 필터링: 전체/일반/긴급 -->
+		   	<if test='shippingCategory.equals("일반")'>
+				AND ORD_SHP_CAT='일반'
+			</if>
+			<if test='shippingCategory.equals("긴급")'>
+				AND ORD_SHP_CAT='긴급'
+			</if>
+			<!-- 배송방식 필터링: 전체/오스템/합배송(협력사 제외.) -->
+		   	<if test='shippingWay.equals("오스템")'>
+				AND ORD_SHP_WAY='오스템'
+			</if>
+			<if test='shippingWay.equals("합배송")'>
+				AND ORD_SHP_WAY='합배송'
+			</if>
+			<!-- 출고/미출고 필터링 -->
+		  	<if test='released.equals("출고")'>
+				AND ( OI_URLS_QTY = 0 OR ISNULL(OI_URLS_QTY) )
+			</if>
+			<if test='released.equals("미출고")'>
+				AND OI_URLS_QTY > 0
+			</if>
+			<!-- 출고검수/패킹 담당자 필터링 -->
+		    <if test='!assignee.equals("")'>
+				AND RI_EMP_NAME = #{assignee}
+				<!-- AND (RI_EMP_NAME = #{assignee} OR RLS_EMP_NAME = #{assignee}) -->
+			</if>
+			<!-- 주문번호 필터링 -->
+			<if test='orderNo != -1'>
+		   		AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%')
+			</if>
+			
+			<!-- 거래처 필터링 -->
+		   	<if test='!clientName.equals("")'>
+				AND CLT_NAME LIKE CONCAT('%',#{clientName},'%')
+			</if>
+			
+			<!-- 배송지 필터링 -->
+		   	<if test='!shippingDestination.equals("")'>
+		 		AND ORD_SHP_DEST LIKE CONCAT('%',#{shippingDestination},'%')
+		 	</if>
+		 	<!-- 업체명으로 필터링 -->
+		   	<if test='!vendorName.equals("")'>
+		   		AND V_NAME LIKE CONCAT('%',#{vendorName},'%')
+		   	</if>
 			</where>
 		) SQ
 			, (SELECT @ROWNUM := 0) AS R

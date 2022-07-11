@@ -23,7 +23,7 @@ public interface CombineShippingDao {
 												, @Param("endDate") String endDate);
 	
 	public int selectCountAllReceipt(@Param("toDo") int toDo
-									, @Param("employeeId") String employeeId
+									, @Param("vendorName") String vendorName
 									, @Param("startDate") String startDate
 									, @Param("endDate") String endDate);
 	

@@ -74,6 +74,7 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 				.selectCountAllReceipt(
 					toDo, vendorName, startDate, endDate
 				);
+		log.info("## getReceiptList - totalRows" + totalRows);
 		Pager pager = new Pager(20, 10, totalRows, pageNo);
 		
 		List<String> orderItemNoList = combineShippingDao
