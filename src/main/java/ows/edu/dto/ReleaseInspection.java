@@ -28,4 +28,13 @@ public class ReleaseInspection {
 	
 	private Client client;
  
+//	private Release release;
+//	private Item item;
+//	private Picking picking;
+//	private Vendor vendor;
+//	private Order order;
+//	private Employee employee;
+//	private Packing packing;
+//	private Client client;
+
 }

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ows.edu.dao.InspectionLabelingDao">
+
+	<!-- 왼쪽 전체 데이터 가져오기 / 전체 트리 그리드 데이터 -->
+	<!-- 왼쪽 담당자 기준으로 데이터 가져오기 / 2번째 트리 그리드 데이터 -->
+	<resultMap id="LabelingWorkTimeMap" type="LabelingWorkTime">
+		<result property="labelingWorkTimeNo" column="LWT_NO" />
+		<result property="employeeName" column="EMP_NAME" />
+		<result property="receiveItem" column="LWT_RCV_ITM" />
+		<result property="receiveQuantity" column="LWT_RCV_QTY" />
+		<result property="currentQuantity" column="LWT_CRT_QTY" />
+		<result property="progressQuantity" column="LWT_PRG_QTY" />
+		<result property="scheduledStartTime" column="LWT_SCH_SRT_TM" />
+		<result property="scheduledEndTime" column="LWT_SCH_END_TM" />
+		<result property="totalWorkTime" column="LWT_TTL_WRK_TM" />
+		<result property="LWTNine" column="LWT_9" />
+		<result property="LWTTen" column="LWT_10" />
+		<result property="LWTEleven" column="LWT_11" />
+		<result property="LWTThirteen" column="LWT_13" />
+		<result property="LWTFourteen" column="LWT_14" />
+		<result property="LWTFifteen" column="LWT_15" />
+		<result property="LWTSixteen" column="LWT_16" />
+		<result property="LWTSeventeen" column="LWT_17" />
+	</resultMap>
+
+	<!-- 왼쪽 업체명 기준으로 데이터 가져오기 / 3번째 트리 그리드 데이터 -->
+	<resultMap id="InspectionLabelingWorkMap"
+		type="InspectionLabelingWork">
+		<result property="employeeName" column="V_NAME" />
+		<result property="receiveDate" column="ILW_RCV_DT" />
+		<result property="receiveItem" column="ILW_RCV_ITM" />
+		<result property="receiveQuantity" column="ILW_RCV_QTY" />
+		<result property="scheduledStartTime" column="ILW_SCH_SRT_TM" />
+		<result property="scheduledEndTime" column="ILW_SCH_END_TM" />
+		<result property="totalWorkTime" column="LWT_TTL_WRK_TM" />
+		<result property="startTime" column="ILW_SRT_TM" />
+		<result property="workTime" column="ILW_WRK_TM" />
+		<result property="progressRate" column="ILW_PRG_RT" />
+		<result property="status" column="ILW_STS" />
+		<result property="lateTime" column="ILW_LT_TM" />
+		<result property="inspectionQuantity" column="ILW_INSP_QTY" />
+		<result property="passItemQuantity" column="ILW_PAS_ITM_QTY" />
+		<result property="labelingItemQuantity" column="ILW_LBL_ITM_QTY" />
+	</resultMap>
+
+	<!-- 오른쪽 작업 담당자 기준으로 데이터 가져오기 -->
+	<resultMap id="InspectionLabelingViewMap"
+		type="InspectionLabelingView">
+		<result property="vendorName" column="V_NAME" />
+		<result property="itemName" column="ITM_NAME" />
+		<result property="itemCode" column="ITM_CODE" />
+		<result property="placingOrderNo" column="PO_CODE" />
+		<result property="lotCode" column="LOT_CODE" />
+		<result property="recievedQuantity" column="IL_RCV_QTY" />
+		<result property="inspectionQuantity" column="IL_INSP_QTY" />
+		<result property="passedItemQuantity" column="IL_PAS_ITM_QTY" />
+		<result property="missingItemQuantity" column="IL_MIS_ITM_QTY" />
+		<result property="damagedItemQuantity" column="IL_DMG_ITM_QTY" />
+		<result property="etcQuantity" column="IL_ETC_ITM_QTY" />
+		<result property="Accepted" column="IL_ACP" />
+		<result property="labelingItemQuantity" column="IL_LBL_ITM_QTY" />
+	</resultMap>
+
+	<!-- 현황 가져오기 -->
+	<resultMap id="InspectionLabelingStatusMap"
+		type="InspectionLabelingStatus">
+		<result property="receiveItem" column="SUM_RCV_ITM" />
+		<result property="receiveItemQuantity" column="SUM_RCV_QTY" />
+
+		<result property="inspectionItem" column="CNT_INSP_QTY" />
+		<result property="inspectionItemQuantity" column="SUM_INSP_QTY" />
+		<result property="labelingItem" column="CNT_LBL_QTY" />
+		<result property="labelingItemQuantity" column="SUM_LBL_QTY" />
+		<result property="passedItem" column="CNT_PAS_QTY" />
+		<result property="passedItemQuantity" column="SUM_PAS_QTY" />
+		<result property="missingItem" column="CNT_MIS_QTY" />
+		<result property="missingItemQuantity" column="SUM_MIS_QTY" />
+		<result property="damagedItem" column="CNT_DMG_QTY" />
+		<result property="damagedItemQuantity" column="SUM_DMG_QTY" />
+	</resultMap>
+
+	<!-- 왼쪽 전체 데이터 가져오기 / 전체 트리 그리드 데이터 -->
+	<select id="searchAllByTotal" resultMap="LabelingWorkTimeMap">
+		SELECT SUM(LWT_RCV_ITM)
+		as LWT_RCV_ITM
+		, SUM(LWT_RCV_QTY) as LWT_RCV_QTY
+		, SUM(LWT_CRT_QTY) as LWT_CRT_QTY
+		, SUM(LWT_PRG_QTY) as LWT_PRG_QTY
+		, DATE_FORMAT(MIN(LWT_SCH_SRT_TM), '%H:%i') AS LWT_SCH_SRT_TM
+		, DATE_FORMAT(MAX(LWT_SCH_END_TM), '%H:%i') AS LWT_SCH_END_TM
+		, timestampdiff(Minute, MIN(LWT_SCH_SRT_TM), MAX(LWT_SCH_END_TM)) AS
+		LWT_TTL_WRK_TM
+		, avg(LWT_9) as LWT_9
+		, avg(LWT_10) as LWT_10
+		, avg(LWT_11) as LWT_11
+		, avg(LWT_13) as LWT_13
+		, avg(LWT_14) as LWT_14
+		, avg(LWT_15) as LWT_15
+		, avg(LWT_16) as LWT_16
+		, avg(LWT_17) as LWT_17
+		FROM TB_LBL_WRK_TM lwt
+		WHERE LWT_DT = '22-07-28'
+	</select>
+
+	<!-- 왼쪽 담당자 기준으로 데이터 가져오기 / 2번째 트리 그리드 데이터 -->
+	<select id="searchAllByName" resultMap="LabelingWorkTimeMap">
+		select lwt.LWT_NO
+		, emp.EMP_name
+		, lwt.LWT_RCV_ITM
+		, lwt.LWT_RCV_QTY
+		, lwt.LWT_CRT_QTY
+		, lwt.LWT_PRG_QTY
+		, DATE_FORMAT(lwt.LWT_SCH_SRT_TM, '%H:%i') as LWT_SCH_SRT_TM
+		, DATE_FORMAT(lwt.LWT_SCH_END_TM, '%H:%i') as LWT_SCH_END_TM
+		, timestampdiff(Minute, lwt.LWT_SCH_SRT_TM, lwt.LWT_SCH_END_TM) as
+		LWT_TTL_WRK_TM
+		, lwt.LWT_9
+		, lwt.LWT_10
+		, lwt.LWT_11
+		, lwt.LWT_13
+		, lwt.LWT_14
+		, lwt.LWT_15
+		, lwt.LWT_16
+		, lwt.LWT_17
+		from TB_LBL_WRK_TM lwt
+		JOIN TB_EMP emp ON emp.EMP_ID =
+		lwt.EMP_ID
+		WHERE LWT_DT = '22-07-28'
+	</select>
+
+	<!-- 왼쪽 업체명 기준으로 데이터 가져오기 / 3번째 트리 그리드 데이터 -->
+	<select id="searchAllByLWTNo" parameterType="int"
+		resultMap="InspectionLabelingWorkMap">
+		SELECT vnd.V_NAME
+		, DATE_FORMAT(ilw.ILW_RCV_DT, '%m-%d %H:%i') AS ILW_RCV_DT
+		, ilw.ILW_RCV_ITM
+		, ilw.ILW_RCV_QTY
+		, DATE_FORMAT(ilw.ILW_SCH_SRT_TM, '%H:%i') AS ILW_SCH_SRT_TM
+		, DATE_FORMAT(ilw.ILW_SCH_END_TM, '%H:%i') AS ILW_SCH_END_TM
+		, timestampdiff(Minute, ilw.ILW_SCH_SRT_TM, ilw.ILW_SCH_END_TM) AS
+		LWT_TTL_WRK_TM
+		, ilw.ILW_SRT_TM
+		, ilw.ILW_WRK_TM
+		, ilw.ILW_PRG_RT
+		, ilw.ILW_STS
+		, ilw.ILW_LT_TM
+		, ilw.ILW_INSP_QTY
+		, ilw.ILW_PAS_ITM_QTY
+		, ilw.ILW_LBL_ITM_QTY
+		FROM TB_INSP_LBL_WRK ilw
+		JOIN TB_PLC_ORD po ON ilw.PO_CODE = po.PO_CODE
+		JOIN TB_VND vnd on po.V_NO = vnd.V_NO
+		WHERE ilw.LWT_NO = #{labelingWorkTimeNo}
+		ORDER BY ILW_SCH_SRT_TM
+		
+	</select>
+
+		<!-- 오른쪽 작업 담당자 기준으로 데이터 가져오기 -->
+	<select id="searchAllDetailByLWTNo"
+		resultMap="InspectionLabelingViewMap">
+		SELECT lwt.EMP_ID
+			 , vnd.V_NAME
+			 , itm.ITM_NAME
+		     , itm.ITM_CODE
+		     , ilw.PO_CODE
+		     , poi.LOT_CODE
+		     , il.IL_RCV_QTY
+		     , il.IL_INSP_QTY
+		     , il.IL_PAS_ITM_QTY
+		     , il.IL_MIS_ITM_QTY
+		     , il.IL_DMG_ITM_QTY
+		     , il.IL_ETC_ITM_QTY
+		     , il.IL_ACP
+		     , il.IL_LBL_ITM_QTY
+		FROM TB_LBL_WRK_TM lwt
+		JOIN TB_INSP_LBL_WRK ilw ON lwt.LWT_NO = ilw.LWT_NO
+		JOIN TB_PLC_ORD_ITM poi ON ilw.PO_CODE = poi.PO_CODE
+		JOIN TB_PLC_ORD po ON poi.PO_CODE = po.PO_CODE
+		JOIN TB_ITM itm ON itm.ITM_CODE = poi.ITM_CODE
+		JOIN TB_VND vnd ON vnd.V_NO = po.V_NO
+		JOIN TB_INSP_LBL il ON il.POI_NO = poi.POI_NO
+		WHERE lwt.LWT_NO = #{il.labelingWorkTimeNo}
+		<if
+			test='il.searchSelected != null and il.searchContent != null and il.searchSelected.equals("업체명")'>
+			AND V_NAME LIKE CONCAT('%', #{il.searchContent}, '%')
+		</if>
+		<if
+			test='il.searchSelected != null and il.searchContent != null and il.searchSelected.equals("발주번호")'>
+			AND ilw.PO_CODE LIKE CONCAT('%', #{il.searchContent}, '%')
+		</if>
+		<if
+			test='il.searchSelected != null and il.searchContent != null and il.searchSelected.equals("품목명")'>
+			AND ITM_NAME LIKE CONCAT('%', #{il.searchContent}, '%')
+		</if>
+		<if
+			test='il.searchSelected != null and il.searchContent != null and il.searchSelected.equals("품목코드")'>
+			AND itm.ITM_CODE LIKE CONCAT('%', #{il.searchContent}, '%')
+		</if>
+		order by ilw.ILW_SCH_SRT_TM
+		LIMIT #{pager.rowsPerPage} OFFSET #{pager.startRowIndex}
+	</select>
+	
+	<select id="countDetailByLWTNO" resultType="int">
+		SELECT count(*)
+		FROM TB_LBL_WRK_TM lwt
+		JOIN TB_INSP_LBL_WRK ilw ON
+		lwt.LWT_NO = ilw.LWT_NO
+		JOIN TB_PLC_ORD_ITM poi ON ilw.PO_CODE =
+		poi.PO_CODE
+		JOIN TB_PLC_ORD po ON poi.PO_CODE = po.PO_CODE
+		JOIN TB_ITM
+		itm ON itm.ITM_CODE = poi.ITM_CODE
+		JOIN TB_VND vnd ON vnd.V_NO =
+		po.V_NO
+		JOIN TB_INSP_LBL il ON il.POI_NO = poi.POI_NO
+		WHERE lwt.LWT_NO = #{labelingWorkTimeNo}
+		<if
+			test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("업체명")'>
+			AND V_NAME LIKE CONCAT('%', #{searchContent}, '%');
+		</if>
+		<if
+			test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("발주번호")'>
+			AND ilw.PO_CODE LIKE CONCAT('%', #{searchContent}, '%');
+		</if>
+		<if
+			test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("품목명")'>
+			AND ITM_NAME LIKE CONCAT('%', #{searchContent}, '%');
+		</if>
+		<if
+			test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("품목코드")'>
+			AND itm.ITM_CODE LIKE CONCAT('%', #{searchContent}, '%');
+		</if>
+	</select>
+
+	<!-- 현황 가져오기(물품수령 품목/개수) -->
+	<select id="searchStatusTotal"
+		resultMap="InspectionLabelingStatusMap">
+		SELECT SUM(ILW_RCV_ITM) AS SUM_RCV_ITM
+		, SUM(ILW_RCV_QTY) AS SUM_RCV_QTY FROM TB_INSP_LBL_WRK;
+	</select>
+
+	<!-- 현황 가져오기(검품검수 품목/개수, 라벨링 품목/개수, 양품 품목/개수, 누락 품목/개수, 파손 품목/개수 ) -->
+	<select id="searchStatus"
+		resultMap="InspectionLabelingStatusMap">
+		SELECT
+		COUNT(CASE WHEN IL_INSP_QTY THEN 1 END) AS CNT_INSP_QTY
+		, SUM(IL_INSP_QTY) AS SUM_INSP_QTY
+		, COUNT(CASE WHEN IL_LBL_ITM_QTY THEN 1 END) AS CNT_LBL_QTY
+		, SUM(IL_LBL_ITM_QTY) AS SUM_LBL_QTY
+		, COUNT(CASE WHEN IL_PAS_ITM_QTY THEN 1 END) AS CNT_PAS_QTY
+		, SUM(IL_PAS_ITM_QTY) AS SUM_PAS_QTY
+		, COUNT(CASE WHEN IL_MIS_ITM_QTY THEN 1 END) AS CNT_MIS_QTY
+		, SUM(IL_MIS_ITM_QTY) AS SUM_MIS_QTY
+		, COUNT(CASE WHEN IL_DMG_ITM_QTY THEN 1 END) AS CNT_DMG_QTY
+		, SUM(IL_DMG_ITM_QTY) AS SUM_DMG_QTY
+		FROM TB_INSP_LBL
+	</select>
+</mapper>
+

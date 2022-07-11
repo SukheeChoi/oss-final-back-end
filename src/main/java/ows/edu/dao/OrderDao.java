@@ -28,3 +28,4 @@ public interface OrderDao {
 	// 미완료된 주문 건수 조회.
 	public int countProgressOrder();
 }
+

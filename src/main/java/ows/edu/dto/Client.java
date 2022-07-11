@@ -10,5 +10,5 @@ public class Client {
   private String representative;
   private String representativeContact;
   
-  private Order order;
+//  private Order order;
 }
