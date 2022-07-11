@@ -19,7 +19,7 @@
 			<result property="orderItemNo" column="OI_NO"/>		
 		</association>
 		<association property="release" javaType="release">
-			<result property="releaseNo" column="RLS_NO"/>
+			<result property="releaseCode" column="RLS_CODE"/>
 			<result property="invoiceCode" column="RLS_RLS_IVC_CODE"/>
 			<result property="employeeName" column="RLS_EMP_NAME"/>	
 			<result property="shippingCompany" column="RLS_SHP_CPN"/>			
