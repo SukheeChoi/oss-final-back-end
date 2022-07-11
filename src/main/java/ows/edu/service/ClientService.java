@@ -30,6 +30,10 @@ public class ClientService {
 		return clientDao.getListByShippingCategory(map);
 	}
 	
+	public int unreleaseCnt() {
+		return clientDao.unreleaseCnt();
+	}
+	
 	//주문 단계 별(clientDao.statusCnt(i)) 건수 list에 삽입
 	public List<Integer> getstatusCnt() {
 		List<Integer> list = new ArrayList<>();

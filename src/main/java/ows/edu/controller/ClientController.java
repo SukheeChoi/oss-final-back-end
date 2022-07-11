@@ -23,7 +23,6 @@ import ows.edu.service.ClientService;
 @RequestMapping("/client")
 @Log4j2
 public class ClientController {
-	
 	@Resource
 	ClientService clientService;
 	
@@ -76,4 +75,10 @@ public class ClientController {
 		return map;
 	}
 	
+	@GetMapping("/unreleaseCnt")
+	public int unreleaseCnt() {
+		int unreleaseCnt = clientService.unreleaseCnt();
+		log.info("unreleaseCnt : " + unreleaseCnt);
+		return unreleaseCnt;
+	}
 }

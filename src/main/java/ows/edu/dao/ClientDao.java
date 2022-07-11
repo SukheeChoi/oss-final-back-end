@@ -13,5 +13,7 @@ public interface ClientDao {
 	
 	public List<Client> getListByShippingCategory(Map<String, Object> map);
 	
+	public int unreleaseCnt();
+	
 	public int getstatusCnt(int status);
 }

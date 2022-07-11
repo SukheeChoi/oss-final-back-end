@@ -167,5 +167,11 @@
  			AND O.ORD_STS=#{status};
 	</select>
 
+	<!-- 미출고 카운트 -->
+	<select id="unreleaseCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM TB_ORD
+		WHERE ORD_URLS = 1;
+	</select>
 </mapper>
 
