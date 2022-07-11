@@ -67,7 +67,7 @@ public class CombineShippingController {
 	}
 	
 //	선택된 담당자를 기준으로 수령 목록 조회.
-	@PostMapping("/getReceiptList")
+	@PostMapping("/receiptList")
 	public Map<String, Object> geReceiptList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="vendorName", defaultValue="전체") String vendorName
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
