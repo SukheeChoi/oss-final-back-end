@@ -181,24 +181,25 @@ SET 필드이름1=데이터값1, 필드이름2=데이터값2, ...
 WHERE 필드이름=데이터값 -->
 
 	<!-- 검수수량, 미출고수량 업데이트 -->
-	<update id="releaseInspectionQtyUpdate" parameterType="Map">
+	<update id="releaseInspectionQtyUpdate" parameterType="String">
 		UPDATE TB_RLS_INSP
 		INNER JOIN tb_ord_itm on tb_rls_insp.oi_no = tb_ord_itm.oi_no
+		INNER JOIN TB_PIC ON tb_ord_itm.oi_no = TB_PIC.OI_NO
 		INNER JOIN tb_ord on TB_ORD_ITM.ord_no = TB_ORD.ord_no
 		INNER JOIN tb_rls on TB_ORD.ord_no = tb_rls.ord_no
-		set tb_rls_insp.ri_qty = if(tb_rls_insp.ri_qty is null, 1, TB_RLS_INSP.ri_qty+1)
+		set tb_rls_insp.ri_qty = TB_PIC.pic_qty, tb_rls.rls_dn = 1
 		WHERE TB_RLS.RLS_CODE = #{releaseCode}
-			and TB_RLS_INSP.ri_brcd = #{scannedBarcode};
+		<!-- 출고검수 테이블에 출고검수 컬럼 넣고 이후에 set 해주기 -->
 	</update>
 	
-	<update id="unRleaseQtyUpdate" parameterType="Map">
+	<update id="unRleaseQtyUpdate" parameterType="String">
 		UPDATE TB_RLS_INSP
 		INNER JOIN tb_ord_itm on tb_rls_insp.oi_no = tb_ord_itm.oi_no
+		INNER JOIN TB_PIC ON tb_ord_itm.oi_no = TB_PIC.OI_NO
 		INNER JOIN tb_ord on TB_ORD_ITM.ord_no = TB_ORD.ord_no
 		INNER JOIN tb_rls on TB_ORD.ord_no = tb_rls.ord_no
-		set tb_rls_insp.RI_URLS = if(tb_rls_insp.RI_URLS is null, 1, TB_RLS_INSP.RI_URLS+1)
+		set tb_rls_insp.RI_URLS = TB_PIC.pic_qty, tb_rls.rls_dn = 0
 		WHERE TB_RLS.RLS_CODE = #{releaseCode}
-		and TB_RLS_INSP.ri_brcd = #{scannedBarcode}
 	</update>
 	
 	<resultMap id="releaseInspectionScanMap" type="releaseInspection">
@@ -209,7 +210,9 @@ WHERE 필드이름=데이터값 -->
 		<result property="releaseInspectionDate" column="RI_DT"/>
 		<result property="releaseInspectionNote" column="RI_NT"/>	
 		<association property="release" javaType="release">
-			<result property="releaseCode" column="RLS_CODE"/>		
+			<result property="releaseCode" column="RLS_CODE"/>
+			<result property="releaseBarCode" column="RLS_BRCD"/>
+			<result property="releaseDone" column="RLS_DN"/>
 		</association>
 		<association property="order" javaType="order">		
 			<result property="shippingCategory" column="ORD_SHP_CAT"/>					
@@ -224,19 +227,21 @@ WHERE 필드이름=데이터값 -->
 		</association>
 	</resultMap>
 		
-	<!-- scan버튼 눌렀을때 정보 띄우기 -->
-	<select id="scan" parameterType="String" resultMap="releaseInspectionScanMap">
+	<!-- 출고번호 scan버튼 눌렀을때 정보 띄우기 -->
+	<select id="scan" resultMap="releaseInspectionScanMap">
 		select sum(TB_RLS_INSP.RI_QTY) as "RI_QTY", TB_RLS_INSP.RI_DT, TB_RLS_INSP.RI_RLS_PRT_DT, TB_RLS_INSP.RI_RCPT_PRT_DT,
 			TB_RLS_INSP.EMP_ID, TB_RLS_INSP.RI_NT, sum(TB_RLS_INSP.RI_URLS) as "RI_URLS",
 		    tb_ord.ord_no, tb_ord.clt_no, tb_ord.ord_shp_cat,
-		    TB_RLS.rls_code, sum(tb_pic.pic_qty) as "pic_qty", TB_CLT.CLT_NAME
+		    TB_RLS.rls_code, TB_RLS.RLS_DN, tb_rls.rls_brcd, sum(tb_pic.pic_qty) as "pic_qty", TB_CLT.CLT_NAME
 		from TB_RLS_INSP
 		INNER JOIN tb_ord_itm on tb_rls_insp.oi_no = tb_ord_itm.oi_no
 		inner join tb_pic on tb_pic.oi_no = tb_ord_itm.oi_no
 		INNER JOIN tb_ord on TB_ORD_ITM.ord_no = TB_ORD.ord_no
 		INNER JOIN tb_rls on TB_ORD.ord_no = tb_rls.ord_no
 		inner join tb_clt on tb_ord.clt_no = tb_clt.clt_no
-		WHERE TB_RLS.RLS_CODE = #{releaseCode}
+		<if test="kind.equals('releaseCode')">WHERE TB_RLS.RLS_CODE = #{code}</if>
+		<if test="kind.equals('barCode')">WHERE TB_RLS.RLS_BRCD = #{code}</if>
+		<!-- releaseInspection 테이블에 검수여부 넣고  -->
 	</select>
 	
 	<update id="update" parameterType="Map">

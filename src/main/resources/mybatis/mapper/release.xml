@@ -2,9 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.ReleaseDao">
-	<update id="updateReleaseDone" parameterType="MAP">
+	<update id="updateReleaseDone" parameterType="map">
 		update tb_rls
 		set rls_dn = 1, rls_bx_qty = #{boxQty}
 		WHERE RLS_CODE = #{releaseCode}
 	</update>
+	<select id="count" resultType="int">
+		select count(*) from tb_rls
+	</select>
+	
+	<select id="count2" parameterType="pager" resultType="int">
+		select count(*) from tb_rls
+	</select>
 </mapper>

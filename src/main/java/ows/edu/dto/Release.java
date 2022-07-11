@@ -14,6 +14,7 @@ public class Release {
 	private String invoiceCode;
 	private String note;
 	private String shippingCompany;
+	private long releaseBarCode;
 	
 	private String releaseCode;
 	

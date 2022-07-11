@@ -21,10 +21,7 @@ public class DataSourceConfig {
 	    config.setJdbcUrl("jdbc:mariadb://localhost:3306/osstem");
 //	    config.setJdbcUrl("jdbc:mariadb://kosa1.iptime.org:50121/osstem");
 	    config.setUsername("root");
-//	    config.setPassword("shsh");
-
-//	    config.setPassword("1111");
-	    config.setPassword("mariadb");
+	    config.setPassword("shsh");
 	    config.setMaximumPoolSize(3);
 	    HikariDataSource hikariDataSource = new HikariDataSource(config);
 	    return hikariDataSource;

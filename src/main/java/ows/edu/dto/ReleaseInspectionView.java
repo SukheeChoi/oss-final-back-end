@@ -22,7 +22,7 @@ public class ReleaseInspectionView {
 	//order Item
 	private int orderItemNo;			
 	private String code;
-	private int orderItemqty;
+	private int orderItemQuantity;
 	
 	//Item
 	private String itemName;
@@ -32,13 +32,13 @@ public class ReleaseInspectionView {
 	private String releaseCode;
 	private int done;
 	private int boxQty;
+	private long releaseBarcode;
 	
 	//ReleaseInspection
 	private int releaseInspectionQuantity;
 	private String note;
 	private Date releasePrintDate;
 	private Date receiptePrintDate;
-	private long releaseInspectionBarcode;
 	private int unReleased;
 	
 	//picking

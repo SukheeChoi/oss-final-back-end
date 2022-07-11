@@ -20,7 +20,6 @@ public interface ReleaseInspectionViewDao {
 	
 	//데이터 총 개수
 	public int count();
-
 	//페이징처리
 	public List<ReleaseInspectionView> selectByPage(Pager pager);
 	
@@ -30,5 +29,7 @@ public interface ReleaseInspectionViewDao {
 	//페이징처리&필터
 	public List<ReleaseInspectionView> selectByFilterPage(Pager pager);
 	
+	//스캔했을 때, 박스별품목정보 띄어주는 용도
+	public List<ReleaseInspectionView> selectByReleaseCode(String releaseCode);
 	
 }

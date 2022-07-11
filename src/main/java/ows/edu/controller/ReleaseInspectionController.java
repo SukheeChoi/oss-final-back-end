@@ -19,12 +19,12 @@ import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.Box;
 import ows.edu.dto.Pager;
 import ows.edu.dto.ReleaseInspection;
+import ows.edu.dto.ReleaseInspectionFilter;
 import ows.edu.dto.ReleaseInspectionView;
 import ows.edu.service.BoxService;
 import ows.edu.service.OrderService;
 import ows.edu.service.ReleaseInspectionService;
 import ows.edu.service.ReleaseService;
-import ows.edu.service.impl.ReleaseServiceImpl;
 
 @RestController
 @RequestMapping("/releaseInspection")
@@ -42,6 +42,8 @@ public class ReleaseInspectionController {
 	
 	@Resource
 	ReleaseService releaseService;
+
+	private Integer[] computedStartRowNo;
 	
 	@GetMapping("/get")
 	public List<ReleaseInspectionView> getReleaseInspectionList(){
@@ -51,21 +53,45 @@ public class ReleaseInspectionController {
 	}
 	
 	@PostMapping("/getFilterList")
-	public List<ReleaseInspectionView> getFilterList(@RequestBody String[] newGroup){
-		log.info(newGroup);
-		System.out.println(Arrays.toString(newGroup));
+	public Map<String, Object> getFilterList(@RequestBody ReleaseInspectionFilter apiData){ //String[] newGroup
+
+		String[] newGroup = apiData.getEmptyGroup();
+		int pageSize = apiData.getPageSize();  //pageSeize <= rowsPerPage
+		int pageNo = apiData.getPageNo();
+		
+		log.info("체크된 필터 : "+Arrays.toString(newGroup));
+		
+		//전체 데이터 개수
+		int totalCount = releaseService.count();
+		log.info(totalCount);
 		
 		//페이저 & 필터 설정
-		Pager pager = new Pager(3, 10, 10, 1);
+		Pager pager = new Pager(pageSize, 10, totalCount, pageNo); 
+		log.info("넘어온 pageNo 정보 : " + pageNo);
+		
+		computedStartRowNo =new Integer[pageSize];
+		
+		//computedStartRowNo 정보
+		for(int i=0; i<pageSize; i++) {
+			computedStartRowNo [i] = i;
+		}
+		
+		pager.setStartPageNo(4);
+		pager.setComputedStartRowNo(computedStartRowNo);
+		
+		log.info("그룹의 시작 페이지 번호 : " + pager.getStartPageNo());
 		pager.setNewGroup(newGroup);
-		System.out.println(Arrays.toString(pager.getNewGroup()));
-		
-		//서비스 단에서 페이저, 필터 처리된 정보 가져오기
-		//list = releaseI
-		
+				
 		List<ReleaseInspectionView> list = new ArrayList<>();
 		list = releaseInspectionService.selectByFilterPage(pager);
-		return list;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("data", list);
+		map.put("totalCount", totalCount);
+		map.put("pageNo", pageNo);
+		
+		return map;
 	}
 	
 	//왼쪽 배송 list
@@ -91,33 +117,41 @@ public class ReleaseInspectionController {
 		return list;
 	}
 	
-	
-	////검수수량, 미출고 수량 업데이트
-	@PostMapping("/RIQtyUpdate")
-	public int releaseInspectionQtyUpdate(@RequestBody HashMap<String, String> codes) {
+	//검수수량, 미출고 수량 업데이트
+	@GetMapping("/RIQtyUpdate")
+	public int releaseInspectionQtyUpdate(String releaseCode) {
+		log.info("====================");
+		log.info(releaseCode);
 		
-		System.out.println(codes);
-		
-		int success = releaseInspectionService.releaseInspectionQtyUpdate(codes);
-		System.out.println(success);
+		int success = releaseInspectionService.releaseInspectionQtyUpdate(releaseCode);
+		log.info(success);
 		
 		return success;
 	}
 	
 	@PostMapping("/unRleaseQtyUpdate")
-	public int unRleaseQtyUpdate(@RequestBody HashMap<String, String> codes) {
+	public int unRleaseQtyUpdate(@RequestBody String releaseCode) {
 		
-		System.out.println("unRleaseQtyUpdate");
-		int success = releaseInspectionService.unRleaseQtyUpdate(codes);
+		log.info("unRleaseQtyUpdate");
+		int success = releaseInspectionService.unRleaseQtyUpdate(releaseCode);
 		
 		return success;
 	}
 	
 	//스캔
 	@GetMapping("/scanBtnClick")
-	public ReleaseInspection scan(@RequestParam String releaseCode) {
-		ReleaseInspection releaseInspection = releaseInspectionService.scan(releaseCode);
+	public ReleaseInspection scan(@RequestParam String code, @RequestParam String kind) {
+		
+		ReleaseInspection releaseInspection = releaseInspectionService.scan(code,kind);
 		return releaseInspection;
+	}
+	
+	//박스별품목정보
+	@GetMapping("/selectByReleaseCode")
+	public List<ReleaseInspectionView> selectByReleaseCode(@RequestParam String releaseCode){
+		List<ReleaseInspectionView> list = new ArrayList<>();
+		list = releaseInspectionService.selectByReleaseCode(releaseCode);
+		return list;
 	}
 	
 	//현황 (주문건: 1360건 | 피킹완료건: 530건(긴급5건/일반525건) | 출고검수/패킹건: 0건(긴급3건/일반125건))
@@ -157,11 +191,13 @@ public class ReleaseInspectionController {
 	// 패킹 최종 완료
 	@PostMapping("/packingDone")
 	public int packing(@RequestBody Map<String, Object> map) {
-		
+		log.info("패킹 최종 완료");
 		//출고검수, 출고박스수량 업데이트
 		releaseService.updateReleaseDone(map);
 		
 		return 0;
 	}
+	
+	
 	
 }

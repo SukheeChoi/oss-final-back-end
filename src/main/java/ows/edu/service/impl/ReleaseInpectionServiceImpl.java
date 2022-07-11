@@ -128,15 +128,21 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	public List<ReleaseInspectionView> selectByFilterPage(Pager pager){
 		List<ReleaseInspectionView> list = releaseInspectionViewDao.selectByFilterPage(pager);
 		
-		int count = 0;
-		
-		for(int i=0; i<list.size(); i++ ) {
-			if(!list.get(i).getReleaseCode().equals(releaseCode)) {
-				releaseCode = list.get(i).getReleaseCode();
-				count++;
-			}
-			list.get(i).setNo(count);
-		}		
+//		int count = pager.getStartRowIndex();
+//		
+//		//현재 페이지 번호
+//		int pageNo = pager.getPageNo();
+//		
+//		//이전까지의 releseCode 개수
+//		
+//		
+//		for(int i=0; i<list.size(); i++ ) {
+//			if(!list.get(i).getReleaseCode().equals(releaseCode)) {
+//				releaseCode = list.get(i).getReleaseCode();
+//				count++;
+//			}
+//			list.get(i).setNo(count);
+//		}		
 		
 		return list;
 	}
@@ -156,22 +162,22 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	
 	//검수수량, 미출고 수량 업데이트
 	@Override
-	public int releaseInspectionQtyUpdate(Map<String, String> map) {
+	public int releaseInspectionQtyUpdate(String releaseCode) {
 		// TODO Auto-generated method stub
-		return releaseInspectionDao.releaseInspectionQtyUpdate(map);
+		return releaseInspectionDao.releaseInspectionQtyUpdate(releaseCode);
 	}
 
 	@Override
-	public int unRleaseQtyUpdate(Map<String, String> map) {
+	public int unRleaseQtyUpdate(String releaseCode) {
 		// TODO Auto-generated method stub
-		return releaseInspectionDao.unRleaseQtyUpdate(map);
+		return releaseInspectionDao.unRleaseQtyUpdate(releaseCode);
 	}
 
 	//스캔
 	@Override
-	public ReleaseInspection scan(String release) {
+	public ReleaseInspection scan(String release, String kind) {
 		// TODO Auto-generated method stub
-		return releaseInspectionDao.scan(release);
+		return releaseInspectionDao.scan(release, kind);
 	}
 
 	@Override
@@ -186,9 +192,14 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 			map.put("orderItemNo", boxArray.getOrderItemNo());
 			System.out.println(boxArray.getOrderItemNo());
 			updateCount =+ releaseInspectionDao.update(map);
-		}
-			
+		}		
 		return updateCount; 
+	}
+
+	@Override
+	public List<ReleaseInspectionView> selectByReleaseCode(String releaseCode) {
+		// TODO Auto-generated method stub
+		return releaseInspectionViewDao.selectByReleaseCode(releaseCode);
 	}
 	
 }

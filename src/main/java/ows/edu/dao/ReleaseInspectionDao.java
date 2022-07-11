@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import ows.edu.dto.ReleaseInspection;
 
@@ -35,13 +36,13 @@ public interface ReleaseInspectionDao {
 
 	//========================현주========================
 	//검수수량 업데이트
-	public int releaseInspectionQtyUpdate(Map<String, String> map);
+	public int releaseInspectionQtyUpdate(String releaseCode);
 	
 	//미출고수량 업데이트
-	public int unRleaseQtyUpdate(Map<String, String> map);
+	public int unRleaseQtyUpdate(String releaseCode);
 	
 	//스캔
-	public ReleaseInspection scan(String releaseCode);
+	public ReleaseInspection scan(@Param("code") String releaseCode, @Param("kind") String kind);
 	
 	//출고검수수량 업데이트
 	public int update(Map<String, Integer> map);
