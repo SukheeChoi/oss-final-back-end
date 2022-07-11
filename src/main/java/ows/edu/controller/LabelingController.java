@@ -51,15 +51,16 @@ public class LabelingController {
   }
   
   //담당자별 검품검수 및 라벨링 내역
-  @GetMapping("/getListByEmployeeName")
-  public Map<String, Object> getListByEmployeeName(InspectionLabeling inspectionLabeling
+  @GetMapping("/getListByLWTNo")
+  public Map<String, Object> getListByLWTNo(InspectionLabeling inspectionLabeling
                                                   , @RequestParam(defaultValue = "1") int pageNo
                                                   , @RequestParam(defaultValue = "5") int pageSize) {
     
+    log.info(inspectionLabeling);
     int totalCount = inspectionLabelingService.getTotalNum(inspectionLabeling);
     Pager pager = new Pager(pageSize, 5, totalCount, pageNo);
     
-    List<InspectionLabelingView> data = inspectionLabelingService.getListByEmployeeName(inspectionLabeling, pager);
+    List<InspectionLabelingView> data = inspectionLabelingService.getListByLWTNo(inspectionLabeling, pager);
     
     Map<String, Object> map = new HashMap<>();
     map.put("data", data);
