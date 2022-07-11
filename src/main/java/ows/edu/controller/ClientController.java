@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
@@ -32,7 +31,7 @@ public class ClientController {
 		String[] shippingCategory = filterList.getShippingCategory();
 		int status = filterList.getStatus();
 		boolean orderUnrelease = filterList.isUnrelease();
-		int orderNo = filterList.getOrderNo();
+		long orderNo = filterList.getOrderNo();
 		String clientName = filterList.getClientName();
 		
 		log.info("shippingCategory : " + Arrays.toString(shippingCategory));
@@ -41,7 +40,7 @@ public class ClientController {
 		log.info("orderNo : " + orderNo);
 		log.info("clientName : " + clientName);
 		List<Client> list = null;
-		
+	
 		Map<String, Object> map1 = new HashMap<>();
 		map1.put("shippingCategory", shippingCategory);
 		map1.put("orderUnrelease", orderUnrelease);
@@ -75,6 +74,7 @@ public class ClientController {
 		return map;
 	}
 	
+	//미출고 건수 조회
 	@GetMapping("/unreleaseCnt")
 	public int unreleaseCnt() {
 		int unreleaseCnt = clientService.unreleaseCnt();

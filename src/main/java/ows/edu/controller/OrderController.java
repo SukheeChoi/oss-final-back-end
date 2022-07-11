@@ -53,5 +53,4 @@ public class OrderController {
     map.put("totalCount", totalRows);
     return map;
   }
-  
 }
