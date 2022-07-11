@@ -41,7 +41,7 @@
 			<result property="date" column="PIC_DT"/>
 			<result property="done" column="PIC_DN"/>
 			<result property="pickingQuantity" column="PIC_QTY"/>
-			<result property="unrelease" column="PIC_URLS"/>
+			<!-- <result property="unrelease" column="PIC_URLS"/> -->
 		</association>
 		<association property="releaseInspection" javaType="releaseInspection">
 			<result property="orderItemNo" column="OI_NO"/>
@@ -167,5 +167,11 @@
  			AND O.ORD_STS=#{status};
 	</select>
 
+	<!-- 미출고 카운트 -->
+	<select id="unreleaseCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM TB_ORD
+		WHERE ORD_URLS = 1;
+	</select>
 </mapper>
 
