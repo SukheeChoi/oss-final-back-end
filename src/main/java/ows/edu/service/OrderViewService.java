@@ -46,8 +46,7 @@ public class OrderViewService {
         ov.setPickingDirectionUnrelease(ov.getUnrelease());
         
         //피킹 단계
-      } else if(ov.getOrderStatus() >= 3) {
-        ov.setPickingDirectionUnrelease(0);
+      } else if(ov.getOrderStatus() == 3) {
         ov.setPickingUnrelease(ov.getUnrelease());
       }
     }

@@ -2,10 +2,187 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.OrderDao">
-	<select id="countProgressOrder" resultType="int">
-		SELECT COUNT(*)
-		FROM TB_ORD
-		WHERE ORD_PRC_ORD IS NULL
+	<resultMap id="orderViewMap" type="orderView">
+		<result property="orderItemNo" column="OI_NO"/>
+		<result property="orderDate" column="ORD_DT"/>
+		<result property="orderNo" column="ORD_NO"/>
+		<result property="clientName" column="CLT_NAME"/>
+		<result property="itemName" column="ITM_NAME"/>
+		<result property="itemCode" column="ITM_CODE"/>
+		<result property="orderItemQuantity" column="OI_QTY"/>
+		<result property="shippingCategory" column="ORD_SHP_CAT"/>
+		<result property="vendorName" column="V_NAME"/>
+		<result property="orderStatus" column="ORD_STS"/>
+		<result property="unrelease" column="OI_URLS"/>
+		
+		<result property="pickingDirectionAttempt" column="PD_ATM"/>
+		<result property="pickingDirectionDate" column="PD_DT"/>
+		<result property="pickingDirectionQuantity" column="PD_QTY"/>
+		
+		<result property="pickingEmployee" column="PIC_NAME"/>
+		<result property="pickingQuantity" column="PIC_QTY"/>
+		<result property="pickingDate" column="PIC_DT"/>
+		
+		<result property="orderShippingWay" column="ORD_SHP_WAY"/>
+		<result property="orderCheckDate" column="CS_ORD_CHK_DT"/>
+		<result property="releaseQuantity" column="CS_RCV_QTY"/>
+		<result property="releaseScheduleDate" column="CS_RLS_SCH_DT"/>
+		<result property="recieveDate" column="CS_RCV_DT"/>
+		
+		<result property="packingInspectionEmployee" column="RI_NAME"/>
+		<result property="inspectionDate" column="RI_DT"/>
+		
+		<result property="releaseEmployee" column="RLS_NAME"/>
+		<result property="releaseDate" column="RLS_DT"/>
+		
+		<result property="transferEmployee" column="TRF_NAME"/>
+		<result property="transferDate" column="TRF_DT"/>
+	</resultMap>
+	
+	<!-- 상단 현황 전체 건수 -->
+	<select id="countAll" resultType="int">
+		SELECT count(*) FROM osstem.ord_view
 	</select>
+	
+	<!-- 상단 오스템 전체 건수 -->
+	<select id="countOsstem" resultType="int">
+		SELECT count(*) FROM osstem.ord_view WHERE ITM_OSS = 1
+	</select>
+	
+	<!-- 상단 협력사합배송 전체 건수 -->
+	<select id="countVendorPlus" resultType="int">
+		SELECT count(*) FROM osstem.ord_view WHERE ITM_OSS = 0 AND ORD_SHP_WAY LIKE CONCAT('합배송', '')
+	</select>
+	
+	<!-- 상단 협력사직배송 전체 건수 -->
+	<select id="countVendorDir" resultType="int">
+		SELECT count(*) FROM osstem.ord_view WHERE ITM_OSS = 0 AND ORD_SHP_WAY LIKE CONCAT('직배송', '')
+	</select>
+	
+	<!-- 상단 미출고 전체 건수 -->
+	<select id="countunleased" resultType="int">
+		SELECT COUNT(*) FROM osstem.ord_view
+		WHERE OI_URLS > 0
+	</select>
+	
+	<select id="select" resultMap="orderViewMap">
+		SELECT * FROM osstem.ord_view
+	</select>
+
+	<select id="count" resultType="int">
+		SELECT count(*) FROM osstem.ord_view
+		
+		<if test="company != null and shippingway != null and unreleased != null">
+		WHERE (
+			<!-- 오스템 제품  -->
+			<if test="itemOSS == 1">						
+				(ITM_OSS = 1 AND V_NO IS NULL)
+			</if>
+					
+			<if test="itemOSSPRO == 1">
+				<if test="itemOSS == 1">
+					OR
+				</if>		
+				(ITM_OSS = 1 AND V_NO IS NOT NULL)
+			</if>
+			
+			<if test="itemVND == 1">
+				<if test="itemOSS == 1 or itemOSSPRO == 1">
+					OR
+				</if>  					
+				(ITM_OSS = 0 AND ORD_SHP_WAY LIKE CONCAT('직배송', ''))
+			</if>
+
+			<if test="itemVNDPLUS == 1">
+				<if test="itemOSS == 1 or itemOSSPRO == 1 or itemVND == 1">
+					OR
+				</if>  							
+				(ITM_OSS = 0 AND ORD_SHP_WAY LIKE CONCAT('합배송', ''))
+			</if>
+		)
+		 <!-- 긴급 일반  -->               
+         <if test="shippingCategory == 1">   <!-- 긴급 -->
+            AND ORD_SHP_CAT LIKE CONCAT('긴급', '')
+         </if>
+
+         <if test="shippingCategory == 2">   <!-- 일반 --> 
+            AND ORD_SHP_CAT LIKE CONCAT('일반', '')
+         </if>
+         
+         <!-- 출고 미출고  -->         
+         <if test="pickingdirectionUnreleased == 1">   <!-- 출고 -->
+            AND PD_URLS = 0
+         </if>
+         <if test="pickingdirectionUnreleased == 2">   <!-- 미출고  -->
+            AND PD_URLS = 1
+         </if>
+         
+         <if test='searchSelected != null and searchContent != null and searchSelected.equals("주문번호")'>
+         	AND ORD_NO LIKE CONCAT('%', #{searchContent}, '%')
+         </if>
+         <if test='searchSelected != null and searchContent != null and searchSelected.equals("거래처")'>
+         	AND CLT_NAME LIKE CONCAT('%', #{searchContent}, '%')
+         </if>
+    	</if>
+	</select>
+	
+	<select id="selectByFilter" resultMap="orderViewMap">
+		SELECT * FROM osstem.ord_view
+		<if test="of.company != null and of.shippingway != null and of.unreleased != null">
+		WHERE (
+			<!-- 오스템 제품  -->
+			<if test="of.itemOSS == 1">						
+				(ITM_OSS = 1 AND V_NO IS NULL)
+			</if>
+					
+			<if test="of.itemOSSPRO == 1">
+				<if test="of.itemOSS == 1">
+					OR
+				</if>		
+				(ITM_OSS = 1 AND V_NO IS NOT NULL)
+			</if>
+			
+			<if test="of.itemVND == 1">
+				<if test="of.itemOSS == 1 or of.itemOSSPRO == 1">
+					OR
+				</if>  					
+				(ITM_OSS = 0 AND ORD_SHP_WAY LIKE CONCAT('직배송', ''))
+			</if>
+
+			<if test="of.itemVNDPLUS == 1">
+				<if test="of.itemOSS == 1 or of.itemOSSPRO == 1 or of.itemVND == 1">
+					OR
+				</if>  							
+				(ITM_OSS = 0 AND ORD_SHP_WAY LIKE CONCAT('합배송', ''))
+			</if>
+		)
+		 <!-- 긴급 일반  -->               
+         <if test="of.shippingCategory == 1">   <!-- 긴급 -->
+            AND ORD_SHP_CAT LIKE CONCAT('긴급', '')
+         </if>
+
+         <if test="of.shippingCategory == 2">   <!-- 일반 --> 
+            AND ORD_SHP_CAT LIKE CONCAT('일반', '')
+         </if>
+         
+         <!-- 출고 미출고  -->         
+         <if test='of.pickingdirectionUnreleased == 1'>   <!-- 출고 -->
+            AND PD_URLS = 0
+         </if>
+         <if test='of.pickingdirectionUnreleased == 2'>   <!-- 미출고  -->
+            AND PD_URLS = 1
+         </if>
+         
+         <if test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("주문번호")'>
+         	AND ORD_NO LIKE CONCAT('%', #{of.searchContent}, '%')
+         </if>
+         <if test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("거래처")'>
+         	AND CLT_NAME LIKE CONCAT('%', #{of.searchContent}, '%')
+         </if>
+         LIMIT #{pager.rowsPerPage} OFFSET #{pager.startRowIndex}
+    	</if>
+    	
+	</select>
+
 </mapper>
 
