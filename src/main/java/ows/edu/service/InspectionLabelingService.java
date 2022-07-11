@@ -27,11 +27,13 @@ public class InspectionLabelingService {
   public LabelingWorkTime getTreeList() {
 
     int labelingWorkTimeNo = 0;
-
+    int totalitem = 0;
+    int totalQuantity = 0;
+    
     // 2번째 담당자별 리스트
     List<LabelingWorkTime> employeeList = new ArrayList<>();
     employeeList.addAll(inspectionLabelingDao.searchAllByName());
-
+    
     for (LabelingWorkTime employee : employeeList) {
 
       // 담당자별 예정 시간 정제
@@ -44,7 +46,7 @@ public class InspectionLabelingService {
       // 3번째 업체별 리스트
       List<InspectionLabelingWork> workList = new ArrayList<>();
       labelingWorkTimeNo = employee.getLabelingWorkTimeNo();
-      workList.addAll(inspectionLabelingDao.searchAllByEmployeeName(labelingWorkTimeNo));
+      workList.addAll(inspectionLabelingDao.searchAllByLWTNo(labelingWorkTimeNo));
       for (InspectionLabelingWork labelingWork : workList) {
 
         // 업체별 예정 시간 정제
@@ -75,10 +77,10 @@ public class InspectionLabelingService {
   }
 
   // (오른쪽) 담당자 세부 작업목록 가져오기
-  public List<InspectionLabelingView> getListByEmployeeName(InspectionLabeling inspectionLabeling,
+  public List<InspectionLabelingView> getListByLWTNo(InspectionLabeling inspectionLabeling,
       Pager pager) {
     List<InspectionLabelingView> list = new ArrayList<>();
-    list.addAll(inspectionLabelingDao.searchAllDetailByEmployeeName(inspectionLabeling, pager));
+    list.addAll(inspectionLabelingDao.searchAllDetailByLWTNo(inspectionLabeling, pager));
     return list;
   }
 
@@ -93,7 +95,7 @@ public class InspectionLabelingService {
 
   // (오른쪽) 그리드 페이지용 전체 개수
   public int getTotalNum(InspectionLabeling inspectionLabeling) {
-    return inspectionLabelingDao.countDetailByEmployeeName(inspectionLabeling);
+    return inspectionLabelingDao.countDetailByLWTNO(inspectionLabeling);
   }
 
   // 날짜 데이터 정제 메소드

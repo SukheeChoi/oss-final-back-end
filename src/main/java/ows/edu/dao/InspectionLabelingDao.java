@@ -14,20 +14,20 @@ import ows.edu.dto.Pager;
 
 @Mapper
 public interface InspectionLabelingDao {    //select, insert, update, delete, count
-  //(왼쪽) 전체 작업 가져오기
+  //(왼쪽) 전체 작업 가져오기(1)
   public LabelingWorkTime searchAllByTotal();
   
-  //(왼쪽) 담당자 기준으로 전체 작업 가져오기
+  //(왼쪽) 담당자 기준으로 전체 작업 가져오기(2)
   public List<LabelingWorkTime> searchAllByName();
 
-  //(왼쪽) 담당자별 작업 업체 가져오기
-  public List<InspectionLabelingWork> searchAllByEmployeeName(int labelingWorkTimeNo);
+  //(왼쪽) 담당자별 작업 업체 가져오기(3)
+  public List<InspectionLabelingWork> searchAllByLWTNo(int labelingWorkTimeNo);
   
   //(오른쪽) 담당자 세부 작업목록 가져오기
-  public List<InspectionLabelingView> searchAllDetailByEmployeeName(@Param("il") InspectionLabeling inspectionLabeling, @Param("pager") Pager pager);
+  public List<InspectionLabelingView> searchAllDetailByLWTNo(@Param("il") InspectionLabeling inspectionLabeling, @Param("pager") Pager pager);
   
   //(오른쪽) 카운트
-  public int countDetailByEmployeeName(InspectionLabeling inspectionLabeling);
+  public int countDetailByLWTNO(InspectionLabeling inspectionLabeling);
   
   //단건일때는 널 체크 잘 하기(list는 isEmpty)
   //전체 현황 가져오기
