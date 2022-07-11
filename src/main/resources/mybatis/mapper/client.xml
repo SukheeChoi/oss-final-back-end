@@ -76,7 +76,7 @@
 	</resultMap>
 
 	<!-- 배송구분, 회사, 미출고로 필터링 -->
-	<select id="selectList" resultMap="clientMap" parameterType="hashmap">
+	<select id="getList" resultMap="clientMap" parameterType="hashmap">
 		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, O.ORD_URLS, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
@@ -87,7 +87,7 @@
 		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
 		LEFT JOIN TB_TRF T ON (O.ORD_NO = T.ORD_NO)
  		<choose>
-			<when test='unreleaseChk.equals("true")'>
+			<when test='orderUnrelease == true'>
 				WHERE O.ORD_SHP_CAT IN (
 					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
 						#{shippingCategory}
@@ -100,7 +100,7 @@
 					OR R.RLS_URLS != 0
 					OR T.TRF_URLS != 0)
 			</when>
-			<when test='unreleaseChk.equals("false")'>
+			<when test='orderUnrelease == false'>
 				WHERE O.ORD_SHP_CAT IN (
 					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
 						#{shippingCategory}
@@ -109,17 +109,17 @@
 					AND O.ORD_STS = #{status}
 			</when>
 		</choose>
-<!-- 		<if test='!orderNo.equals("")'>
+ 		<if test='!orderNo.equals(0)'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
 	   	<if test='!clientName.equals("")'>
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
-	 	</if> -->
+	 	</if>
 		ORDER BY O.ORD_URLS DESC, O.ORD_STS;
 	</select>
 	
-	<!-- 배송구분으로 필터링 -->
-	<select id="selectListByShippingCategory" resultMap="clientMap" parameterType="hashmap">
+	<!-- 배송구분, 미출로 필터링 -->
+	<select id="getListByShippingCategory" resultMap="clientMap" parameterType="hashmap">
 		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, O.ORD_URLS, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
@@ -128,9 +128,9 @@
 		LEFT JOIN TB_PIC PI ON (OI.OI_NO = PI.OI_NO)
 		LEFT JOIN TB_RLS_INSP RI ON (OI.OI_NO = RI.OI_NO)
 		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
-		LEFT JOIN TB_TRF T  ON (O.ORD_NO = T.ORD_NO)
+		LEFT JOIN TB_TRF T ON (O.ORD_NO = T.ORD_NO)
 		<choose>
-			<when test='unreleaseChk.equals("true")'>
+			<when test='orderUnrelease == true'>
 				WHERE O.ORD_SHP_CAT IN (
 					<foreach collection="shippingCategory" item="shippingCategory" separator=",">
 						#{shippingCategory}
@@ -142,7 +142,7 @@
 					OR R.RLS_URLS != 0
 					OR T.TRF_URLS != 0)
 			</when>
-			<when test='unreleaseChk.equals("false")'>
+			<when test='orderUnrelease == false'>
 				WHERE O.ORD_SHP_CAT IN (
 				<foreach collection="shippingCategory" item="shippingCategory" separator=",">
 					#{shippingCategory}
@@ -150,22 +150,28 @@
 				)
 			</when>
 		</choose>
-<!-- 		<if test='!orderNo.equals("")'>
+ 		<if test='!orderNo.equals(0)'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
 	   	<if test='!clientName.equals("")'>
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
-	 	</if> -->
+	 	</if>
 		ORDER BY O.ORD_URLS DESC, O.ORD_STS;
 	</select>
 	
 	<!-- 주문 단계마다 카운트 --> 
-	<select id="statusCnt" resultType="int">
+	<select id="getstatusCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM TB_CLT C, TB_ORD O
 		WHERE O.CLT_NO = C.CLT_NO
  			AND O.ORD_STS=#{status};
 	</select>
 
+	<!-- 미출고 카운트 -->
+	<select id="unreleaseCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM TB_ORD
+		WHERE ORD_URLS = 1;
+	</select>
 </mapper>
 
