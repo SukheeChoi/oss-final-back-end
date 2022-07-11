@@ -15,7 +15,7 @@ public interface OrderViewDao {
   //전체 주문 확인 리스트 가져오기
   public List<OrderView> selectByFilter(@Param("of") OrderFilter orderfilter, @Param("pager") Pager pager);
   //전체 주문 확인 리스트 가져오기
-  public int count(@Param("of") OrderFilter orderFilter);
+  public int count(OrderFilter orderFilter);
   
   public int countAll();
   public int countOsstem();

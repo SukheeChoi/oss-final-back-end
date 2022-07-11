@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ows.edu.dto.CombineShipping;
+import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
 
 @Mapper
@@ -21,24 +22,34 @@ public interface CombineShippingDao {
 												, @Param("startDate") String startDate
 												, @Param("endDate") String endDate);
 	
-	public List<String> selectReceiptOrderItemNoList(@Param("toDo") int toDo
-													, @Param("employeeId") String employeeId
-													, @Param("startDate") String startDate
-													, @Param("endDate") String endDate);
-	public CombineShipping selectAReceipt(String orderItemNo);
+	public int selectCountAllReceipt(@Param("toDo") int toDo
+									, @Param("vendorName") String vendorName
+									, @Param("startDate") String startDate
+									, @Param("endDate") String endDate);
 	
-	public List<String> selectDeliveryOrderItemNoList(@Param("toDo") int toDo
-													, @Param("employeeId") String employeeId
+	public List<String> selectReceiptList(@Param("toDo") int toDo
+													, @Param("vendorName") String vendorName
 													, @Param("startDate") String startDate
-													, @Param("endDate") String endDate);
-	public CombineShipping selectADelivery(String orderItemNo);
+													, @Param("endDate") String endDate
+													, @Param("pager") Pager pager);
+	
+	public int selectCountAllDelivery(@Param("toDo") int toDo
+									, @Param("employeeId") String employeeId
+									, @Param("startDate") String startDate
+									, @Param("endDate") String endDate);
+
+	
+	public List<CombineShipping> selectDeliveryList(@Param("toDo") int toDo
+													, @Param("employeeName") String employeeName
+													, @Param("startDate") String startDate
+													, @Param("endDate") String endDate
+													, @Param("pager") Pager pager);
 
 	// 수령여부 update.
 	public int updateAReceipt(CombineShipping combineShipping);
 	
 	// 전달여부 update.
 	public int updateADelivery(int orderItemNo);
-
 
 //	public List<CombineShipping> getReceiptListByDate(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }

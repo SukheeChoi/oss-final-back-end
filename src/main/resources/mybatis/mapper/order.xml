@@ -2,10 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.OrderDao">
+
 	<select id="countProgressOrder" resultType="int">
 		SELECT COUNT(*)
 		FROM TB_ORD
-		WHERE ORD_PRC_ORD IS NULL
+		WHERE ORD_STS > 0
 	</select>
+
+
 </mapper>
 
