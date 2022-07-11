@@ -122,7 +122,8 @@
 	<select id="selectCountAllReceipt" resultType="int">
 		SELECT COUNT(*)
 		FROM TB_CMB_SHP CS
-		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
+		LEFT JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
+		LEFT JOIN TB_VND V ON (CS.V_NO=V.V_NO)
 		<where>
 			<choose>
 				<!-- 수령 한 일: (수령O && 전달X) -->
