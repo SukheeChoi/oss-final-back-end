@@ -25,68 +25,50 @@
 		</association>
 	</resultMap>
 
-	<!-- 전체 -->
+	<!-- 처리완료 되지 않은 주문의 개수, 현황(주문건) -->
 	<select id="count" resultType="int">
 		SELECT COUNT(*)
 		FROM TB_ORD
-		WHERE ORD_PRC_ORD = 1
+		WHERE ORD_STS != 6
 	</select>
 	
 	<!-- 피킹완료건 -->
 	<select id="pickingDoneCount" resultType="int">
-		select count(DISTINCT tb_ord.ord_no)
-		from TB_PIC, tb_ord, tb_ord_itm
-		where tb_ord.ORD_PRC_ORD = 1
-			and TB_ORD.ORD_NO = TB_ORD_ITM.ORD_NO
-		    and TB_ORD_ITM.OI_NO = tb_pic.oi_no
-		    and TB_PIC.PIC_DN = 1
+        SELECT COUNT(*)
+        FROM TB_ORD
+        WHERE ORD_STS IN (4,5,6)
 	</select>
 	
+	<!-- 피킹완료건(일반) -->
 	<select id="pickDnCommonCount" resultType="int">
-		select count(DISTINCT tb_ord.ord_no)
-		from TB_PIC, tb_ord, tb_ord_itm
-		where tb_ord.ORD_PRC_ORD = 1
-			and TB_ORD.ORD_NO = TB_ORD_ITM.ORD_NO
-		    and TB_ORD_ITM.OI_NO = tb_pic.oi_no
-		    and TB_PIC.PIC_DN = 1
-		    and tb_ord.ord_shp_cat = "일반"	
+        SELECT COUNT(*)
+        FROM TB_ORD
+        WHERE ORD_STS IN (4,5,6) and ord_shp_cat = "일반"	
 	</select>
 	
 	<select id="pickDnEmergencyCount" resultType="int">
-		select count(DISTINCT tb_ord.ord_no)
-		from TB_PIC, tb_ord, tb_ord_itm
-		where tb_ord.ORD_PRC_ORD = 1
-			and TB_ORD.ORD_NO = TB_ORD_ITM.ORD_NO
-		    and TB_ORD_ITM.OI_NO = tb_pic.oi_no
-		    and TB_PIC.PIC_DN = 1
-		    and tb_ord.ord_shp_cat = "긴급"	
+        SELECT COUNT(*)
+        FROM TB_ORD
+        WHERE ORD_STS IN (4,5,6) and ord_shp_cat = "긴급"	
 	</select>
 	
-	<!-- 출고검수/패킹건 -->
+	<!-- 출고검수/패킹(완료)건 -->
 	<select id="rlsInspPackingCount" resultType="int">
-		select count(DISTINCT tb_ord.ord_no)
-		from tb_ord, TB_RLS
-		where tb_ord.ORD_PRC_ORD = 1
-			and TB_ORD.ORD_NO = TB_RLS.ord_no
-		    and rls_dn = 1;
+        SELECT COUNT(*)
+        FROM TB_ORD
+        WHERE ORD_STS IN (5,6)
 	</select>
 	
 	<select id="rlsInspPackCommonCount" resultType="int">
-		select count(DISTINCT tb_ord.ord_no)
-		from tb_ord, TB_RLS
-		where tb_ord.ORD_PRC_ORD = 1
-			and TB_ORD.ORD_NO = TB_RLS.ord_no
-		    and rls_dn = 1
-		    and tb_ord.ord_shp_cat = "일반"	
+        SELECT COUNT(*)
+        FROM TB_ORD
+        WHERE ORD_STS IN (5,6) and ord_shp_cat = "일반"	
 	</select>
 
 	<select id="rlsInspPackEmergencyCount" resultType="int">
-		select count(DISTINCT tb_ord.ord_no)
-		from tb_ord, TB_RLS
-		where tb_ord.ORD_PRC_ORD = 1
-			and TB_ORD.ORD_NO = TB_RLS.ord_no
-		    and rls_dn = 1
-		    and tb_ord.ord_shp_cat = "긴급"	
+        SELECT COUNT(*)
+        FROM TB_ORD
+        WHERE ORD_STS IN (5,6) and ord_shp_cat = "긴급"	
 	</select>	
 	
 	<select id="countProgressOrder" resultType="int">
