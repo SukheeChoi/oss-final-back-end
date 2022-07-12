@@ -155,7 +155,7 @@
 	</select>
 
 	<!-- 수령 목록 조회. -->
-	<select id="selectReceiptList" resultMap="combineShippingMap">
+	<select id="selectReceiptList" resultMap="combineShippingPartnerMap">
 		SELECT @ROWNUM := @ROWNUM+1 AS ROWNUM, SQ.*   
 		FROM(
 			SELECT OI.ORD_NO, R.RLS_CODE, I.ITM_NAME, OI.ITM_CODE, OI.OI_URLS_QTY
@@ -206,124 +206,80 @@
 			<!-- OFFSET : 시작 row의 index -->
 			OFFSET #{pager.startRowIndex}
 	</select>
-<!-- ////////////////////////////// -->
+
 	<select id="selectCountAllDelivery" resultType="int">
 		SELECT COUNT(*)
-		FROM TB_CMB_SHP CS
-		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
-			<!-- toDo != 1 : 한 일(수령O && 전달O) (기간 기준: 수령일) -->
+		FROM TB_CMB_SHP_PTN CSP
+		LEFT JOIN TB_INF_PTN IP
+			ON (CSP.OI_NO=IP.OI_NO)
+		LEFT JOIN TB_EMP E
+			ON (CSP.EMP_ID=E.EMP_ID)
+		<where>
+			<if test='!employeeId.equals("")'>
+				AND CS.EMP_ID=#{employeeId}
+			</if>
 			<choose>
 				<when test="toDo != 1">
-					<where>
-					<!-- id(o) + date(x) : id 기준으로 완료 전체. -->
-					<if test='(!employeeId.equals("")) and (startDate == null)'>
-						AND CS.EMP_ID=#{employeeId}
-					</if>
-					<!-- id(x) + date(o) : 완료 전체를 기간으로 필터링. -->
-					<if test='(employeeId.equals("")) and (startDate != null)'>
-			 			<![CDATA[
-						AND DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
-						AND DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-						]]>
-					</if>
-					<!-- id(o) + date(o) : 완료 전체를 id와 기간으로 필터링. -->
-		 			<if test='(!employeeId.equals("")) and (startDate != null)'>
-						AND CS.EMP_ID=#{employeeId}
-						<![CDATA[
-						AND DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
-						AND DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-						]]>
-					</if>
-					<!-- WHERE절 불필요. : id(x) + date(x) : 완료 전체. -->
-					AND CS.CS_RCV_CHK=1
-					AND CS.CS_DLV_CHK=1
-				</where>
+		 			<![CDATA[
+					AND DATE_FORMAT(CSP.CSP_DLV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+					AND DATE_FORMAT(CSP.CSP_DLV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+					]]>
 				</when>
-				
 				<!-- toDo == 1 : 할 일. (수령O && 전달X) (기간 기준: 수령일) -->
 				<otherwise>
-				<where>
-					<!-- id(o) + date(x) : id 기준으로 한 일 전체. -->
-					<if test='(!employeeId.equals("")) and (startDate == null)'>
-						AND CS.EMP_ID=#{employeeId}
-					</if>
-					<!-- id(x) + date(o) : 미완료 전체를 기간으로 필터링. -->
-					<if test='(employeeId.equals("")) and (startDate != null)'>
-			 			<![CDATA[
-						AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
-						AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-						]]>
-					</if>
-					<!-- id(o) + date(o) : 미완료 전체를 id와 기간으로 필터링. -->
-		 			<if test='(!employeeId.equals("")) and (startDate != null)'>
-						AND CS.EMP_ID=#{employeeId}
-						<![CDATA[
-						AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
-						AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-						]]>
-					</if>
-					<!-- WHERE절 불필요. : id(x) + date(x) : 미완료 전체. -->
-					AND CS.CS_RCV_CHK=1
-					AND CS.CS_DLV_CHK=0
-				</where>
+					AND CSP.CSP_DLV_DT IS NULL
+		 			<![CDATA[
+					AND DATE_FORMAT(CSP.CSP_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+					AND DATE_FORMAT(CSP.CSP_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+					]]>
 				</otherwise>
 			</choose>
+		</where>
 	</select>
 	
 	<!-- 담당사원을 기준으로 전달 목록 조회. -->
-	<select id="selectDeliveryList" resultMap="combineShippingMap">
+	<select id="selectDeliveryList" resultMap="combineShippingPartnerMap">
 		SELECT @ROWNUM := @ROWNUM+1 AS ROWNUM, SQ.*   
 		FROM(
 			SELECT OI.ORD_NO, R.RLS_CODE, I.ITM_NAME, OI.ITM_CODE
 				, CS.CS_DLV_URLS, CS.CS_RCV_QTY, CS.CS_DLV_QTY
 				, OI.OI_QTY, CS.CS_DLV_CHK, OI.OI_NO
 		        , CS.CS_DLV_DT, E.EMP_NAME
-			FROM TB_CMB_SHP CS
-			LEFT JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
-			LEFT JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
-			LEFT JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
-			LEFT JOIN TB_EMP E ON (CS.EMP_ID=E.EMP_ID)
-				<!-- toDo != 1 : 한 일(수령O && 전달O) (기간 기준: 수령일) -->
+			FROM TB_CMB_SHP_PTN CSP
+			LEFT JOIN TB_INF_PTN IP
+				ON (CSP.OI_NO=IP.OI_NO)
+			LEFT JOIN TB_ORD_ITM OI
+				ON (CSP.OI_NO=OI.OI_NO)
+			LEFT JOIN TB_ORD O
+				ON (OI.ORD_NO=O.ORD_NO)
+			LEFT JOIN TB_RLS R
+				ON (O.ORD_NO=R.ORD_NO)
+			LEFT JOIN TB_EMP E
+				ON (CSP.EMP_ID=E.EMP_ID)
+			<where>
+			<!-- 사원이름으로 검색. -->
+			<if test='!employeeName.equals("전체")'>
+				AND E.EMP_NAME=#{employeeName}
+			</if>
 				<choose>
+					<!-- toDo != 1 : 한 일(수령O && 전달O) (기간 기준: 전달일) -->
 					<when test="toDo != 1">
-						<where>
-						<!-- 사원이름으로 검색. -->
-						<if test='!employeeName.equals("전체")'>
-							AND E.EMP_NAME=#{employeeName}
-						</if>
-						<!-- 완료 전체를 기간으로 필터링. -->
-						<if test='startDate != null'>
-				 			<![CDATA[
-							AND DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
-							AND DATE_FORMAT(CS_DLV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-							]]>
-						</if>
-						<!-- WHERE절 불필요. : id(x) + date(x) : 완료 전체. -->
-						AND CS.CS_RCV_CHK=1
-						AND CS.CS_DLV_CHK=1
-					</where>
+			 			<![CDATA[
+						AND DATE_FORMAT(CSP.CSP_DLV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+						AND DATE_FORMAT(CSP.CSP_DLV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+						]]>
 					</when>
 					
 					<!-- toDo == 1 : 할 일. (수령O && 전달X) (기간 기준: 수령일) -->
 					<otherwise>
-					<where>
-						<!-- 담당자 이름 기준으로 한 일 전체. -->
-						<if test='!employeeName.equals("전체")'>
-							AND E.EMP_NAME=#{employeeName}
-						</if>
-						<!-- 미완료 전체를 기간으로 필터링. -->
-						<if test='startDate != null'>
-				 			<![CDATA[
-							AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
-							AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-							]]>
-						</if>
-						<!-- WHERE절 불필요. : id(x) + date(x) : 미완료 전체. -->
-						AND CS.CS_RCV_CHK=1
-						AND CS.CS_DLV_CHK=0
-					</where>
+						AND CSP.CSP_DLV_DT IS NULL
+			 			<![CDATA[
+						AND DATE_FORMAT(CSP.CSP_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+						AND DATE_FORMAT(CSP.CSP_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+						]]>
 					</otherwise>
 				</choose>
+			</where>
 				ORDER BY OI.OI_NO
 			) SQ
 				, (SELECT @ROWNUM := 0) AS R
@@ -334,22 +290,20 @@
 			OFFSET #{pager.startRowIndex}
 	</select>
 	<!-- 수령항목 정보 update. -->
-	<update id="updateAReceipt" parameterType="combineShipping">
-		UPDATE TB_CMB_SHP
-		SET CS_RCV_URLS=#{receiveUnrelease}
-			, CS_RCV_CHK=1
-			, CS_RCV_QTY=(CS_RLS_QTY - #{receiveUnrelease})
-			, CS_RCV_DT=DATE_FORMAT(CURDATE(), '%Y-%m-%d')
+	<update id="updateAReceipt" parameterType="combineShippingPartner">
+		UPDATE TB_CMB_SHP_PTN
+		SET CSP_RCV_URLS=#{receiveUnrelease}
+			, CSP_RCV_QTY=(CSP_RLS_QTY - #{receiveUnrelease})
+			, CSP_RCV_DT=DATE_FORMAT(CURDATE(), '%Y-%m-%d')
 		WHERE OI_NO=#{orderItemNo}
 	</update>
 	
 	<!-- 전달항목 정보 update. -->
 	<update id="updateADelivery" parameterType="int">
-		UPDATE TB_CMB_SHP
-		SET CS_DLV_QTY=CS_RCV_QTY
-		    , CS_DLV_URLS=0
-		    , CS_DLV_CHK=1
-		    , CS_DLV_DT=DATE_FORMAT(CURDATE(), '%Y-%m-%d')
+		UPDATE TB_CMB_SHP_PTN
+		SET CSP_DLV_QTY=CSP_RCV_QTY
+		    , CSP_DLV_URLS=0
+		    , CSP_DLV_DT=DATE_FORMAT(CURDATE(), '%Y-%m-%d')
 		WHERE OI_NO=#{orderItemNo}
 	</update>
 <!-- 	
