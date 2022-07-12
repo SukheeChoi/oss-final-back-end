@@ -8,5 +8,7 @@ public class OrderItem {
 	private Long orderNo;
 	private String itemCode;
 	private int qty;
+	private int orderItemUnreleaseQuantity;
+	private String orderItemNote;
 		
 }

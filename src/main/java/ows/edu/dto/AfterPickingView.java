@@ -26,7 +26,7 @@ public class AfterPickingView {
 	private String shippingCompany;
 	private String invoiveCode;
 	private String releaseInspectionNote;
-	private String releaseNote;
+//	private String releaseNote;
 	private Boolean releaseDone;
 	private int orderNo;
 	private String clientName;
