@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.CombineShippingDao;
+import ows.edu.dao.OrderItemDao;
 import ows.edu.dto.CombineShipping;
 import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
@@ -22,6 +23,8 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	@Resource
 	CombineShippingDao combineShippingDao;
+	@Resource
+	OrderItemDao orderItemDao;
 	
 	@Override
 	public List<Vendor> getVendorList(int toDo, String[] dateList) {
@@ -48,7 +51,7 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 			startDate = dateList[0];
 			endDate = dateList[1];
 		}
-		List<String> list = combineShippingDao.selectAssigneeListByDate(toDo, startDate, endDate);
+		List<String> list = combineShippingDao.selectAssigneeList(toDo, startDate, endDate);
 //		List<Employee> list = combineShippingDao.selectAssigneeListByDate(startDate, endDate);
 		log.info("service getAssigneeListByDate - list : " + list);
 		return list;
@@ -146,7 +149,9 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		return map;
 	}
 
-	// 수령여부 update: 미출고, 수령여부 컬럼.
+	// 수령여부 update: 수령 수량, 수령여부, 미출고 수량.
+	// TB_CMB_SHP CS_RCV_QTY && CS_RCV_CHK && CS_RCV_URLS_QTY 업데이트.
+	// TB_ORD_ITM OI_URLS_QTY 업데이트.
 	@Override
 	public String updateReceipt(CombineShipping[] combineShippingList) {
 		String result = "fail";
@@ -156,15 +161,21 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 			if(affectedRowNo == 1) {
 				totalAffectedRows++;				
 			}
+			// 미출고 수량 업데이트.
+			orderItemDao.updateOiUnreleaseQuantity(combineShipping);
 		}
 		if(totalAffectedRows == combineShippingList.length) {
 			result = "success";
+			
 		}
 		
 		return result;
 	}
 	
 	// 전달여부 update.
+	// TB_CMB_SHP CS_DLV_QTY && CS_DLV_CHK && ((CS_RCV_URLS_QTY &&)) CS_DLV_URLS_QTY 업데이트.
+	// TB_ORD_ITM OI_URLS_QTY 업데이트.
+	// TB_ORD ORD_STS 업데이트.(2->4)
 	@Override
 	public String updateDelivery(int[] orderItemNoList) {
 		log.info("실행");
@@ -181,14 +192,5 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		}
 		return result;
 	}
-
-
-//	@Override
-//	public List<CombineShipping> getReceiptListByDate(String[] dateList) {
-//		String startDate = dateList[0];
-//		String endDate = dateList[1];
-//		List<CombineShipping> list = combineShippingDao.getReceiptListByDate(startDate, endDate);
-//		return list;
-//	}
 
 }

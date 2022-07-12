@@ -91,7 +91,7 @@
 	
 	<!-- 담당자별 필터링을 위한 담당자 조회. -->
 	<!-- <select id="selectAssigneeListByDate" resultMap="employeeMap"> -->
-	<select id="selectAssigneeListByDate" resultType="string">
+	<select id="selectAssigneeList" resultType="string">
 		<!-- SELECT DISTINCT E.EMP_ID, E.EMP_NAME -->
 		SELECT DISTINCT E.EMP_NAME
 		FROM TB_CMB_SHP CS
