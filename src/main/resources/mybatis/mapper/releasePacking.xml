@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.ReleaseInspectionViewDao">
-	<resultMap id="releaseInspectionViewMap" type="releaseinspectionView">
+	<resultMap id="releaseInspectionViewMap" type="releasePacking">
 		<result property="no" column="no"/>
 		<result property="orderNo" column="ORD_NO"/>
 		<result property="date" column="ORD_DT"/>

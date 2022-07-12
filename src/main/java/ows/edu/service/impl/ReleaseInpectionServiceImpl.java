@@ -14,7 +14,7 @@ import ows.edu.dao.OrderDao;
 import ows.edu.dao.PackingDao;
 import ows.edu.dao.PickingDirectionDao;
 import ows.edu.dao.ReleaseInspectionDao;
-import ows.edu.dao.ReleaseInspectionViewDao;
+import ows.edu.dao.ReleasePackingDao;
 import ows.edu.dto.Box;
 import ows.edu.dto.Pager;
 import ows.edu.dto.ReleaseInspection;
@@ -34,7 +34,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	@Resource
 	PackingDao packingDao;
 	@Resource
-	ReleaseInspectionViewDao releaseInspectionViewDao;
+	ReleasePackingDao releaseInspectionViewDao;
 	@Resource
 	AfterPickingViewDao afterPickingViewDao;
 	
