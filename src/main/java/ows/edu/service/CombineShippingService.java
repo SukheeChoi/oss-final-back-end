@@ -5,8 +5,7 @@ import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ows.edu.dto.CombineShipping;
-import ows.edu.dto.Employee;
+import ows.edu.dto.CombineShippingPartner;
 import ows.edu.dto.Vendor;
 
 @Transactional
@@ -30,11 +29,11 @@ public interface CombineShippingService {
 											);
 
 	// 수령여부 update.
-	public String updateReceipt(CombineShipping[] combineShippingList);
+	public String updateReceipt(CombineShippingPartner[] combineShippingPartnerList);
+//	public String updateReceipt(CombineShipping[] combineShippingList);
 
 	// 전달여부 update.
 	public String updateDelivery(int[] orderItemList);
-	// 선택된 기간 동안의 수령목록 조회.
-//	public List<CombineShipping> getReceiptListByDate(String[] dateList);
 
+	
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
-import ows.edu.dto.CombineShipping;
+import ows.edu.dto.CombineShippingPartner;
 import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
 
@@ -111,7 +111,7 @@ public class CombineShippingController {
 	// OI_NO를 기준으로
 	// ITM_NAME, ITM_CODE, 
 	@PutMapping("/receipt")
-	public Map<String, String> updateReceipt(@RequestBody CombineShipping[] receiptListForUpdate) {
+	public Map<String, String> updateReceipt(@RequestBody CombineShippingPartner[] receiptListForUpdate) {
 		Map<String, String> resultMap = new HashMap<>();
 		log.info("combineShippingList[0] : " + receiptListForUpdate[0]);
 		String result = combineShippingService.updateReceipt(receiptListForUpdate);
@@ -133,14 +133,5 @@ public class CombineShippingController {
 		return resultMap;
 	}
 	
-// 선택된 기간 동안안의 수령 목록 조회.
-//	@PostMapping("/getReceiptListByDate")
-//	public Map<String, Object> getReceiptListByDate(@RequestBody String[] dateList) {
-//		Map<String, Object> map = new HashMap<>();
-//		List<CombineShipping> list = combineShippingService.getReceiptListByDate(dateList);
-//		map.put("list", list);
-//		log.info("list : " + list);
-//		return map;
-//	}
 	
 }

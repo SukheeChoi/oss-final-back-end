@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ows.edu.dto.CombineShipping;
+import ows.edu.dto.CombineShippingPartner;
 import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
 
@@ -45,7 +46,8 @@ public interface CombineShippingDao {
 													, @Param("pager") Pager pager);
 
 	// 수령여부 update.
-	public int updateAReceipt(CombineShipping combineShipping);
+	public int updateAReceipt(CombineShippingPartner combineShippingPartner);
+//	public int updateAReceipt(CombineShipping combineShipping);
 	
 	// 전달여부 update.
 	public int updateADelivery(int orderItemNo);
