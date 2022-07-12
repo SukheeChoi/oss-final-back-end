@@ -4,8 +4,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface OrderDao {
-	//전체
-	public int count();
+	// 미완료된 주문 건수 조회.
+	public int countProgressOrder();
 
 	//피킹완료건 -> 전체
 	public int pickingDoneCount();
@@ -25,7 +25,6 @@ public interface OrderDao {
 	//출고검수/패킹건 -> 긴급
 	public int rlsInspPackEmergencyCount();
 	
-	// 미완료된 주문 건수 조회.
-	public int countProgressOrder();
+
 }
 

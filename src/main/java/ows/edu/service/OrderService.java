@@ -8,7 +8,7 @@ public interface OrderService {
 //	public List<String> getOrderNoList(Pager pager);
 	public int getTotalOrders();
 	
-	//전체
+	//현황(주문건)
 	public int count();
 
 	//피킹완료건 -> 전체

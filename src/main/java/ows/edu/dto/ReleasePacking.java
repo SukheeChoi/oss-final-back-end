@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class ReleaseInspectionView {
+public class ReleasePacking {
 	private int no;
 	
 	//order
@@ -52,4 +52,6 @@ public class ReleaseInspectionView {
 	
 	//client
 	private String clientName;
+	
+	//
 }

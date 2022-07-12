@@ -27,10 +27,10 @@
 	</resultMap>
 
 	<!-- 처리완료 되지 않은 주문의 개수, 현황(주문건) -->
-	<select id="count" resultType="int">
+	<select id="countProgressOrder" resultType="int">
 		SELECT COUNT(*)
 		FROM TB_ORD
-		WHERE ORD_STS != 6
+		WHERE ORD_STS > 0
 	</select>
 	
 	<!-- 피킹완료건 -->
@@ -72,11 +72,7 @@
         WHERE ORD_STS IN (5,6) and ord_shp_cat = "긴급"	
 	</select>	
 
-	<select id="countProgressOrder" resultType="int">
-		SELECT COUNT(*)
-		FROM TB_ORD
-		WHERE ORD_STS > 0
-	</select>
+
 
 </mapper>
 

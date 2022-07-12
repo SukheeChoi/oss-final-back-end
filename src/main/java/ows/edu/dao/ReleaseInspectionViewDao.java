@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ows.edu.dto.Pager;
-import ows.edu.dto.ReleaseInspectionView;
+import ows.edu.dto.ReleasePacking;
 
 @Mapper
 public interface ReleaseInspectionViewDao {
@@ -16,20 +16,20 @@ public interface ReleaseInspectionViewDao {
 	// ex. 매퍼에서 pager객체 내부의 필드를 사용하고 싶다면, #{pager.startRowNo} 이런식!
 	
 	//단순 가져오기
-	public List<ReleaseInspectionView> select();
+	public List<ReleasePacking> select();
 	
 	//데이터 총 개수
 	public int count();
 	//페이징처리
-	public List<ReleaseInspectionView> selectByPage(Pager pager);
+	public List<ReleasePacking> selectByPage(Pager pager);
 	
 	//오른쪽에 띄어줄 주문에 대한 상세 정보
-	public List<ReleaseInspectionView> selectByOrderNo(int orderNo);
+	public List<ReleasePacking> selectByOrderNo(int orderNo);
 	
 	//페이징처리&필터
-	public List<ReleaseInspectionView> selectByFilterPage(Pager pager);
+	public List<ReleasePacking> selectByFilterPage(Pager pager);
 	
 	//스캔했을 때, 박스별품목정보 띄어주는 용도
-	public List<ReleaseInspectionView> selectByReleaseCode(String releaseCode);
+	public List<ReleasePacking> selectByReleaseCode(String releaseCode);
 	
 }

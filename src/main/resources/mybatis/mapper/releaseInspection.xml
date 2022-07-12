@@ -3,15 +3,21 @@
 
 <mapper namespace="ows.edu.dao.ReleaseInspectionDao">
 
- 	<resultMap id="afterPickingMap" type="releaseInspection">
-		<result property="releaseInspectionQuantity" column="RI_QTY"/>
-		<result property="unReleased" column="RI_URLS"/>
-		<result property="employeeName" column="RI_EMP_NAME"/>			
-		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
-		<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
-		<result property="releaseInspectionDate" column="RI_DT"/>
-		<result property="releaseInspectionNote" column="RI_NT"/>
-		
+ 	<resultMap id="afterPickingMap" type="afterPicking">
+		<!-- <result property="strReleaseInspectionUnreleased" column="RI_URLS"/> -->
+		<!-- <result property="strPackingUnreleased" column="PAC_URLS"/> -->
+		<!-- <result property="strBoxQuantity" column="PAC_BX_QTY"/> -->
+ 	
+ 	
+		<association property="releaseInspection" javaType="releaseInspection">
+			<result property="releaseInspectionQuantity" column="RI_QTY"/>
+			<result property="employeeName" column="RI_EMP_NAME"/>
+			<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
+			<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
+			<result property="releaseInspectionDate" column="RI_DT"/>
+			<result property="releaseInspectionNote" column="RI_NT"/>
+			<result property="orderItemNo" column="OI_NO"/>		
+		</association>
 		<association property="release" javaType="release">
 			<result property="releaseNo" column="RLS_NO"/>
 			<result property="invoiceCode" column="RLS_RLS_IVC_CODE"/>
@@ -25,6 +31,7 @@
 		</association>
 		<association property="picking" javaType="picking">
 			<result property="pickingNo" column="PIC_NO"/>
+			<result property="pickingQuantity" column="PIC_QTY"/>
 		</association>
 		<association property="vendor" javaType="vendor">
 			<result property="vendorName" column="V_NAME"/>
@@ -36,9 +43,7 @@
 			<result property="orderNo" column="ORD_NO"/>			
 		</association>
 		<association property="packing" javaType="packing">
-			<result property="unrelease" column="PAC_URLS"/>			
-			<result property="boxQty" column="PAC_BX_QTY"/>			
-			<result property="note" column="PAC_NT"/>		
+			<result property="note" column="PAC_NT"/>
 		</association>
 		<association property="client" javaType="client">
 			<result property="clientName" column="CLT_NAME"/>		
@@ -47,51 +52,60 @@
 	
 	<select id="countReleaseInspection" resultType="int">
 		SELECT COUNT(*)
-		FROM TB_RLS_INSP RI
-		JOIN TB_ORD_ITM OI
-			ON (RI.OI_NO=OI.OI_NO)
-		LEFT JOIN TB_ORD O
-			ON (O.ORD_NO=OI.ORD_NO)    
-		WHERE O.ORD_PRC_ORD IS NULL
+		FROM TB_ORD
+		WHERE ORD_STS = 4
 	</select>
+	<!-- TB_RLS_INSP의 ORD_NO별 SUM(RI_URLS) > 0 인 건수 집계. -->
 	<select id="sumUnreleased" resultType="int">
-		SELECT SUM(RI.RI_URLS)
-		FROM TB_RLS_INSP RI
-		JOIN TB_ORD_ITM OI
-			ON (RI.OI_NO=OI.OI_NO)
-		LEFT JOIN TB_ORD O
-			ON (O.ORD_NO=OI.ORD_NO)
-		WHERE O.ORD_PRC_ORD IS NULL
+		SELECT COUNT(*)
+			FROM (
+				SELECT O.ORD_STS ORD_STS
+					, SUM(OI.OI_URLS_QTY) AS SUM_OI_URLS_QTY
+				FROM TB_ORD_ITM OI
+				LEFT JOIN TB_ORD O
+					ON (OI.ORD_NO = O.ORD_NO)
+				GROUP BY O.ORD_NO
+			) SQ
+			WHERE SQ.ORD_STS = 4
+				AND SQ.SUM_OI_URLS_QTY > 0
 	</select>
 	<select id="countExpressShipping" resultType="int">
 		SELECT COUNT(*)
-		FROM TB_RLS_INSP RI
-		JOIN TB_ORD_ITM OI
-			ON (RI.OI_NO=OI.OI_NO)
-		LEFT JOIN TB_ORD O
-			ON (O.ORD_NO=OI.ORD_NO)
-		WHERE O.ORD_PRC_ORD IS NULL 
-			AND O.ORD_SHP_CAT='긴급'
+		FROM (
+			SELECT O.ORD_STS ORD_STS
+				, SUM(OI.OI_URLS_QTY) AS SUM_OI_URLS_QTY
+		        , O.ORD_SHP_CAT ORD_SHP_CAT
+			FROM TB_ORD_ITM OI
+			LEFT JOIN TB_ORD O
+				ON (OI.ORD_NO = O.ORD_NO)
+			GROUP BY O.ORD_NO
+		) SQ
+		WHERE SQ.ORD_STS = 4
+			AND SQ.ORD_SHP_CAT='긴급'
 	</select>
 	<select id="countNormalShipping" resultType="int">
 		SELECT COUNT(*)
-		FROM TB_RLS_INSP RI
-		JOIN TB_ORD_ITM OI
-			ON (RI.OI_NO=OI.OI_NO)
-		LEFT JOIN TB_ORD O
-			ON (O.ORD_NO=OI.ORD_NO)
-		WHERE O.ORD_PRC_ORD IS NULL 
-			AND O.ORD_SHP_CAT='일반'
+		FROM (
+			SELECT O.ORD_STS ORD_STS
+				, SUM(OI.OI_URLS_QTY) AS SUM_OI_URLS_QTY
+		        , O.ORD_SHP_CAT ORD_SHP_CAT
+			FROM TB_ORD_ITM OI
+			LEFT JOIN TB_ORD O
+				ON (OI.ORD_NO = O.ORD_NO)
+			GROUP BY O.ORD_NO
+		) SQ
+		WHERE SQ.ORD_STS = 4
+			AND SQ.ORD_SHP_CAT='일반'
 	</select>
-
+<!-- 
  	<select id="selectAfterPickingList" resultMap="afterPickingMap">
-		SELECT R.RLS_NO, I.ITM_NAME, I.ITM_CODE, PI.PIC_NO
-			, RI.RI_QTY, RI_URLS, PA.PAC_URLS, V.V_NAME, O.ORD_SHP_DEST
+		SELECT R.RLS_NO, I.ITM_NAME, I.ITM_CODE, PI.PIC_NO, PI.PIC_QTY
+			, RI.RI_QTY, IFNULL(RI.RI_URLS, ' ') RI_URLS, IFNULL(PA.PAC_URLS, ' ') PAC_URLS, V.V_NAME, O.ORD_SHP_DEST
 		    , O.ORD_SHP_CAT, O.ORD_SHP_WAY, E.EMP_NAME RI_EMP_NAME
-		    , RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_DT, PA.PAC_BX_QTY
+		    , RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_DT, IFNULL(PA.PAC_BX_QTY, ' ') PAC_BX_QTY
 		    , R.RLS_EMP_NAME, R.RLS_SHP_CPN, R.RLS_RLS_IVC_CODE, IFNULL(RI.RI_NT, ' ') RI_NT
 		    , IFNULL(PA.PAC_NT, ' ') PAC_NT, IFNULL(R.RLS_RLS_NT, ' ') RLS_RLS_NT
-		    , R.RLS_DN, O.ORD_NO, C.CLT_NAME
+		    , R.RLS_DN, O.ORD_NO, C.CLT_NAME, RI.OI_NO
 		FROM TB_ORD O
 		JOIN (SELECT RLS.RLS_NO RLS_NO, RLS.ORD_NO RLS_ORD_NO, EMP.EMP_NAME RLS_EMP_NAME
 					, RLS_SHP_CPN, RLS.RLS_IVC_CODE RLS_RLS_IVC_CODE, RLS.RLS_NT RLS_RLS_NT
@@ -118,63 +132,61 @@
 		JOIN TB_CLT C
 			ON (C.CLT_NO=O.CLT_NO)
 <where>
-	<!-- 배송구분 필터링: 전체/일반/긴급 -->
-   	<if test='(!shippingCategory.equals("")) and (shippingCategory.equals("일반"))'>
+	배송구분 필터링: 전체/일반/긴급
+   	<if test='shippingCategory.equals("일반")'>
 		AND O.ORD_SHP_CAT='일반'
 	</if>
-	<if test='(!shippingCategory.equals("")) and (shippingCategory.equals("긴급"))'>
+	<if test='shippingCategory.equals("긴급")'>
 		AND O.ORD_SHP_CAT='긴급'
 	</if>
-	<!-- 배송방식 필터링: 전체/오스템/합배송 -->
-   	<if test='(!shippingWay.equals("")) and (shippingWay.equals("오스템"))'>
+	배송방식 필터링: 전체/오스템/합배송
+   	<if test='shippingWay.equals("오스템")'>
 		AND O.ORD_SHP_WAY='오스템'
 	</if>
-	<if test='(!shippingWay.equals("")) and (shippingWay.equals("합배송"))'>
+	<if test='shippingWay.equals("합배송")'>
 		AND O.ORD_SHP_WAY='합배송'
 	</if>
-	<!-- 출고/미출고 필터링 -->
+	출고/미출고 필터링
    	<if test='(!released.equals("")) and (released.equals("출고"))'>
+  	<if test='released.equals("출고")'>
 		AND R.RLS_DN=1
 	</if>
 	<if test='(!released.equals("")) and (released.equals("미출고"))'>
-		AND R.RLS_DN IS NULL
+	<if test='released.equals("미출고")'>
+		AND ( R.RLS_DN!=1 OR ISNULL(R.RLS_DN) )
 	</if>
 	
-	<!-- assignee 필수여야 작동하는 이유는..? -->
-	<!-- 출고검수/패킹 담당자 필터링 -->
+	출고검수/패킹 담당자 필터링
     <if test='!assignee.equals("")'>
-		<!-- AND CONCAT(E.EMP_NAME, '') LIKE CONCAT('%',#{assignee},'%') -->
-		CONCAT(E.EMP_NAME, '') LIKE CONCAT('%',#{assignee},'%')
-		OR
-		CONCAT(R.RLS_EMP_NAME, '') LIKE CONCAT('%',#{assignee},'%')
+		AND (E.EMP_NAME = #{assignee} OR R.RLS_EMP_NAME = #{assignee})
 	</if>
 	
-	<!-- 주문번호 필터링 -->
-	<!-- <if test='orderNo != -1'> -->
+	주문번호 필터링
+	<if test='orderNo != -1'>
  	<if test='!strOrderNo.equals("-1")'>
- 		<!-- AND CONCAT(O.ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%') -->
+ 		AND CONCAT(O.ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%')
    		AND CONCAT(O.ORD_NO, '') LIKE CONCAT('%',#{strOrderNo},'%')
 	</if>
 	
-	<!-- 거래처 필터링 -->
+	거래처 필터링
    	<if test='!clientName.equals("")'>
 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	</if>
 	
-	<!-- 배송지 필터링 -->
-  	<if test='!shippingDestination.equals("")'>
+	배송지 필터링
+   	<if test='!shippingDestination.equals("")'>
  		AND O.ORD_SHP_DEST LIKE CONCAT('%',#{shippingDestination},'%')
  	</if>
- 	<!-- 업체명으로 필터링 -->
+ 	업체명으로 필터링
    	<if test='!vendorName.equals("")'>
    		AND V.V_NAME LIKE CONCAT('%',#{vendorName},'%')
-   	</if>
+   	</if> 
 	
 </where>
 		ORDER BY R.RLS_NO, I.ITM_NAME
- 	</select>
- 	
+ 	</select> -->
 
+ 	
 <!-- ========================================현주======================================== -->
 <!-- UPDATE 테이블이름
 SET 필드이름1=데이터값1, 필드이름2=데이터값2, ...
@@ -249,6 +261,5 @@ WHERE 필드이름=데이터값 -->
 		ri_qty = ri_qty + #{releaseInspectionQty}
 		where oi_no = #{orderItemNo}
 	</update>
- 	
 </mapper>
 

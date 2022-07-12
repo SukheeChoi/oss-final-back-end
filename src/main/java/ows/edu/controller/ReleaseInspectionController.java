@@ -20,7 +20,7 @@ import ows.edu.dto.Box;
 import ows.edu.dto.Pager;
 import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleaseInspectionFilter;
-import ows.edu.dto.ReleaseInspectionView;
+import ows.edu.dto.ReleasePacking;
 import ows.edu.service.BoxService;
 import ows.edu.service.OrderService;
 import ows.edu.service.ReleaseInspectionService;
@@ -46,8 +46,8 @@ public class ReleaseInspectionController {
 	private Integer[] computedStartRowNo;
 	
 	@GetMapping("/get")
-	public List<ReleaseInspectionView> getReleaseInspectionList(){
-		List<ReleaseInspectionView> list = new ArrayList<>();
+	public List<ReleasePacking> getReleaseInspectionList(){
+		List<ReleasePacking> list = new ArrayList<>();
 		list = releaseInspectionService.select();
 		return list;
 	}
@@ -82,7 +82,7 @@ public class ReleaseInspectionController {
 		log.info("그룹의 시작 페이지 번호 : " + pager.getStartPageNo());
 		pager.setNewGroup(newGroup);
 				
-		List<ReleaseInspectionView> list = new ArrayList<>();
+		List<ReleasePacking> list = new ArrayList<>();
 		list = releaseInspectionService.selectByFilterPage(pager);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -101,7 +101,7 @@ public class ReleaseInspectionController {
 		int totalRows = releaseInspectionService.count();
 		Pager pager = new Pager(3, 10, totalRows, pageNo);
 		//paging 처리된 list 가져오기
-		List<ReleaseInspectionView> list = new ArrayList<>();
+		List<ReleasePacking> list = new ArrayList<>();
 		list = releaseInspectionService.selectByPage(pager);	
 		
 		Map<String, Object> map = new HashMap<>();
@@ -111,8 +111,8 @@ public class ReleaseInspectionController {
 	}
 	
 	@GetMapping("/listItemInfo")
-	public List<ReleaseInspectionView> getlistItemInfo(int orderNo){
-		List<ReleaseInspectionView> list = new ArrayList<>();
+	public List<ReleasePacking> getlistItemInfo(int orderNo){
+		List<ReleasePacking> list = new ArrayList<>();
 		list = releaseInspectionService.selectByOrderNo(orderNo);
 		return list;
 	}
@@ -141,15 +141,14 @@ public class ReleaseInspectionController {
 	//스캔
 	@GetMapping("/scanBtnClick")
 	public ReleaseInspection scan(@RequestParam String code, @RequestParam String kind) {
-		
 		ReleaseInspection releaseInspection = releaseInspectionService.scan(code,kind);
 		return releaseInspection;
 	}
 	
 	//박스별품목정보
 	@GetMapping("/selectByReleaseCode")
-	public List<ReleaseInspectionView> selectByReleaseCode(@RequestParam String releaseCode){
-		List<ReleaseInspectionView> list = new ArrayList<>();
+	public List<ReleasePacking> selectByReleaseCode(@RequestParam String releaseCode){
+		List<ReleasePacking> list = new ArrayList<>();
 		list = releaseInspectionService.selectByReleaseCode(releaseCode);
 		return list;
 	}

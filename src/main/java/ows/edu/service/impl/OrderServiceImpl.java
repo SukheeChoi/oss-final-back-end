@@ -15,23 +15,16 @@ public class OrderServiceImpl implements OrderService {
 	@Resource
 	OrderDao orderDao;
 	
-//	@Override
-//	public List<String> getOrderNoList(Pager pager) {
-//	List<String> list = new ArrayList<>();
-//	orderDao.selectByPage(pager);
-//	
-//		return list;
-//	}
-
 	@Override
 	public int getTotalOrders() {
-		return orderDao.count();
+		return orderDao.countProgressOrder();
 	}
 
+	//현황(주문건)
 	@Override
 	public int count() {
 		// TODO Auto-generated method stub
-		return orderDao.count();
+		return orderDao.countProgressOrder();
 	}
 
 	@Override
