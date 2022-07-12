@@ -30,7 +30,7 @@
 	<select id="countProgressOrder" resultType="int">
 		SELECT COUNT(*)
 		FROM TB_ORD
-		WHERE ORD_STS > 0
+		WHERE ORD_STS != 0
 	</select>
 	
 	<!-- 피킹완료건 -->

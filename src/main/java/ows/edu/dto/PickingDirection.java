@@ -12,4 +12,5 @@ public class PickingDirection {
 	private int qty;
 	private int unrelease;
 	private String employeeId;
+	private int lotLocationNo;
 }

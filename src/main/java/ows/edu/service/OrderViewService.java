@@ -58,6 +58,7 @@ public class OrderViewService {
   public int getTotalNum(OrderFilter orderfilter) {
     
     orderfilter = setData(orderfilter);
+    log.info("## orderfilter : ", orderfilter);
     
     return orderViewDao.count(orderfilter);
   }

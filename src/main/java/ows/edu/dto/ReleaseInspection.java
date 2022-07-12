@@ -13,7 +13,6 @@ public class ReleaseInspection {
 	private Date receiptPrintDate;
 	private String employeeId;
 	private long releaseInspectionBarcode;
-	private String releaseInspectionNote;
 	private int unReleased;
 	
 	private String employeeName;

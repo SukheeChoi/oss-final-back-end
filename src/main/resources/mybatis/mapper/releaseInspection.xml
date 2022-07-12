@@ -15,15 +15,13 @@
 			<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
 			<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
 			<result property="releaseInspectionDate" column="RI_DT"/>
-			<result property="releaseInspectionNote" column="RI_NT"/>
 			<result property="orderItemNo" column="OI_NO"/>		
 		</association>
 		<association property="release" javaType="release">
-			<result property="releaseNo" column="RLS_NO"/>
+			<result property="releaseCode" column="RLS_CODE"/>
 			<result property="invoiceCode" column="RLS_RLS_IVC_CODE"/>
 			<result property="employeeName" column="RLS_EMP_NAME"/>	
 			<result property="shippingCompany" column="RLS_SHP_CPN"/>			
-			<result property="note" column="RLS_RLS_NT"/>
 		</association>
 		<association property="item" javaType="item">
 			<result property="itemName" column="ITM_NAME"/>
@@ -43,7 +41,6 @@
 			<result property="orderNo" column="ORD_NO"/>			
 		</association>
 		<association property="packing" javaType="packing">
-			<result property="note" column="PAC_NT"/>
 		</association>
 		<association property="client" javaType="client">
 			<result property="clientName" column="CLT_NAME"/>		
