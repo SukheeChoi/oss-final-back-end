@@ -19,7 +19,7 @@ import ows.edu.dao.ReleaseInspectionDao;
 import ows.edu.dao.ReleaseInspectionViewDao;
 import ows.edu.dto.AfterPickingView;
 import ows.edu.dto.Pager;
-import ows.edu.dto.ReleaseInspection;
+import ows.edu.dto.Picking;
 import ows.edu.dto.ReleaseInspectionView;
 import ows.edu.service.ReleaseInspectionService;
 
@@ -184,13 +184,15 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		log.info("ap : " + ap);
 		log.info("ap.size() : " + ap.size());
 		
+		DateFormat df = new SimpleDateFormat("MM-dd HH:mm");
+		String strFormedDate = null;
 		for(int i=0; i<ap.size(); i++) {
-			DateFormat df = new SimpleDateFormat("MM-dd HH:mm");
-			String strFormedDate = null;
+			log.info("ap.get(i) : " + ap.get(i));
 			
 			if(ap.get(i) != null && ap.get(i).getReleaseInspection() != null) {
 				if(ap.get(i).getReleaseInspection().getReleasePrintDate() != null) {
 					// 출고요청서 출력일시 포멧팅.
+					strFormedDate = null;
 					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReleasePrintDate());
 					ap.get(i)
 						.setStrReleasePrintDate(
@@ -228,14 +230,28 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				// 		RI_QTY != null && OI_URLS_QTY == null -> OI_URLS_QTY = 0
 				// 현재 데이터 문제로 0처리해줌.
 				if(
-						ap.get(i).getReleaseInspection().getReleaseInspectionQuantity() != null
-						&&
-						ap.get(i).getOrderItem().getOrderItemUnreleaseQuantity() == null
-						) {
-					ap.get(i).getOrderItem().setOrderItemUnreleaseQuantity(0);
+					ap.get(i).getReleaseInspection().getReleaseInspectionQuantity() != null
+					&&
+					ap.get(i).getOrderItem().getUnreleaseQuantity() == null
+				) {
+					ap.get(i).getOrderItem().setUnreleaseQuantity(0);
 				}
-
 			}
+			
+			// 합배송 && 협력사 제품 -> 피킹수량 = 전달수량. 
+			// 협력사 직배송은 출고검수 테이블에 데이터가 없으므로, 합배송 여부 검사는 불필요.(추후에 삭제 예정.)
+//			if(ap.get(i) != null && ap.get(i).getCombineShippingPartner() != null) {
+//				if(
+//					ap.get(i).getOrder().getShippingWay().equals("합배송")
+//					&&
+//					ap.get(i).getItem().getItemOsstem() == false
+//				) {
+//					Picking pic = new Picking();
+//					pic.setPickingQuantity(ap.get(i).getCombineShippingPartner().getDeliveryQuantity());
+//					
+//					ap.get(i).setPicking(pic);
+//				}
+//			}
 			 
 			 
 		}

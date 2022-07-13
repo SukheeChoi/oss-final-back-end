@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class Picking {
 	private int pickingNo;
-	private int orderItemNo;
+	private Integer orderItemNo;
 	private String employeeId;
 	private int pickingQuantity;
 	private Date date;

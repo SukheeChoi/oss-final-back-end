@@ -19,6 +19,7 @@ public class AfterPickingView {
 	private Item item;
 	private Client client;
 	private Picking picking;
+	private CombineShippingPartner combineShippingPartner;
 	private Employee employee;
 	private ReleaseInspection releaseInspection;
 	private Release release;
