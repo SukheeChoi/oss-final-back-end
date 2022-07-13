@@ -30,7 +30,7 @@ public class CombineShippingController {
 	
 	//수령 대상 업체 필터링을 위한 조회.
 	//선택된 날짜(parameter로 넘김.) || (parameter X)오늘 날짜에 해당하도록 조회할 것.
-	@PostMapping("/getVendorList")
+	@PostMapping("/vendorList")
 	public Map<String, Object> getVendorList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
 		Map<String, Object> map = new HashMap<>();
@@ -50,8 +50,8 @@ public class CombineShippingController {
 //	'전달'탭 선택시에 표시되는 합배송 담당직원의 목록 조회.
 //	당일의 '전달'사항을 할일로 가진 모든 담당자 조회.
 //	수령1 + 전달0인 행들의 모든 EMP_NAME을 중복없이 정렬해서 전달.
-	@PostMapping("/getAssignee")
-	public Map<String, Object> getAssignee(@RequestParam(value="toDo", defaultValue="1") int toDo
+	@PostMapping("/assigneeList")
+	public Map<String, Object> getAssigneeList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
 		
 		Map<String, Object> map = new HashMap<>();
@@ -67,7 +67,7 @@ public class CombineShippingController {
 	}
 	
 //	선택된 담당자를 기준으로 수령 목록 조회.
-	@PostMapping("/getReceiptList")
+	@PostMapping("/receiptList")
 	public Map<String, Object> geReceiptList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="vendorName", defaultValue="전체") String vendorName
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
@@ -88,7 +88,7 @@ public class CombineShippingController {
 		return map;
 	}
 //	선택된 담당자를 기준으로 전달 목록 조회.
-	@PostMapping("/getDeliveryList")
+	@PostMapping("/deliveryList")
 	public Map<String, Object> getDeliveryList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="employeeName", defaultValue="전체") String employeeName
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList

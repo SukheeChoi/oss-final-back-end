@@ -1,3 +1,4 @@
+//김예원
 package ows.edu.controller;
 
 import java.util.Arrays;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
@@ -29,10 +29,11 @@ public class ClientController {
 	//배송구분, 주문 단계, 미출고로 필터링	
 	@PostMapping("/getFilterList")
 	public Map<String, Object> getFilterList(@RequestBody ClientFilter filterList) {
+		log.info(filterList);
 		String[] shippingCategory = filterList.getShippingCategory();
 		int status = filterList.getStatus();
 		boolean orderUnrelease = filterList.isUnrelease();
-		int orderNo = filterList.getOrderNo();
+		Long orderNo = filterList.getOrderNo();
 		String clientName = filterList.getClientName();
 		
 		log.info("shippingCategory : " + Arrays.toString(shippingCategory));
@@ -41,7 +42,7 @@ public class ClientController {
 		log.info("orderNo : " + orderNo);
 		log.info("clientName : " + clientName);
 		List<Client> list = null;
-		
+	
 		Map<String, Object> map1 = new HashMap<>();
 		map1.put("shippingCategory", shippingCategory);
 		map1.put("orderUnrelease", orderUnrelease);
@@ -49,7 +50,7 @@ public class ClientController {
 		map1.put("clientName", clientName);
 		log.info("clientcontroller - map1: " + map1);
 
-		if(status == 0) {
+		if(status == -1) {
 			list = clientService.getListByShippingCategory(map1);
 			log.info("list1 : " + list);
 		} else {
@@ -75,6 +76,7 @@ public class ClientController {
 		return map;
 	}
 	
+	//미출고 건수 조회
 	@GetMapping("/unreleaseCnt")
 	public int unreleaseCnt() {
 		int unreleaseCnt = clientService.unreleaseCnt();

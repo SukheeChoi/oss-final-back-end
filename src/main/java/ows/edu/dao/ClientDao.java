@@ -13,6 +13,7 @@ public interface ClientDao {
 	
 	public List<Client> getListByShippingCategory(Map<String, Object> map);
 	
+	//미출고 건수 조회
 	public int unreleaseCnt();
 	
 	public int getstatusCnt(int status);

@@ -9,12 +9,16 @@
 		<typeAlias type="ows.edu.dto.Client" alias="client"/>
 		<typeAlias type="ows.edu.dto.ClientDetail" alias="clientdetail"/>
 		<typeAlias type="ows.edu.dto.CombineShipping" alias="combineShipping"/>
+		<typeAlias type="ows.edu.dto.CombineShippingPartner" alias="combineShippingPartner"/>
 		<typeAlias type="ows.edu.dto.Department" alias="department"/>
 		<typeAlias type="ows.edu.dto.Employee" alias="employee"/>
+
 		<typeAlias type="ows.edu.dto.InspectionLabeling" alias="inspectionLabeling"/>
 		<typeAlias type="ows.edu.dto.InspectionLabelingView" alias="inspectionLabelingView"/>
 		<typeAlias type="ows.edu.dto.InspectionLabelingWork" alias="inspectionLabelingWork"/>
 		<typeAlias type="ows.edu.dto.InspectionLabelingStatus" alias="inspectionlabelingStatus"/>
+		<typeAlias type="ows.edu.dto.InformationPartner" alias="informationPartner"/>
+
 		<typeAlias type="ows.edu.dto.Item" alias="item"/>
 		<typeAlias type="ows.edu.dto.LabelingWorkTime" alias="labelingWorkTime"/>
 		<typeAlias type="ows.edu.dto.Location" alias="location"/>
