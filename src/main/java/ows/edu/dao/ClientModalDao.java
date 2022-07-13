@@ -16,7 +16,7 @@ public interface ClientModalDao {
   public ClientDetail searchClientDetail(int clientNo);
   
   //진행 주문 정보
-  public RecentOrder searchRecentOrder(String orderNo);
+  public List<RecentOrder> searchRecentOrder(String orderNo);
   
   //과거 주문 이력
   public List<PastOrder> searchAllPastOrder(int clientNo);
