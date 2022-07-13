@@ -4,9 +4,12 @@ import lombok.Data;
 
 @Data
 public class ClientDetail {
-  private int clientDetailNo;
-  private int clientNo;
-  private String shipingdestination;
-  private String shipingaddress;
-  private Boolean manager;
+  private String clientName;
+  private String representative;
+  private String representativeContact;
+  private String clientAddress;
+  private String clientDestination;
+  private String branchName;
+  private String employeeId;
+  private String employeeContact;
 }
