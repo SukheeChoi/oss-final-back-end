@@ -12,11 +12,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.Client;
+import ows.edu.dto.ClientDetail;
 import ows.edu.dto.ClientFilter;
+import ows.edu.dto.PastOrder;
+import ows.edu.dto.PastOrderDetail;
+import ows.edu.dto.RecentOrder;
+import ows.edu.service.ClientModalService;
 import ows.edu.service.ClientService;
 
 @RestController
@@ -25,6 +31,9 @@ import ows.edu.service.ClientService;
 public class ClientController {
 	@Resource
 	ClientService clientService;
+	
+	@Resource
+	private ClientModalService clientModalService;
 	
 	//배송구분, 주문 단계, 미출고로 필터링	
 	@PostMapping("/getFilterList")
@@ -83,4 +92,36 @@ public class ClientController {
 		log.info("unreleaseCnt : " + unreleaseCnt);
 		return unreleaseCnt;
 	}
+	
+	@GetMapping("/modal")
+	public Map<String, Object> getModal(@RequestParam int clientNo, @RequestParam String orderNo) {
+	  
+	  Map<String, Object> map = new HashMap<>();
+	  //거래처 정보
+	  ClientDetail clientDetail = clientModalService.getClientDetailByClientNo(clientNo);
+
+	  //진행 주문 정보
+	  List<RecentOrder> recentOrder = clientModalService.getRecentOrderByOrderNo(orderNo);
+	  
+	  //과거 주문 이력
+	  List<PastOrder> pastOrder = clientModalService.getPastOrderListByClientNo(clientNo);
+	  
+    map.put("clientDetail", clientDetail);
+    map.put("recentOrder", recentOrder);
+    map.put("pastOrder", pastOrder);
+    return map;
+	}
+	
+	@GetMapping("modalDetail")
+	public Map<String, Object> getModalDetail(@RequestParam String orderNo) {
+    
+    Map<String, Object> map = new HashMap<>();
+
+    //상세 내역
+    List<PastOrderDetail> pastOrderDetail = clientModalService.getPastOrderDetailByOrderNo(orderNo);
+
+    map.put("pastOrderDetail", pastOrderDetail);
+
+    return map;
+  }
 }

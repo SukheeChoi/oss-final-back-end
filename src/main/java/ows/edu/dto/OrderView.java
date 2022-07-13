@@ -6,7 +6,7 @@ import lombok.Data;
 public class OrderView {
   
   private String orderDate;                  //주문일시
-  private long orderNo;                      //주문번호
+  private String orderNo;                      //주문번호
   private String clientName;                 //거래처
   private String itemName;                   //품목명
   private String itemCode;                   //품목코드
