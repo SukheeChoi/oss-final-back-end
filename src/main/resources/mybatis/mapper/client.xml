@@ -12,6 +12,7 @@
 		<result property="orderWay" column="ORD_ORD_WAY"/>	
 		<result property="shippingCategory" column="ORD_SHP_CAT"/>	
 		<result property="clientNo" column="CLT_NO"/>
+		<result property="unrelease" column="UNRELEASE"/>
  		<association property="client" javaType="client">
 		 	<result property="clientNo" column="CLT_NO"/>
 			<result property="clientName" column="CLT_NAME"/>
@@ -30,7 +31,7 @@
 
 	<!-- 배송구분, 회사, 미출고로 필터링 -->
 	<select id="getList" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY
+		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY, SUM(OI.OI_URLS_QTY) AS UNRELEASE
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
 		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
@@ -43,7 +44,7 @@
 					)
 					AND O.ORD_STS = #{status}
 					AND OI.OI_URLS_QTY IS NOT NULL
-    				<!-- AND OI.OI_URLS_QTY != 0 -->
+    				AND OI.OI_URLS_QTY != 0
 			</when>
 			<when test='orderUnrelease == false'>
 				WHERE O.ORD_SHP_CAT IN (
@@ -54,18 +55,19 @@
 					AND O.ORD_STS = #{status}
 			</when>
 		</choose>
- 		<if test='!orderNo.equals(0)'>
+ 		<if test='orderNo != null'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
 	   	<if test='!clientName.equals("")'>
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	 	</if>
-		ORDER BY OI.OI_URLS_QTY DESC, O.ORD_STS;
+		GROUP BY OI.OI_NO
+		ORDER BY UNRELEASE DESC, O.ORD_STS;
 	</select>
 	
 	<!-- 배송구분, 미출로 필터링 -->
 	<select id="getListByShippingCategory" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY
+		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY, SUM(OI.OI_URLS_QTY) AS UNRELEASE
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
 		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
@@ -77,7 +79,7 @@
 					</foreach>
 					)
 					AND OI.OI_URLS_QTY IS NOT NULL
-    				<!-- AND OI.OI_URLS_QTY != 0 -->
+    				AND OI.OI_URLS_QTY != 0
 			</when>
 			<when test='orderUnrelease == false'>
 				WHERE O.ORD_SHP_CAT IN (
@@ -87,13 +89,15 @@
 				)
 			</when>
 		</choose>
- 		<if test='!orderNo.equals(0)'>
+ 		<if test='orderNo != null'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
 	   	<if test='!clientName.equals("")'>
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	 	</if>
-		ORDER BY OI.OI_URLS_QTY DESC, O.ORD_STS;
+	 		AND O.ORD_STS != 0
+		GROUP BY OI.OI_NO
+		ORDER BY UNRELEASE DESC, O.ORD_STS;
 	</select>
 	
 	<!-- 주문 단계마다 카운트 --> 

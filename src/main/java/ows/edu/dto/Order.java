@@ -18,6 +18,7 @@ public class Order {
 	
 	private Client client;
 	private OrderItem orderItem;
+	private int unrelease;
 	
 	private boolean processedOrder; //처리 완료된 주문.(인계완료? 고객에게 배송완료?)
 }
