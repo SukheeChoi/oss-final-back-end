@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class OrderItem {
-	private int orderItemNo;
+	private Integer orderItemNo;
 	private Long orderNo;
 	private String itemCode;
-	private int qty;
-	private int orderItemUnreleaseQuantity;
+	private Integer qty;
+	private Integer orderItemUnreleaseQuantity;
 	private String orderItemNote;
 		
 }

@@ -5,16 +5,19 @@
 <!-- V_AFT_PIC 생성 코드 -->
 <!-- 
 USE FOUREVER;
+DROP VIEW V_AFT_PIC;
 CREATE OR REPLACE VIEW V_AFT_PIC AS
 	(
 	SELECT O.ORD_SHP_DEST, O.ORD_SHP_CAT, O.ORD_SHP_WAY, O.ORD_NO
-		, OI.ITM_CODE, OI.OI_URLS_QTY
+		, OI.ITM_CODE, OI.OI_URLS_QTY, OI.OI_NT
 		, I.ITM_NAME, I.ITM_OSS
 		, C.CLT_NAME
 		, PI.PIC_QTY
-		, RI.EMP_ID RI_EMP_ID, RI.RI_QTY, RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_NT, RI.RI_DT
-		, R.RLS_CODE, R.EMP_ID R_EMP_ID, R.RLS_SHP_CPN, R.RLS_IVC_CODE, R.RLS_BX_QTY, R.RLS_NT
+		, RI.EMP_ID RI_EMP_ID, RI.RI_QTY, RI.RI_RLS_PRT_DT, RI.RI_RCPT_PRT_DT, RI.RI_DT
+		, R.RLS_CODE, R.EMP_ID R_EMP_ID, R.RLS_SHP_CPN, R.RLS_IVC_CODE, R.RLS_BX_QTY
 		, I.V_NO
+		, (SELECT EMP_NAME FROM TB_EMP WHERE EMP_ID=RI_EMP_ID) RI_EMP_NAME
+		, (SELECT EMP_NAME FROM TB_EMP WHERE EMP_ID=R_EMP_ID) R_EMP_NAME
 	FROM TB_ORD O
 	RIGHT JOIN TB_ORD_ITM OI
 		ON (O.ORD_NO=OI.ORD_NO)
@@ -29,9 +32,52 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 	LEFT JOIN TB_RLS R
 		ON (O.ORD_NO=R.ORD_NO)
 	WHERE O.ORD_STS IN (4, 5, 6)
+	ORDER BY O.ORD_DT
 	)
 ;
  -->
+
+	<resultMap id="afterPickingViewMap" type="afterPickingView">
+		<result property="releaseInspectionEmployeeId" column="RI_EMP_ID"/>
+		<result property="releaseInspectionEmployeeName" column="RI_EMP_NAME"/>
+		<result property="releaseEmployeeId" column="R_EMP_ID"/>
+		<result property="releaseEmployeeName" column="R_EMP_NAME"/>
+	
+		<association property="order" javaType="order">
+			<result property="shippingDestination" column="ORD_SHP_DEST"/>
+			<result property="shippingCategory" column="ORD_SHP_CAT"/>
+			<result property="shippingWay" column="ORD_SHP_WAY"/>
+			<result property="orderNo" column="ORD_NO"/>
+		</association>
+		<association property="orderItem" javaType="orderItem">
+			<result property="itemCode" column="ITM_CODE"/>
+			<result property="orderItemUnreleaseQuantity" column="OI_URLS_QTY"/>
+			<result property="orderItemNote" column="OI_NT"/>
+		</association>
+		<association property="item" javaType="item">
+			<result property="itemName" column="ITM_NAME"/>
+			<result property="itemOsstem" column="ITM_OSS"/>
+			<result property="vendorNo" column="V_NO"/>
+		</association>
+		<association property="client" javaType="client">
+			<result property="clientName" column="CLT_NAME"/>
+		</association>
+		<association property="picking" javaType="picking">
+			<result property="pickingQuantity" column="PIC_QTY"/>
+		</association>
+		<association property="releaseInspection" javaType="releaseInspection">
+			<result property="releaseInspectionQuantity" column="RI_QTY"/>
+			<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
+			<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
+			<result property="releaseInspectionDate" column="RI_DT"/>
+		</association>
+		<association property="release" javaType="release">
+			<result property="releaseCode" column="RLS_CODE"/>
+			<result property="shippingCompany" column="RLS_SHP_CPN"/>
+			<result property="invoiceCode" column="RLS_IVC_CODE"/>
+			<result property="boxQuantity" column="RLS_BX_QTY"/>
+		</association>
+	</resultMap>
 
 	<select id="selectCountAll" resultType="int">
 		SELECT COUNT(*)
@@ -109,11 +155,6 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 			<if test='released.equals("미출고")'>
 				AND OI_URLS_QTY > 0
 			</if>
-			<!-- 출고검수/패킹 담당자 필터링 -->
-		    <if test='!assignee.equals("")'>
-				AND RI_EMP_NAME = #{assignee}
-				<!-- AND (RI_EMP_NAME = #{assignee} OR RLS_EMP_NAME = #{assignee}) -->
-			</if>
 			<!-- 주문번호 필터링 -->
 			<if test='orderNo != -1'>
 		   		AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%')
@@ -136,7 +177,8 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 		ORDER BY RI_EMP_NAME
 	</select>
 
-	<select id="selectAll" resultType="HashMap">
+	<!-- <select id="selectAll" resultType="HashMap"> -->
+	<select id="selectAll" resultMap="afterPickingViewMap">
 		SELECT @ROWNUM := @ROWNUM+1 AS ROWNUM, SQ.*
 		FROM(
 			SELECT * FROM V_AFT_PIC
@@ -165,7 +207,6 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 			<!-- 출고검수/패킹 담당자 필터링 -->
 		    <if test='!assignee.equals("")'>
 				AND RI_EMP_NAME = #{assignee}
-				<!-- AND (RI_EMP_NAME = #{assignee} OR RLS_EMP_NAME = #{assignee}) -->
 			</if>
 			<!-- 주문번호 필터링 -->
 			<if test='orderNo != -1'>

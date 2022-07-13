@@ -6,15 +6,17 @@ import lombok.Data;
 
 @Data
 public class ReleaseInspection {	
-	private int orderItemNo;
-	private int releaseInspectionQuantity;
+	private Integer orderItemNo;
+	private Integer releaseInspectionQuantity;
+//	private String releaseInspectionDate;
+//	private String releasePrintDate;
+//	private String receiptPrintDate;
 	private Date releaseInspectionDate;
 	private Date releasePrintDate;
 	private Date receiptPrintDate;
 	private String employeeId;
 	private long releaseInspectionBarcode;
-	private int unReleased;
 	
-	private String employeeName;
+//	private String employeeName;
 
 }

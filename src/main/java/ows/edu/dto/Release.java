@@ -15,5 +15,5 @@ public class Release {
 	private int unrelease;
 	private int boxQuantity;
 	
-	private String employeeName;
+//	private String employeeName;
 }
