@@ -35,28 +35,28 @@ public class InspectionLabelingService {
     employeeList.addAll(inspectionLabelingDao.searchAllByName());
     
     for (LabelingWorkTime employee : employeeList) {
-
+      // 3번째 업체별 리스트
+      List<InspectionLabelingWork> workList = new ArrayList<>();
+      labelingWorkTimeNo = employee.getLabelingWorkTimeNo();
+      workList.addAll(inspectionLabelingDao.searchAllByLWTNo(labelingWorkTimeNo));
+      for (InspectionLabelingWork labelingWork : workList) {
+        
+        // 업체별 예정 시간 정제
+        String startTime = labelingWork.getScheduledStartTime();
+        String endTime = labelingWork.getScheduledEndTime();
+        int totalTime = labelingWork.getTotalWorkTime();
+        String scheduledTime = setDateTime(startTime, endTime, totalTime);
+        labelingWork.setScheduledTime(scheduledTime);
+        labelingWork.setEmployeeName(employee.getTitle());
+      }
+      employee.setChildrennn(workList);
+      
       // 담당자별 예정 시간 정제
       String startTime = employee.getScheduledStartTime();
       String endTime = employee.getScheduledEndTime();
       int totalTime = employee.getTotalWorkTime();
       String scheduledTime = setDateTime(startTime, endTime, totalTime);
       employee.setScheduledTime(scheduledTime);
-
-      // 3번째 업체별 리스트
-      List<InspectionLabelingWork> workList = new ArrayList<>();
-      labelingWorkTimeNo = employee.getLabelingWorkTimeNo();
-      workList.addAll(inspectionLabelingDao.searchAllByLWTNo(labelingWorkTimeNo));
-      for (InspectionLabelingWork labelingWork : workList) {
-
-        // 업체별 예정 시간 정제
-        startTime = labelingWork.getScheduledStartTime();
-        endTime = labelingWork.getScheduledEndTime();
-        totalTime = labelingWork.getTotalWorkTime();
-        scheduledTime = setDateTime(startTime, endTime, totalTime);
-        labelingWork.setScheduledTime(scheduledTime);
-      }
-      employee.setChildrennn(workList);
     }
 
     // 1번째 전체 리스트
@@ -69,7 +69,7 @@ public class InspectionLabelingService {
     String scheduledTime = setDateTime(startTime, endTime, totalTime);
     totalList.setScheduledTime(scheduledTime);
     
-    totalList.setEmployeeName("전체");
+    totalList.setTitle("전체");
     totalList.setChild(employeeList);
     
 
