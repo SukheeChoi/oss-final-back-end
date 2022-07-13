@@ -117,4 +117,3 @@
 			AND OI_URLS_QTY != '';
 	</select>
 </mapper>
-
