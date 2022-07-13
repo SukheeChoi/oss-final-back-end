@@ -9,6 +9,5 @@
 		WHERE ORD_STS > 0
 	</select>
 
-
 </mapper>
 

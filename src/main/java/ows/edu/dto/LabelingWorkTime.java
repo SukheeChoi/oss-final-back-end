@@ -5,9 +5,9 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class LabelingWorkTime {        //왼쪽화면
+public class LabelingWorkTime {        //왼쪽화면(1번, 2번)
   private int labelingWorkTimeNo;      //번호
-	private String employeeName;         //담당자
+	private String title;         //담당자
 	private String labelingWorkTimeDate; //작업일
 	private int receiveItem;             //수령 품목
 	private int receiveQuantity;         //수령 수량(전체 작업량)
