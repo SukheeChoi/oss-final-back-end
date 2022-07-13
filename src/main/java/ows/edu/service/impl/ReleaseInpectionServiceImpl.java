@@ -219,7 +219,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 					strFormedDate = null;
 					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReleaseInspectionDate());
 					ap.get(i)
-						.setStrReceiptPrintDate(
+						.setStrReleaseInspectionDate(
 							strFormedDate
 						);
 				}
