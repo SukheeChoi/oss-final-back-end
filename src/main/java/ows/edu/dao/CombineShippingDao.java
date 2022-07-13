@@ -17,8 +17,7 @@ public interface CombineShippingDao {
 									, @Param("endDate") String endDate);
 
 	// 담당자 필터링을 위한 조회.
-//	public List<Employee> selectAssigneeListByDate(@Param("startDate") String startDate
-	public List<String> selectAssigneeListByDate(@Param("toDo") int toDo
+	public List<String> selectAssigneeList(@Param("toDo") int toDo
 												, @Param("startDate") String startDate
 												, @Param("endDate") String endDate);
 	
@@ -51,5 +50,4 @@ public interface CombineShippingDao {
 	// 전달여부 update.
 	public int updateADelivery(int orderItemNo);
 
-//	public List<CombineShipping> getReceiptListByDate(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }
