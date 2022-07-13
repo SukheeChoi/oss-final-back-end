@@ -1,10 +1,10 @@
 package ows.edu.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import ows.edu.dto.AfterPickingView;
 import ows.edu.dto.Pager;
 
 @Mapper
@@ -22,8 +22,8 @@ public interface AfterPickingViewDao {
 		);
 
 	
-//	public List<HashMap<String, String>> selectAll(
-	public List<AfterPickingView> selectAll(
+	public List<HashMap<String, String>> selectAll(
+//	public List<AfterPickingView> selectAll(
 			String shippingCategory
 			, String shippingWay
 			, String released

@@ -82,6 +82,9 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 			<result property="invoiceCode" column="RLS_IVC_CODE"/>
 			<result property="boxQuantity" column="RLS_BX_QTY"/>
 		</association>
+		<association property="vendor" javaType="vendor">
+			<result property="vendorName" column="V_NAME"/>
+		</association>
 	</resultMap>
 
 	<select id="selectCountAll" resultType="int">
@@ -182,9 +185,8 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 		ORDER BY RI_EMP_NAME
 	</select>
 
-	<!-- <select id="selectAll" resultType="HashMap"> -->
-	<!--  -->
-	<select id="selectAll" resultMap="afterPickingViewMap">
+	<select id="selectAll" resultType="HashMap">
+	<!-- <select id="selectAll" resultMap="afterPickingViewMap"> -->
 		<!-- SELECT @ROWNUM := @ROWNUM+1 AS ROWNUM, SQ.* -->
 		<!-- SELECT SQ.* -->
 		<!-- FROM( -->
@@ -192,7 +194,7 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 				, ITM_CODE, OI_URLS_QTY, IFNULL(OI_NT, ' ') OI_NT
 				, ITM_NAME, ITM_OSS
 				, CLT_NAME
-				, PIC_QTY, CSP_DLV_QTY
+				, IFNULL(PIC_QTY, 0) PIC_QTY, IFNULL(CSP_DLV_QTY, 0) CSP_DLV_QTY
 				, RI_EMP_ID, RI_QTY, RI_RLS_PRT_DT, RI_RCPT_PRT_DT, RI_DT
 				, RLS_CODE, R_EMP_ID, RLS_SHP_CPN, RLS_IVC_CODE, RLS_BX_QTY
 				, V_NO, V_NAME

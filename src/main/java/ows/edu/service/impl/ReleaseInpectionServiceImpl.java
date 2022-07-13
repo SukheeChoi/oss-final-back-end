@@ -1,7 +1,6 @@
 package ows.edu.service.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,6 @@ import ows.edu.dao.ReleaseInspectionDao;
 import ows.edu.dao.ReleaseInspectionViewDao;
 import ows.edu.dto.AfterPickingView;
 import ows.edu.dto.Pager;
-import ows.edu.dto.Picking;
 import ows.edu.dto.ReleaseInspectionView;
 import ows.edu.service.ReleaseInspectionService;
 
@@ -138,8 +136,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 
 	@Override
 //	public List<AfterPicking> getAfterPickingList(
-//	public List<HashMap<String, String>> getAfterPickingList(
-	public List<AfterPickingView> getAfterPickingList(
+	public List<HashMap<String, String>> getAfterPickingList(
+//	public List<AfterPickingView> getAfterPickingList(
 		String shippingCategory
 		, String shippingWay
 		, String released
@@ -168,8 +166,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 //		Pager pager = new Pager(10, 10, totalRows, pageNo);
 		
 //		List<AfterPickingView> ap = afterPickingViewDao.selectAll();
-//		List<HashMap<String, String>> ap = afterPickingViewDao.selectAll(
-		List<AfterPickingView> ap = afterPickingViewDao.selectAll(
+		List<HashMap<String, String>> ap = afterPickingViewDao.selectAll(
+//		List<AfterPickingView> ap = afterPickingViewDao.selectAll(
 				shippingCategory
 				, shippingWay
 				, released
@@ -184,66 +182,64 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		log.info("ap : " + ap);
 		log.info("ap.size() : " + ap.size());
 		
-		DateFormat df = new SimpleDateFormat("MM-dd HH:mm");
-		String strFormedDate = null;
-		for(int i=0; i<ap.size(); i++) {
-			log.info("ap.get(i) : " + ap.get(i));
-			
-			if(ap.get(i) != null && ap.get(i).getReleaseInspection() != null) {
-				if(ap.get(i).getReleaseInspection().getReleasePrintDate() != null) {
-					// 출고요청서 출력일시 포멧팅.
-					strFormedDate = null;
-					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReleasePrintDate());
-					ap.get(i)
-						.setStrReleasePrintDate(
-							ap.get(i).getReleaseInspectionEmployeeName()
-							+ "\n" 
-							+ "("
-							+ strFormedDate
-							+ ")"
-						);
-				}
-				if(ap.get(i).getReleaseInspection().getReceiptPrintDate() != null) {
-					// 거래명세서 출력일시 포멧팅.
-					strFormedDate = null;
-					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReceiptPrintDate());
-					ap.get(i)
-						.setStrReceiptPrintDate(
-							ap.get(i).getReleaseInspectionEmployeeName()
-							+ "\n" 
-							+ "("
-							+ strFormedDate
-							+ ")"
-						);
-				}
-				if(ap.get(i).getReleaseInspection().getReleaseInspectionDate() != null) {
-					// 검수일시 포멧팅.
-					strFormedDate = null;
-					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReleaseInspectionDate());
-					ap.get(i)
-						.setStrReleaseInspectionDate(
-							strFormedDate
-						);
-				}
-				
-				// OI_URLS_QTY 컬럼 :
-				// 		RI_QTY != null && OI_URLS_QTY == null -> OI_URLS_QTY = 0
-				// 현재 데이터 문제로 0처리해줌.
-				if(
-					ap.get(i).getReleaseInspection().getReleaseInspectionQuantity() != null
-					&&
-					ap.get(i).getOrderItem().getUnreleaseQuantity() == null
-				) {
-					ap.get(i).getOrderItem().setUnreleaseQuantity(0);
-				}
-			}
-			
-			// 합배송 && 협력사 제품 -> 피킹수량 = 전달수량. 
-			// 협력사 직배송은 출고검수 테이블에 데이터가 없으므로, 합배송 여부 검사는 불필요.(추후에 삭제 예정.)
+//		DateFormat df = new SimpleDateFormat("MM-dd HH:mm");
+//		String strFormedDate = null;
+//		for(int i=0; i<ap.size(); i++) {
+//			log.info("ap.get(i) : " + ap.get(i));
+//			
+//			if(ap.get(i) != null && ap.get(i).getReleaseInspection() != null) {
+//				if(ap.get(i).getReleaseInspection().getReleasePrintDate() != null) {
+//					// 출고요청서 출력일시 포멧팅.
+//					strFormedDate = null;
+//					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReleasePrintDate());
+//					ap.get(i)
+//						.setStrReleasePrintDate(
+//							ap.get(i).getReleaseInspectionEmployeeName()
+//							+ "\n" 
+//							+ "("
+//							+ strFormedDate
+//							+ ")"
+//						);
+//				}
+//				if(ap.get(i).getReleaseInspection().getReceiptPrintDate() != null) {
+//					// 거래명세서 출력일시 포멧팅.
+//					strFormedDate = null;
+//					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReceiptPrintDate());
+//					ap.get(i)
+//						.setStrReceiptPrintDate(
+//							ap.get(i).getReleaseInspectionEmployeeName()
+//							+ "\n" 
+//							+ "("
+//							+ strFormedDate
+//							+ ")"
+//						);
+//				}
+//				if(ap.get(i).getReleaseInspection().getReleaseInspectionDate() != null) {
+//					// 검수일시 포멧팅.
+//					strFormedDate = null;
+//					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReleaseInspectionDate());
+//					ap.get(i)
+//						.setStrReleaseInspectionDate(
+//							strFormedDate
+//						);
+//				}
+//				
+//				// OI_URLS_QTY 컬럼 :
+//				// 		RI_QTY != null && OI_URLS_QTY == null -> OI_URLS_QTY = 0
+//				// 현재 데이터 문제로 0처리해줌.
+//				if(
+//					ap.get(i).getReleaseInspection().getReleaseInspectionQuantity() != null
+//					&&
+//					ap.get(i).getOrderItem().getUnreleaseQuantity() == null
+//				) {
+//					ap.get(i).getOrderItem().setUnreleaseQuantity(0);
+//				}
+//			}
+//			
+//			// 합배송 && 협력사 제품 -> 피킹수량 = 전달수량. 
+//			//	협력사 직배송은 출고검수 테이블에 데이터가 없으므로, 합배송 여부 검사는 불필요.
 //			if(ap.get(i) != null && ap.get(i).getCombineShippingPartner() != null) {
 //				if(
-//					ap.get(i).getOrder().getShippingWay().equals("합배송")
-//					&&
 //					ap.get(i).getItem().getItemOsstem() == false
 //				) {
 //					Picking pic = new Picking();
@@ -252,9 +248,10 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 //					ap.get(i).setPicking(pic);
 //				}
 //			}
-			 
-			 
-		}
+//			 
+//			 
+//		}
+		/////////========================================================
 		
 //		HashMap<String, String> map = new HashMap<>();
 //		for(int i=0; i<ap.size(); i++) {
@@ -311,9 +308,9 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 //			// 다음번 for문 순회하기 전에 HashMap 객체 초기화.
 //			map = null;
 //		}
-		
-		
+//		List<AfterPickingView> a = new ArrayList<>();
 		return ap;
+//		return a;
 	}
 
 	

@@ -106,8 +106,8 @@ public class AfterPickingController {
 		
 		Map<String, Object> map = new HashMap<>();
 //		List<AfterPicking> list = releaseInspectionService
-//		List<HashMap<String, String>> list = releaseInspectionService
-		List<AfterPickingView> list = releaseInspectionService
+		List<HashMap<String, String>> list = releaseInspectionService
+//		List<AfterPickingView> list = releaseInspectionService
 				.getAfterPickingList(
 					shippingCategory
 					, shippingWay

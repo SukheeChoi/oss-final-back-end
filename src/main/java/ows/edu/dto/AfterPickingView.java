@@ -23,6 +23,7 @@ public class AfterPickingView {
 	private Employee employee;
 	private ReleaseInspection releaseInspection;
 	private Release release;
+	private Vendor vendor;
 //	private String releaseNo;
 //	private String itemName;
 //	private int pickingNo;

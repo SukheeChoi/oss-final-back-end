@@ -13,11 +13,11 @@ public class CombineShippingPartner {
   private Date receiveDate;
   private Date deliveryDate;
   private Integer receiveQuantity;
-  private int deliveryQuantity;
+  private Integer deliveryQuantity;
   private Integer receiveUnreleaseQuantity;
   private Integer deliveryUnreleaseQuantity;
   
-  private OrderItem orderItem;
-  private Item item;
-  private Release release;
+//  private OrderItem orderItem;
+//  private Item item;
+//  private Release release;
 }

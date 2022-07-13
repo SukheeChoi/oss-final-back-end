@@ -8,9 +8,6 @@ import lombok.Data;
 public class ReleaseInspection {	
 	private Integer orderItemNo;
 	private Integer releaseInspectionQuantity;
-//	private String releaseInspectionDate;
-//	private String releasePrintDate;
-//	private String receiptPrintDate;
 	private Date releaseInspectionDate;
 	private Date releasePrintDate;
 	private Date receiptPrintDate;
