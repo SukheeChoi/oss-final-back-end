@@ -30,8 +30,8 @@ public class ClientModalService {
   };
   
   //과거 주문 이력
-  public List<PastOrder> getPastOrderListByClientNo(int clientNo) {
-    return clientModalDao.searchAllPastOrder(clientNo);
+  public List<PastOrder> getPastOrderListByClientNo(int clientNo, String orderNo) {
+    return clientModalDao.searchAllPastOrder(clientNo, orderNo);
   };
   
   //상세내역
