@@ -19,7 +19,7 @@ public interface ClientModalDao {
   public List<RecentOrder> searchRecentOrder(String orderNo);
   
   //과거 주문 이력
-  public List<PastOrder> searchAllPastOrder(int clientNo);
+  public List<PastOrder> searchAllPastOrder(int clientNo, String orderNo);
   
   //상세내역
   public List<PastOrderDetail> searchAllPasOrderDetail(String orderNo);
