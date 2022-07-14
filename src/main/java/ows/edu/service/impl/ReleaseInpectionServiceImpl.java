@@ -17,7 +17,6 @@ import ows.edu.dao.ReleaseInspectionDao;
 import ows.edu.dao.ReleasePackingDao;
 import ows.edu.dto.Box;
 import ows.edu.dto.Pager;
-import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleasePacking;
 import ows.edu.service.ReleaseInspectionService;
 
@@ -34,7 +33,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	@Resource
 	PackingDao packingDao;
 	@Resource
-	ReleasePackingDao releaseInspectionViewDao;
+	ReleasePackingDao releasePackingDao;
 	@Resource
 	AfterPickingViewDao afterPickingViewDao;
 	
@@ -269,7 +268,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	private String releaseCode ="";
 	
 	public List<ReleasePacking> select(){
-		List<ReleasePacking> list = releaseInspectionViewDao.select();
+		List<ReleasePacking> list = releasePackingDao.select();
 		int count = 0;
 		
 		for(int i=0; i<list.size(); i++ ) {
@@ -283,7 +282,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	}
 	
 	public List<ReleasePacking> selectByFilterPage(Pager pager){
-		List<ReleasePacking> list = releaseInspectionViewDao.selectByFilterPage(pager);
+		List<ReleasePacking> list = releasePackingDao.selectByFilterPage(pager);
 		
 //		int count = pager.getStartRowIndex();
 //		
@@ -305,34 +304,34 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	}
 	
 	public int count() {
-		return releaseInspectionViewDao.count();
+		return releasePackingDao.count();
 	}
 	
 	public List<ReleasePacking> selectByPage(Pager pager){
-		return releaseInspectionViewDao.selectByPage(pager);
+		return releasePackingDao.selectByPage(pager);
 	}
 	
-	public List<ReleasePacking> selectByOrderNo(int orderNo){
-		return releaseInspectionViewDao.selectByOrderNo(orderNo);
+	public List<ReleasePacking> selectByOrderNo(int orderNo, int index){
+		return releasePackingDao.selectByOrderNo(orderNo, index);
 	}
 	
 	//검수수량, 미출고 수량 업데이트
 	@Override
-	public int releaseInspectionQtyUpdate(String releaseCode) {
+	public int releaseInspectionQtyUpdate(String releaseCode, String barCode) {
 		// TODO Auto-generated method stub
-		return releaseInspectionDao.releaseInspectionQtyUpdate(releaseCode);
+		return releaseInspectionDao.releaseInspectionQtyUpdate(releaseCode, barCode);
 	}
 
 	@Override
-	public int unRleaseQtyUpdate(String releaseCode) {
+	public int unRleaseQtyUpdate(String releaseCode, String barCode) {
 		// TODO Auto-generated method stub
-		return releaseInspectionDao.unRleaseQtyUpdate(releaseCode);
+		return releaseInspectionDao.unRleaseQtyUpdate(releaseCode, barCode);
 	}
 
 	//스캔
 	@Override
-	public ReleaseInspection scan(String release, String kind) {
-		return releaseInspectionDao.scan(release, kind);
+	public List<ReleasePacking> scan(String release, String kind) {
+		return releasePackingDao.scan(release, kind);
 	}
 
 	@Override
@@ -342,8 +341,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		for(Box boxArray : boxArrays) {
 			
 			Map<String, Integer> map = new HashMap<>();
-			map.put("releaseInspectionQty", boxArray.getReleaseInspectionQty());
-			System.out.println(boxArray.getReleaseInspectionQty());
+//			map.put("releaseInspectionQty", boxArray.getReleaseInspectionQty());
+//			System.out.println(boxArray.getReleaseInspectionQty());
 			map.put("orderItemNo", boxArray.getOrderItemNo());
 			System.out.println(boxArray.getOrderItemNo());
 			updateCount =+ releaseInspectionDao.update(map);
@@ -354,7 +353,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	@Override
 	public List<ReleasePacking> selectByReleaseCode(String releaseCode) {
 		// TODO Auto-generated method stub
-		return releaseInspectionViewDao.selectByReleaseCode(releaseCode);
+		return releasePackingDao.selectByReleaseCode(releaseCode);
 	}
 	
 }

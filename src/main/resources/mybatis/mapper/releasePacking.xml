@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="ows.edu.dao.ReleaseInspectionViewDao">
-	<resultMap id="releaseInspectionViewMap" type="releasePacking">
+<mapper namespace="ows.edu.dao.ReleasePackingDao">
+	<resultMap id="releasePackingMap" type="releasePacking">
 		<result property="no" column="no"/>
 		<result property="orderNo" column="ORD_NO"/>
 		<result property="date" column="ORD_DT"/>
@@ -20,7 +20,7 @@
 		<result property="vendorNo" column="V_NO"/>
 		<result property="releaseCode" column="RLS_CODE"/>
 		<result property="done" column="RLS_DN"/>
-		<result property="boxQty" column="RLS_BX_QTY"/>
+		<result property="releaseBoxQty" column="RLS_BX_QTY"/>
 		<result property="releaseInspectionQuantity" column="RI_QTY"/>
 		<result property="note" column="RI_NT"/>
 		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
@@ -31,9 +31,14 @@
 		<result property="vendorName" column="V_NAME"/>
 		<result property="employeeName" column="EMP_NAME"/>
 		<result property="clientName" column="CLT_NAME"/>
+		<result property="oderItemUnreleaseQuantity" column="OI_URLS_QTY"/>
+		<result property="barCode" column="BRCD_NO"/>
+		<result property="barCodeDone" column="BRCD_DN"/>
+		<result property="boxItemQuantity" column="BX_ITM_QTY"/>
+		<result property="boxNum" column="BX_NUM"/>
 	</resultMap>
 
-	<select id="select" resultMap="releaseInspectionViewMap">
+	<select id="select" resultMap="releasePackingMap">
 <!-- 		SELECT CLT_NAME, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE,
 				PIC_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
 		FROM rls_insp_view
@@ -50,7 +55,7 @@
 		 ORDER BY CLT_NAME DESC
 	</select>
 	
-	<select id="selectByFilterPage" parameterType="pager" resultMap="releaseInspectionViewMap">
+<!-- 	<select id="selectByFilterPage" parameterType="pager" resultMap="releasePackingMap">
 		SELECT 
 		  if(a.rls_code like a.rls_prev, @rownum:=@rownum+0, @rownum:=@rownum+1) as 'no' , A.* 
 		FROM 
@@ -68,9 +73,37 @@
 	    #{arr} + #{startRowNo}
 	    </foreach>
 		ORDER BY CLT_NAME DESC;
+	</select> -->
+	
+	<select id="selectByFilterPage" parameterType="pager" resultMap="releasePackingMap">
+		select N.NO, RI_INFO.*
+		from 
+			(select `C`.`CLT_NAME` ,`O`.`ORD_SHP_CAT`,`R`.`RLS_CODE`,`O`.`ORD_SHP_DEST`,`O`.`ORD_NO`,`V`.`V_NAME`,`I`.`ITM_NAME`,
+			 I.ITM_CODE, IFNULL(P.PIC_QTY, CSP.CSP_RCV_QTY) AS PIC_QTY,
+		     `RI`.`RI_QTY`, E.EMP_NAME, `R`.`RLS_BX_QTY`, IF(O.ORD_STS>4, 'Y', 'N') AS RLS_DN, `OI`.`OI_NT`,
+		     OI.OI_NO
+			from (SELECT * FROM TB_ORD WHERE ORD_STS IN (4,5,6)) AS O
+			INNER JOIN TB_ORD_ITM AS OI ON `O`.`ORD_NO` = `OI`.`ORD_NO` 
+			INNER JOIN TB_RLS AS R ON `O`.`ORD_NO` = `R`.`ORD_NO` 
+			INNER JOIN TB_CLT AS C ON `O`.`CLT_NO` = `C`.`CLT_NO`
+			INNER JOIN TB_ITM AS I ON `OI`.`ITM_CODE` = `I`.`ITM_CODE` 
+			INNER JOIN TB_VND AS V ON `I`.`V_NO` = `V`.`V_NO` 
+			INNER JOIN TB_RLS_INSP AS RI ON `RI`.`OI_NO` = `OI`.`OI_NO` 
+			LEFT JOIN TB_PIC AS P ON `OI`.`OI_NO` = P.OI_NO
+		    LEFT JOIN TB_CMB_SHP_PTN AS CSP ON `OI`.`OI_NO` = CSP.OI_NO
+		    LEFT JOIN TB_EMP AS E ON P.EMP_ID = E.EMP_ID OR CSP.EMP_ID = E.EMP_ID
+			order by `O`.`ORD_NO` DESC) AS RI_INFO
+		JOIN (	SELECT R.*, @ROWNUM := @ROWNUM+1 AS 'no'
+				FROM (SELECT @ROWNUM := #{startRowIndex}, ORD_NO FROM TB_ORD WHERE ORD_STS IN (4,5,6) AND ORD_SHP_CAT IN 
+				<foreach collection="newGroup" item="arr" open="(" close=")" separator=",">
+			 		#{arr}
+			    </foreach>		
+				GROUP BY ORD_NO ORDER BY ORD_NO DESC) AS R LIMIT #{startRowIndex},#{rowsPerPage}) N
+		ON RI_INFO.ORD_NO = N.ORD_NO
+		ORDER BY RI_INFO.ORD_NO DESC
 	</select>
 	
-	<select id="selectByPage" parameterType="pager" resultMap="releaseInspectionViewMap">
+	<select id="selectByPage" parameterType="pager" resultMap="releasePackingMap">
 		<!-- ROWNUM사용할 때는 FROM절 내부에 SELECT문을 둬서
 			 0으로 초기화 시켜야 하는것 같네요!!! -->
 		<!-- 최숙희 -->
@@ -108,14 +141,21 @@
 
 	</select>
 	
-	<select id="selectByOrderNo" parameterType="int" resultMap="releaseInspectionViewMap">
+	<!-- ordNo를 사용하여 boxinfo 얻기 -->
+	<select id="selectByOrderNo" parameterType="int" resultMap="releasePackingMap">
 		<!-- select CLT_NAME, ORD_SHP_WAY, PIC_QTY, RI_QTY, RI_URLS, RLS_CODE, RI_BRCD, ORD_NO -->
-		SELECT *
-		FROM osstem.rls_insp_view
-		where ORD_NO = #{orderNo}
+		select `I`.`ITM_CODE`, `I`.`ITM_NAME`, OI.OI_QTY, IFNULL(P.PIC_QTY, CSP.CSP_RCV_QTY) as pic_qty, `RI`.`RI_QTY`, B.BX_NUM, B.BX_ITM_QTY
+		from (SELECT * FROM TB_ORD WHERE ORD_STS IN (4,5,6)) AS O
+		INNER JOIN TB_ORD_ITM AS OI ON `O`.`ORD_NO` = `OI`.`ORD_NO` 
+		INNER JOIN TB_ITM AS I ON `OI`.`ITM_CODE` = `I`.`ITM_CODE` 
+		INNER JOIN TB_RLS_INSP AS RI ON `RI`.`OI_NO` = `OI`.`OI_NO`
+		LEFT JOIN TB_PIC AS P ON `OI`.`OI_NO` = P.OI_NO
+		LEFT JOIN TB_CMB_SHP_PTN AS CSP ON `OI`.`OI_NO` = CSP.OI_NO
+		INNER JOIN TB_BX AS B ON `OI`.`OI_NO` = B.OI_NO
+		WHERE O.ORD_NO = #{orderNo}
 	</select>
 	
-	<select id="selectByReleaseCode" parameterType="String" resultMap="releaseInspectionViewMap">
+	<select id="selectByReleaseCode" parameterType="String" resultMap="releasePackingMap">
 		select *
 		from (
 			SELECT 
@@ -130,6 +170,42 @@
 		) as C
 		where C.rls_code = #{releaseCode};		
 	</select> 
-
+	
+	<!-- 출고번호 scan버튼 눌렀을때 정보 띄우기 -->
+	<select id="scan" resultMap="releasePackingMap">
+<!-- 		select sum(TB_RLS_INSP.RI_QTY) as "RI_QTY", TB_RLS_INSP.RI_DT, TB_RLS_INSP.RI_RLS_PRT_DT, TB_RLS_INSP.RI_RCPT_PRT_DT,
+			TB_RLS_INSP.EMP_ID, TB_RLS_INSP.RI_NT, sum(TB_RLS_INSP.RI_URLS) as "RI_URLS",
+		    tb_ord.ord_no, tb_ord.clt_no, tb_ord.ord_shp_cat,
+		    TB_RLS.rls_code, TB_RLS.RLS_DN, tb_rls.rls_brcd, sum(tb_pic.pic_qty) as "pic_qty", TB_CLT.CLT_NAME
+		from TB_RLS_INSP
+		INNER JOIN tb_ord_itm on tb_rls_insp.oi_no = tb_ord_itm.oi_no
+		INNER join tb_pic on tb_pic.oi_no = tb_ord_itm.oi_no
+		INNER JOIN tb_ord on TB_ORD_ITM.ord_no = TB_ORD.ord_no
+		INNER JOIN tb_rls on TB_ORD.ord_no = tb_rls.ord_no
+		INNER join tb_clt on tb_ord.clt_no = tb_clt.clt_no
+		<if test="kind.equals('releaseCode')">WHERE TB_RLS.RLS_CODE = #{code}</if>
+		<if test="kind.equals('barCode')">WHERE TB_RLS.RLS_BRCD = #{code}</if> -->
+		<!-- releaseInspection 테이블에 검수여부 넣고  -->
+		select `C`.`CLT_NAME` ,`O`.`ORD_SHP_CAT`,`R`.`RLS_CODE`,`O`.`ORD_NO`, IFNULL(P.PIC_QTY, CSP.CSP_RCV_QTY) as pic_qty,
+		 `RI`.`RI_QTY`, `R`.`RLS_BX_QTY`, oi.oi_urls_qty, oi.oi_qty, `I`.`ITM_CODE`, `I`.`ITM_NAME`,
+		 OI.OI_NO, O.ORD_STS, R.RLS_BX_QTY
+		from (SELECT * FROM TB_ORD WHERE ORD_STS IN (4,5,6)) AS O
+		INNER JOIN TB_ORD_ITM AS OI ON `O`.`ORD_NO` = `OI`.`ORD_NO` 
+		INNER JOIN TB_RLS AS R ON `O`.`ORD_NO` = `R`.`ORD_NO` 
+		INNER JOIN TB_CLT AS C ON `O`.`CLT_NO` = `C`.`CLT_NO`
+		INNER JOIN TB_ITM AS I ON `OI`.`ITM_CODE` = `I`.`ITM_CODE` 
+		INNER JOIN TB_RLS_INSP AS RI ON `RI`.`OI_NO` = `OI`.`OI_NO` 
+		LEFT JOIN TB_PIC AS P ON `OI`.`OI_NO` = P.OI_NO
+		LEFT JOIN TB_CMB_SHP_PTN AS CSP ON `OI`.`OI_NO` = CSP.OI_NO
+		<if test="kind.equals('releaseCode')">WHERE R.RLS_CODE = #{code}</if>
+ 		<if test="kind.equals('barCode')">
+			WHERE R.RLS_CODE = (SELECT TB_RLS.RLS_CODE
+			FROM TB_ORD_ITM, TB_BRCD, TB_ORD, TB_RLS
+			WHERE TB_ORD_ITM.OI_NO = TB_BRCD.OI_NO
+			AND TB_ORD.ORD_NO = TB_ORD_ITM.ORD_NO
+			AND TB_ORD.ORD_NO = TB_RLS.ORD_NO
+			AND TB_BRCD.BRCD_NO = #{code})
+		</if>
+	</select>
 </mapper>
 

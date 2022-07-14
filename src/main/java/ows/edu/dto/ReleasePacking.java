@@ -9,7 +9,7 @@ public class ReleasePacking {
 	private int no;
 	
 	//order
-	private int orderNo;				//주문번호
+	private String orderNo;				//주문번호
 	private Date date;					//주문일시
 	private int clientNo;				//거래처번호
 	private String shippingWay;			//배송방식(합배송, 직배송)
@@ -18,11 +18,13 @@ public class ReleasePacking {
 	private String shippingAddress;		//주소
 	private String orderWay;			//주문방법
 	private String category;			//긴급, 일반
+
 	
 	//order Item
 	private int orderItemNo;			
 	private String code;
 	private int orderItemQuantity;
+	private int oderItemUnreleaseQuantity;
 	
 	//Item
 	private String itemName;
@@ -30,8 +32,8 @@ public class ReleasePacking {
 	
 	//Release
 	private String releaseCode;
-	private int done;
-	private int boxQty;
+	private String done;				//출고검수 여부
+	private int releaseBoxQty;
 	private long releaseBarcode;
 	
 	//ReleaseInspection
@@ -53,5 +55,10 @@ public class ReleasePacking {
 	//client
 	private String clientName;
 	
-	//
+	//barcode
+	private int barCode;
+	private int barCodeDone;
+	
+	//box
+	private int boxItemQuantity;
 }

@@ -66,16 +66,16 @@ public interface ReleaseInspectionService {
 	
 	public List<ReleasePacking> selectByPage(Pager pager);
 	
-	public List<ReleasePacking> selectByOrderNo(int orderNo);
+	public List<ReleasePacking> selectByOrderNo(int orderNo, int index);
 
 	
 	//검수수량, 미출고 수량 업데이트
-	public int releaseInspectionQtyUpdate(String releaseCode);
+	public int releaseInspectionQtyUpdate(String releaseCode, String barCode);
 
-	public int unRleaseQtyUpdate(String releaseCode);
+	public int unRleaseQtyUpdate(String releaseCode, String barCode);
 	
 	//스캔
-	public ReleaseInspection scan(String code, String kind);
+	public List<ReleasePacking> scan(String code, String kind);
 	
 	//출고검수수량 업데이트
 	public int update(List<Box> boxArray);

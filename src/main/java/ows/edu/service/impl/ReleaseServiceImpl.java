@@ -21,12 +21,5 @@ public class ReleaseServiceImpl implements ReleaseService{
 	public int updateReleaseDone(Map<String, Object> map) {
 		int updateCount = releaseDao.updateReleaseDone(map);
 		return updateCount;
-	}
-
-	@Override
-	public int count() {
-		int totalCount = releaseDao.count();
-		return totalCount;
-	}
-	
+	}	
 }

@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ows.edu.dto.AfterPicking;
-import ows.edu.dto.ReleaseInspection;
 
 @Mapper
 public interface ReleaseInspectionDao {
@@ -38,13 +37,10 @@ public interface ReleaseInspectionDao {
 
 	//========================현주========================
 	//검수수량 업데이트
-	public int releaseInspectionQtyUpdate(String releaseCode);
+	public int releaseInspectionQtyUpdate(@Param("releaseCode") String releaseCode, @Param("barCode") String barCode);
 	
 	//미출고수량 업데이트
-	public int unRleaseQtyUpdate(String releaseCode);
-	
-	//스캔
-	public ReleaseInspection scan(@Param("code") String releaseCode, @Param("kind") String kind);
+	public int unRleaseQtyUpdate(@Param("releaseCode") String releaseCode, @Param("barCode") String barCode);
 	
 	//출고검수수량 업데이트
 	public int update(Map<String, Integer> map);

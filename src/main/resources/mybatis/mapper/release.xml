@@ -7,9 +7,6 @@
 		set rls_dn = 1, rls_bx_qty = #{boxQty}
 		WHERE RLS_CODE = #{releaseCode}
 	</update>
-	<select id="count" resultType="int">
-		select count(*) from tb_rls
-	</select>
 	
 	<select id="count2" parameterType="pager" resultType="int">
 		select count(*) from tb_rls

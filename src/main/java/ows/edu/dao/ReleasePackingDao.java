@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import ows.edu.dto.Pager;
+import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleasePacking;
 
 @Mapper
@@ -23,13 +24,17 @@ public interface ReleasePackingDao {
 	//페이징처리
 	public List<ReleasePacking> selectByPage(Pager pager);
 	
-	//오른쪽에 띄어줄 주문에 대한 상세 정보
-	public List<ReleasePacking> selectByOrderNo(int orderNo);
+	//스캔했을 때, 박스별품목정보 띄어주는 용도 
+	public List<ReleasePacking> selectByOrderNo(@Param("orderNo") int orderNo, @Param("index") int index);
 	
 	//페이징처리&필터
 	public List<ReleasePacking> selectByFilterPage(Pager pager);
 	
-	//스캔했을 때, 박스별품목정보 띄어주는 용도
+	//오른쪽에 띄어줄 주문에 대한 상세 정보
 	public List<ReleasePacking> selectByReleaseCode(String releaseCode);
+	
+	//스캔
+	public List<ReleasePacking> scan(@Param("code") String releaseCode, @Param("kind") String kind);
+
 	
 }
