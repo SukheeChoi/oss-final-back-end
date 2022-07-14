@@ -63,7 +63,10 @@
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	 	</if>
 		GROUP BY OI.OI_NO
-		ORDER BY UNRELEASE DESC, O.ORD_STS;
+		ORDER BY UNRELEASE DESC, O.ORD_STS
+		<!-- Pager -->
+<!-- 		LIMIT #{pageSize}
+		OFFSET #{startRowIndex}; -->
 	</select>
 	
 	<!-- 배송구분, 미출로 필터링 -->
@@ -98,7 +101,9 @@
 	 	</if>
 	 		AND O.ORD_STS != 0
 		GROUP BY OI.OI_NO
-		ORDER BY UNRELEASE DESC, O.ORD_STS;
+		ORDER BY UNRELEASE DESC, O.ORD_STS
+<!-- 		LIMIT #{pageSize}
+		OFFSET #{startRowIndex}; -->
 	</select>
 	
 	<!-- 주문 단계마다 카운트 --> 
@@ -109,7 +114,7 @@
  			AND O.ORD_STS=#{status};
 	</select>
 
-	<!-- 미출고 건수 캉운 -->
+	<!-- 미출고 건수 카운트 -->
 	<select id="unreleaseCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM TB_ORD_ITM

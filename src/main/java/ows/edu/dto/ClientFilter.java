@@ -10,4 +10,7 @@ public class ClientFilter {
 	private boolean unrelease;
 	private Long orderNo;
 	private String clientName;
+//	private int pageNo;
+//	private int pageSize;
+//	private int startRowIndex;
 }

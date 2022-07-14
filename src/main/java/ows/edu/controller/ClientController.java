@@ -19,6 +19,7 @@ import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.Client;
 import ows.edu.dto.ClientDetail;
 import ows.edu.dto.ClientFilter;
+import ows.edu.dto.Pager;
 import ows.edu.dto.PastOrder;
 import ows.edu.dto.PastOrderDetail;
 import ows.edu.dto.RecentOrder;
@@ -35,7 +36,7 @@ public class ClientController {
 	@Resource
 	private ClientModalService clientModalService;
 	
-	//배송구분, 주문 단계, 미출고로 필터링	
+	//배송구분, 주문 단계, 미출고로 필터링
 	@PostMapping("/getFilterList")
 	public Map<String, Object> getFilterList(@RequestBody ClientFilter filterList) {
 		log.info(filterList);
@@ -51,6 +52,7 @@ public class ClientController {
 		log.info("orderNo : " + orderNo);
 		log.info("clientName : " + clientName);
 		List<Client> list = null;
+//		List<HashMap<String, String>> list;
 	
 		Map<String, Object> map1 = new HashMap<>();
 		map1.put("shippingCategory", shippingCategory);
@@ -61,10 +63,12 @@ public class ClientController {
 
 		if(status == -1) {
 			list = clientService.getListByShippingCategory(map1);
+//			list = clientService.getList(shippingCategory, status, orderUnrelease, orderNo, clientName, pageNo, pageSize);
 			log.info("list1 : " + list);
 		} else {
 			map1.put("status", status);
 			list = clientService.getList(map1);
+//			list = clientService.getListByShippingCategory(shippingCategory, orderUnrelease, orderNo, clientName, pageNo, pageSize);
 			log.info("list2 : " + list);
 		}
 		
