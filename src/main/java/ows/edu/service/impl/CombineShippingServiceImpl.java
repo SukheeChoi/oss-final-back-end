@@ -60,10 +60,13 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	// '수령' 탭 선택된 경우.
 	@Override
-	public Map<String, Object> getReceiptList(int toDo
-									, String vendorName
-									, String[] dateList
-									, int pageNo
+	public Map<String, Object> getReceiptList(
+			int toDo
+			, String vendorName
+			, String[] dateList
+//			, Pager pager
+			, int pageNo
+			, int rowsPerPage
 		) {
 		log.info("실행");
 		
@@ -79,7 +82,8 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 					toDo, vendorName, startDate, endDate
 				);
 		log.info("## getReceiptList - totalRows" + totalRows);
-		Pager pager = new Pager(20, 10, totalRows, pageNo);
+//		pager.setTotalRows(totalRows);
+		Pager pager = new Pager(rowsPerPage, 10, totalRows, pageNo);
 		
 		List<String> orderItemNoList = combineShippingDao
 									.selectReceiptList(

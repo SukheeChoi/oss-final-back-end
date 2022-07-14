@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
 
 import ows.edu.dto.CombineShippingPartner;
+import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
 
 @Transactional
@@ -19,7 +20,8 @@ public interface CombineShippingService {
 	public Map<String, Object> getReceiptList(int toDo
 												, String vendorName
 												, String[] dateList
-												, int pageNo);
+												, int pageNo
+												, int rowsPerPage);
 	
 	// 업체정보 + 날짜정보 필터링 적용한 전달정보 조회.
 	public Map<String, Object> getDeliveryList(int toDo

@@ -253,64 +253,111 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 //		}
 		/////////========================================================
 		
-//		HashMap<String, String> map = new HashMap<>();
-//		for(int i=0; i<ap.size(); i++) {
-//			map = ap.get(i);
-//			
-//			// 출고요청서 출력일시 컬럼 값을 '담당자성명+\n+(+mm:dd+ +hh:MM+)'형태로 만듦.
-//			map.replace(
-//				"RI_RLS_PRT_DT"
-//				, ap.get(i).get("RI_EMP_NAME") 
-//				+ "\n" 
-//				+ "("
-//				+ String.valueOf( ap.get(i).get("RI_RLS_PRT_DT")).substring(5, 10) 
-//				+ " " 
-//				+ String.valueOf( ap.get(i).get("RI_RLS_PRT_DT")).substring(11, 16) 
-//				+")"
-//			);
-//			
-//			// 거래명세서 출력일시 컬럼 값을 '담당자성명+\n+(+mm:dd+ +hh:MM+)'형태로 만듦.
-//			map.replace(
-//				"RI_RCPT_PRT_DT"
-//				, ap.get(i).get("RI_EMP_NAME") 
-//				+ "\n" 
-//				+ "("
-//				+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(5, 10) 
-//				+ " " 
-//				+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(11, 16) 
-//				+")"
-//			);
-//			
-//			// 검수일시 컬럼 값을 'mm:dd+ +hh:MM'형태로 만듦.
-//			map.replace(
-//				"RI_DT"
-//				, String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(5, 10) 
-//				+ " " 
-//				+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(11, 16) 
-//			);
-//			
-//			// OI_URLS_QTY 컬럼 :
-//			// 		RI_QTY != null && OI_URLS_QTY == null -> OI_URLS_QTY = 0
-//			if(map.get("RI_QTY") != null && map.get("OI_URLS_QTY") == null) {
-//				log.info("map.get(\"RI_QTY\") : " + String.valueOf(map.get("RI_QTY")));
-//				log.info("map.get(\"OI_URLS_QTY\") : " + String.valueOf(map.get("OI_URLS_QTY")));
-//				map.replace(
-//					"OI_URLS_QTY"
-//					, String.valueOf(0)
-//				);
-//				log.info("new  map.get(\"OI_URLS_QTY\") : " + String.valueOf(map.get("OI_URLS_QTY")));
-//			}
-//			
-//			
-//			ap.set(i, map);
-//			log.info("new String.valueOf( ap.get(i).get(\"RI_RLS_PRT_DT\")) : " + String.valueOf( ap.get(i).get("RI_RLS_PRT_DT")));
-//
-//			// 다음번 for문 순회하기 전에 HashMap 객체 초기화.
-//			map = null;
-//		}
-//		List<AfterPickingView> a = new ArrayList<>();
+		HashMap<String, String> map = new HashMap<>();
+		for(int i=0; i<ap.size(); i++) {
+			map = ap.get(i);
+			
+			// 출고요청서 출력일시 컬럼 값을 '담당자성명+\n+(+mm:dd+ +hh:MM+)'형태로 만듦.
+			if(
+				ap.get(i).get("RI_EMP_NAME") != null
+				&&
+				ap.get(i).get("RI_RLS_PRT_DT") != null
+				&&
+				!ap.get(i).get("RI_RLS_PRT_DT").equals(" ")
+			) {
+				map.replace(
+						"RI_RLS_PRT_DT"
+						, ap.get(i).get("RI_EMP_NAME") 
+						+ "\n" 
+						+ "("
+						+ String.valueOf( ap.get(i).get("RI_RLS_PRT_DT")).substring(5, 10) 
+						+ " " 
+						+ String.valueOf( ap.get(i).get("RI_RLS_PRT_DT")).substring(11, 16) 
+						+")"
+					);
+			}
+			
+			// 거래명세서 출력일시 컬럼 값을 '담당자성명+\n+(+mm:dd+ +hh:MM+)'형태로 만듦.
+			if(
+				ap.get(i).get("RI_EMP_NAME") != null
+				&&
+				ap.get(i).get("RI_RCPT_PRT_DT") != null
+				&&
+				!ap.get(i).get("RI_RCPT_PRT_DT").equals(" ")
+			) {
+				map.replace(
+						"RI_RCPT_PRT_DT"
+						, ap.get(i).get("RI_EMP_NAME") 
+						+ "\n" 
+						+ "("
+						+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(5, 10) 
+						+ " " 
+						+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(11, 16) 
+						+")"
+					);
+			}
+			
+			// 검수일시 컬럼 값을 'mm:dd+ +hh:MM'형태로 만듦.
+			if(
+				ap.get(i).get("RI_RCPT_PRT_DT") != null
+				&&
+				!ap.get(i).get("RI_RCPT_PRT_DT").equals(" ")
+			) {
+				map.replace(
+						"RI_DT"
+						, String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(5, 10) 
+						+ " " 
+						+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(11, 16) 
+					);
+			}
+			
+			// OI_URLS_QTY 컬럼 :
+			// 		RI_QTY != null && OI_URLS_QTY == null -> OI_URLS_QTY = 0
+			if(map.get("RI_QTY") != null && map.get("OI_URLS_QTY") == null) {
+				map.replace(
+					"OI_URLS_QTY"
+					, String.valueOf(0)
+				);
+			}
+			
+			// 합배송 && 협력사 제품 -> 피킹수량 = 전달수량. 
+			//	협력사 직배송은 출고검수 테이블에 데이터가 없으므로, 합배송 여부 검사는 불필요.
+			if(String.valueOf(map.get("ITM_OSS")).equals("0")) {
+				map.replace(
+					"PIC_QTY"
+					, String.valueOf(map.get("CSP_DLV_QTY"))
+				);
+			}
+			
+			// 출고 담당자가 배정되지 않은 상태 -> 검수수량 = " " && 미출고수량 = " "
+			if(
+				String.valueOf(map.get("RI_EMP_NAME")).equals(" ")
+			) {
+				map.replace(
+					"RI_QTY"
+					, " "
+				);
+				map.replace(
+					"OI_URLS_QTY"
+					, " "
+				);
+			}
+			// 검수일시가 " " (검수 미완료 경우.) -> 출고 박스 수량 " ".
+			if(String.valueOf(map.get("RI_DT")).equals(" ")) {
+				map.replace(
+					"RLS_BX_QTY"
+					,  " "
+				);
+			}
+			
+			
+			ap.set(i, map);
+
+			// 다음번 for문 순회하기 전에 HashMap 객체 초기화.
+			map = null;
+		}
+		
 		return ap;
-//		return a;
 	}
 
 	

@@ -17,7 +17,8 @@ public class CombineShippingPartner {
   private Integer receiveUnreleaseQuantity;
   private Integer deliveryUnreleaseQuantity;
   
-//  private OrderItem orderItem;
-//  private Item item;
-//  private Release release;
+  private OrderItem orderItem;
+  private Item item;
+  private Release release;
+  private InformationPartner informationPartner;
 }

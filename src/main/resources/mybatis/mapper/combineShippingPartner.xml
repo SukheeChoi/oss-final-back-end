@@ -47,6 +47,9 @@
 			<result property="employeeId" column="EMP_ID"/>
 			<result property="releaseDate" column="RLS_DT"/>
 		</association>
+		<association property="informationPartner" javaType="informationPartner">
+			<result property="releaseQuantity" column="IP_RLS_QTY"/>
+		</association>
 	</resultMap>
 	
 	<resultMap id="employeeMap" type="employee">
