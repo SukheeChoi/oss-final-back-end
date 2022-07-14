@@ -10,6 +10,6 @@ public class ClientDetail {
   private String clientAddress;
   private String clientDestination;
   private String branchName;
-  private String employeeId;
+  private String employeeName;
   private String employeeContact;
 }
