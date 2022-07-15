@@ -99,7 +99,7 @@ public class ClientController {
 	
 	@GetMapping("/modal")
 	public Map<String, Object> getModal(@RequestParam int clientNo, @RequestParam String orderNo) {
-	  
+	  log.info(orderNo);
 	  Map<String, Object> map = new HashMap<>();
 	  //거래처 정보
 	  ClientDetail clientDetail = clientModalService.getClientDetailByClientNo(clientNo);
@@ -108,7 +108,7 @@ public class ClientController {
 	  List<RecentOrder> recentOrder = clientModalService.getRecentOrderByOrderNo(orderNo);
 	  
 	  //과거 주문 이력
-	  List<PastOrder> pastOrder = clientModalService.getPastOrderListByClientNo(clientNo);
+	  List<PastOrder> pastOrder = clientModalService.getPastOrderListByClientNo(clientNo, orderNo);
 	  
     map.put("clientDetail", clientDetail);
     map.put("recentOrder", recentOrder);
