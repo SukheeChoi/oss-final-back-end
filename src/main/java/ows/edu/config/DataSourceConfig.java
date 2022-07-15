@@ -19,11 +19,12 @@ public class DataSourceConfig {
 	    HikariConfig config = new HikariConfig();
 	    config.setDriverClassName("org.mariadb.jdbc.Driver");
 	    config.setJdbcUrl("jdbc:mariadb://localhost:3306/FOUREVER");
-
 	    config.setUsername("root");
+
 	    config.setPassword("shsh");
 	    config.setMaximumPoolSize(3);
 	    HikariDataSource hikariDataSource = new HikariDataSource(config);
 	    return hikariDataSource;
 	}
+
 }

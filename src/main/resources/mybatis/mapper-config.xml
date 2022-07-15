@@ -12,13 +12,15 @@
 		<typeAlias type="ows.edu.dto.CombineShippingPartner" alias="combineShippingPartner"/>
 		<typeAlias type="ows.edu.dto.Department" alias="department"/>
 		<typeAlias type="ows.edu.dto.Employee" alias="employee"/>
+
+		<typeAlias type="ows.edu.dto.InspectionLabeling" alias="inspectionLabeling"/>
+		<typeAlias type="ows.edu.dto.InspectionLabelingView" alias="inspectionLabelingView"/>
+		<typeAlias type="ows.edu.dto.InspectionLabelingWork" alias="inspectionLabelingWork"/>
+		<typeAlias type="ows.edu.dto.InspectionLabelingStatus" alias="inspectionlabelingStatus"/>
 		<typeAlias type="ows.edu.dto.InformationPartner" alias="informationPartner"/>
-		<typeAlias type="ows.edu.dto.InspectionLabeling" alias="inspectionlabeling"/>
-		<typeAlias type="ows.edu.dto.InspectionLabelingView" alias="inspectionlabelingView"/>
-		<typeAlias type="ows.edu.dto.InspectionLabelingWork" alias="inspectionlabelingwork"/>
-		<typeAlias type="ows.edu.dto.InspectionLabelingStatus" alias="inspectionlabelingstatus"/>
+
 		<typeAlias type="ows.edu.dto.Item" alias="item"/>
-		<typeAlias type="ows.edu.dto.LabelingWorkTime" alias="labelingworktime"/>
+		<typeAlias type="ows.edu.dto.LabelingWorkTime" alias="labelingWorkTime"/>
 		<typeAlias type="ows.edu.dto.Location" alias="location"/>
 		<typeAlias type="ows.edu.dto.Lot" alias="lot"/>
 		<typeAlias type="ows.edu.dto.Lct" alias="lct"/>
@@ -40,7 +42,12 @@
 		<typeAlias type="ows.edu.dto.Vendor" alias="vendor"/>
 		<typeAlias type="ows.edu.dto.Pager" alias="pager"/>
 		<typeAlias type="ows.edu.dto.Board" alias="board"/>
-		<typeAlias type="ows.edu.dto.Box" alias="box"/>
+		<typeAlias type="ows.edu.dto.Box" alias="box"/>		
+		<typeAlias type="ows.edu.dto.ClientDetail" alias="clientDetail"/>
+		<typeAlias type="ows.edu.dto.RecentOrder" alias="recentOrder"/>
+		<typeAlias type="ows.edu.dto.PastOrder" alias="pastOrder"/>
+		<typeAlias type="ows.edu.dto.PastOrderDetail" alias="pastOrderDetail"/>
+
 	</typeAliases>	
 </configuration>
 

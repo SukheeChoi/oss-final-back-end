@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!-- 김예원 -->
 <mapper namespace="ows.edu.dao.ClientDao">
 	<resultMap id="clientMap" type="order">
 		<result property="orderNo" column="ORD_NO"/>	
 	 	<result property="date" column="ORD_DT"/>	
-		<result property="shippingDestination" column="ORD_SHP_DEST"/>			
 		<result property="shippingWay" column="ORD_SHP_WAY"/>
 		<result property="status" column="ORD_STS"/>
+		<result property="shippingDestination" column="ORD_SHP_DEST"/>			
 		<result property="shippingAddress" column="ORD_SHP_ADDR"/>	
 		<result property="orderWay" column="ORD_ORD_WAY"/>	
 		<result property="shippingCategory" column="ORD_SHP_CAT"/>	
-		<result property="orderUnrelease" column="ORD_URLS"/>	
+		<result property="clientNo" column="CLT_NO"/>
+		<result property="unrelease" column="UNRELEASE"/>
  		<association property="client" javaType="client">
 		 	<result property="clientNo" column="CLT_NO"/>
 			<result property="clientName" column="CLT_NAME"/>
@@ -24,68 +26,16 @@
 			<result property="orderNo" column="ORD_NO"/>
 			<result property="itemCode" column="ITM_CODE"/>
 			<result property="qty" column="OI_QTY"/>
-		</association>
-		<association property="pickingDirection" javaType="pickingDirection">
-			<result property="orderItemNo" column="OI_NO"/>
-			<result property="attempt" column="PD_ATM"/>
-			<result property="date" column="PD_DT"/>
-			<result property="qty" column="PD_QTY"/>
-			<result property="unrelease" column="PD_URLS"/>
-			<result property="employeeId" column="EMP_ID"/>
-		</association>
-		<association property="picking" javaType="picking">
-			<result property="pickingNo" column="PIC_NO"/>
-			<result property="orderItemNo" column="OI_NO"/>
-			<result property="employeeId" column="EMP_ID"/>
-			<result property="locationCode" column="LCT_CODE"/>
-			<result property="date" column="PIC_DT"/>
-			<result property="done" column="PIC_DN"/>
-			<result property="pickingQuantity" column="PIC_QTY"/>
-			<!-- <result property="unrelease" column="PIC_URLS"/> -->
-		</association>
-		<association property="releaseInspection" javaType="releaseInspection">
-			<result property="orderItemNo" column="OI_NO"/>
-			<result property="releaseInspectionQuantity" column="RI_QTY"/>
-			<result property="releaseInspectionDate" column="RI_DT"/>
-			<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
-			<result property="receiptPrintDate" column="RI_RCPT_PRT_DT"/>
-			<result property="employeeId" column="EMP_ID"/>
-			<result property="releaseInspectionBarcode" column="RI_BRCD"/>
-			<result property="releaseInspectionNote" column="RI_NT"/>
-			<result property="unReleased" column="RI_URLS"/>
-		</association>
-		<association property="release" javaType="release">
-			<result property="releaseNo" column="RLS_NO"/>
-			<result property="orderNo" column="ORD_NO"/>
-			<result property="employeeId" column="EMP_ID"/>
-			<result property="releaseDate" column="RLS_DT"/>
-			<result property="releaseDone" column="RLS_DN"/>
-			<result property="invoiceCode" column="RLS_IVC_CODE"/>
-			<result property="note" column="RLS_NT"/>
-			<result property="shippingCompany" column="RLS_SHP_CPN"/>
-			<result property="unrelease" column="RLS_URLS"/>
-			<result property="boxQuantity" column="RLS_BX_QTY"/>
-		</association>
-		<association property="transfer" javaType="transfer">
-			<result property="releaseNo" column="RLS_NO"/>
-			<result property="orderNo" column="ORD_NO"/>
-			<result property="employeeId" column="EMP_ID"/>
-			<result property="transferDate" column="TRF_DT"/>
-			<result property="unrelease" column="TRF_URLS"/>
+			<result property="unreleaseQuantity" column="OI_URLS_QTY"/>
 		</association>
 	</resultMap>
 
 	<!-- 배송구분, 회사, 미출고로 필터링 -->
 	<select id="getList" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, O.ORD_URLS, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
+		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY, SUM(OI.OI_URLS_QTY) AS UNRELEASE
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
 		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
-		LEFT JOIN TB_PIC_DRC PD ON (OI.OI_NO = PD.OI_NO)
-		LEFT JOIN TB_PIC PI ON (OI.OI_NO = PI.OI_NO)
-		LEFT JOIN TB_RLS_INSP RI ON (OI.OI_NO = RI.OI_NO)
-		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
-		LEFT JOIN TB_TRF T ON (O.ORD_NO = T.ORD_NO)
  		<choose>
 			<when test='orderUnrelease == true'>
 				WHERE O.ORD_SHP_CAT IN (
@@ -94,11 +44,8 @@
 					</foreach>
 					)
 					AND O.ORD_STS = #{status}
-					AND (PD.PD_URLS != 0
-					OR PI.PIC_URLS != 0
-					OR RI.RI_URLS != 0
-					OR R.RLS_URLS != 0
-					OR T.TRF_URLS != 0)
+					AND OI.OI_URLS_QTY IS NOT NULL
+    				AND OI.OI_URLS_QTY != 0
 			</when>
 			<when test='orderUnrelease == false'>
 				WHERE O.ORD_SHP_CAT IN (
@@ -109,26 +56,24 @@
 					AND O.ORD_STS = #{status}
 			</when>
 		</choose>
- 		<if test='!orderNo.equals(0)'>
+ 		<if test='orderNo != null'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
 	   	<if test='!clientName.equals("")'>
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	 	</if>
-		ORDER BY O.ORD_URLS DESC, O.ORD_STS;
+		GROUP BY OI.OI_NO
+		ORDER BY UNRELEASE DESC, O.ORD_STS
+		LIMIT 10
+		OFFSET 0;
 	</select>
 	
 	<!-- 배송구분, 미출로 필터링 -->
 	<select id="getListByShippingCategory" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, O.ORD_URLS, OI.OI_NO, PD.PD_URLS, PI.PIC_URLS, RI.RI_URLS, R.RLS_URLS, T.TRF_URLS 
+		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY, SUM(OI.OI_URLS_QTY) AS UNRELEASE
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
 		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
-		LEFT JOIN TB_PIC_DRC PD ON (OI.OI_NO = PD.OI_NO)
-		LEFT JOIN TB_PIC PI ON (OI.OI_NO = PI.OI_NO)
-		LEFT JOIN TB_RLS_INSP RI ON (OI.OI_NO = RI.OI_NO)
-		LEFT JOIN TB_RLS R ON (O.ORD_NO = R.ORD_NO)
-		LEFT JOIN TB_TRF T ON (O.ORD_NO = T.ORD_NO)
 		<choose>
 			<when test='orderUnrelease == true'>
 				WHERE O.ORD_SHP_CAT IN (
@@ -136,11 +81,8 @@
 						#{shippingCategory}
 					</foreach>
 					)
-					AND (PD.PD_URLS != 0
-					OR PI.PIC_URLS != 0
-					OR RI.RI_URLS != 0
-					OR R.RLS_URLS != 0
-					OR T.TRF_URLS != 0)
+					AND OI.OI_URLS_QTY IS NOT NULL
+    				AND OI.OI_URLS_QTY != 0
 			</when>
 			<when test='orderUnrelease == false'>
 				WHERE O.ORD_SHP_CAT IN (
@@ -150,13 +92,17 @@
 				)
 			</when>
 		</choose>
- 		<if test='!orderNo.equals(0)'>
+ 		<if test='orderNo != null'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
 	   	<if test='!clientName.equals("")'>
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	 	</if>
-		ORDER BY O.ORD_URLS DESC, O.ORD_STS;
+	 		AND O.ORD_STS != 0
+		GROUP BY OI.OI_NO
+		ORDER BY UNRELEASE DESC, O.ORD_STS
+		LIMIT 10
+		OFFSET 0;
 	</select>
 	
 	<!-- 주문 단계마다 카운트 --> 
@@ -167,11 +113,11 @@
  			AND O.ORD_STS=#{status};
 	</select>
 
-	<!-- 미출고 카운트 -->
+	<!-- 미출고 건수 캉운 -->
 	<select id="unreleaseCnt" resultType="int">
 		SELECT COUNT(*)
-		FROM TB_ORD
-		WHERE ORD_URLS = 1;
+		FROM TB_ORD_ITM
+		WHERE OI_URLS_QTY != 0
+			AND OI_URLS_QTY != '';
 	</select>
 </mapper>
-
