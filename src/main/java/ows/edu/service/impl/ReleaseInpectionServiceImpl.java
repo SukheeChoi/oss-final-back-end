@@ -311,7 +311,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		return releasePackingDao.selectByPage(pager);
 	}
 	
-	public List<ReleasePacking> selectByOrderNo(int orderNo, int index){
+	public List<ReleasePacking> selectByOrderNo(String orderNo, int index){
 		return releasePackingDao.selectByOrderNo(orderNo, index);
 	}
 	

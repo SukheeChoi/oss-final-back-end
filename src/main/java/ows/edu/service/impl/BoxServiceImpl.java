@@ -19,13 +19,26 @@ public class BoxServiceImpl implements BoxService{
 	BoxDao boxDao;
 	
 	public int insert(List<Box> boxArrays) {
+		int insertCount = 0;
+		
+		for(Box boxArray : boxArrays) {
+			insertCount =+ boxDao.insert(boxArray);	//insert 되면 1씩 증가
+		}
+		
+		return insertCount;
+	}
+
+	@Override
+	public int update(List<Box> boxArrays) {
 		int updateCount = 0;
 		
 		for(Box boxArray : boxArrays) {
-			updateCount =+ boxDao.insert(boxArray);	//업데이트 되면 1씩 증가
+			updateCount =+ boxDao.update(boxArray);	//업데이트 되면 1씩 증가
 		}
 		
 		return updateCount;
 	}
+	
+	
 
 }

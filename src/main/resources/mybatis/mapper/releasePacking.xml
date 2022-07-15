@@ -142,9 +142,10 @@
 	</select>
 	
 	<!-- ordNo를 사용하여 boxinfo 얻기 -->
-	<select id="selectByOrderNo" parameterType="int" resultMap="releasePackingMap">
+	<select id="selectByOrderNo" resultMap="releasePackingMap">
 		<!-- select CLT_NAME, ORD_SHP_WAY, PIC_QTY, RI_QTY, RI_URLS, RLS_CODE, RI_BRCD, ORD_NO -->
-		select `I`.`ITM_CODE`, `I`.`ITM_NAME`, OI.OI_QTY, IFNULL(P.PIC_QTY, CSP.CSP_RCV_QTY) as pic_qty, `RI`.`RI_QTY`, B.BX_NUM, B.BX_ITM_QTY
+		select `I`.`ITM_CODE`, `I`.`ITM_NAME`, OI.OI_QTY, IFNULL(P.PIC_QTY, CSP.CSP_RCV_QTY) as pic_qty, `RI`.`RI_QTY`, B.BX_NUM, B.BX_ITM_QTY,
+				B.RLS_CODE, B.OI_NO
 		from (SELECT * FROM TB_ORD WHERE ORD_STS IN (4,5,6)) AS O
 		INNER JOIN TB_ORD_ITM AS OI ON `O`.`ORD_NO` = `OI`.`ORD_NO` 
 		INNER JOIN TB_ITM AS I ON `OI`.`ITM_CODE` = `I`.`ITM_CODE` 
@@ -152,7 +153,7 @@
 		LEFT JOIN TB_PIC AS P ON `OI`.`OI_NO` = P.OI_NO
 		LEFT JOIN TB_CMB_SHP_PTN AS CSP ON `OI`.`OI_NO` = CSP.OI_NO
 		INNER JOIN TB_BX AS B ON `OI`.`OI_NO` = B.OI_NO
-		WHERE O.ORD_NO = #{orderNo}
+		WHERE O.ORD_NO = #{orderNo} and B.BX_NUM = #{index}
 	</select>
 	
 	<select id="selectByReleaseCode" parameterType="String" resultMap="releasePackingMap">

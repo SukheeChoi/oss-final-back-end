@@ -61,4 +61,6 @@ public class ReleasePacking {
 	
 	//box
 	private int boxItemQuantity;
+	private int boxNum;
+	
 }

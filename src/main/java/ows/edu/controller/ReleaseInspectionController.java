@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.Box;
 import ows.edu.dto.Pager;
-import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleaseInspectionFilter;
 import ows.edu.dto.ReleasePacking;
 import ows.edu.service.BoxService;
@@ -42,8 +41,6 @@ public class ReleaseInspectionController {
 	
 	@Resource
 	ReleaseService releaseService;
-
-	private Integer[] computedStartRowNo;
 	
 	@GetMapping("/get")
 	public List<ReleasePacking> getReleaseInspectionList(){
@@ -55,31 +52,30 @@ public class ReleaseInspectionController {
 	@PostMapping("/getFilterList")
 	public Map<String, Object> getFilterList(@RequestBody ReleaseInspectionFilter apiData){ //String[] newGroup
 
-		String[] newGroup = apiData.getEmptyGroup();
-		int pageSize = apiData.getPageSize();  //pageSeize <= rowsPerPage
+		String[] newGroup = apiData.getEmptyGroup();	//긴급, 일반
+		int pageSize = apiData.getPageSize();  			//pageSeize <= rowsPerPage
 		int pageNo = apiData.getPageNo();
 		
 		log.info("체크된 필터 : "+Arrays.toString(newGroup));
 		
 		//전체 데이터 개수
-		int totalCount = releaseService.count();
+		int totalCount = 0;
+		
+		if(newGroup.length ==2) {
+			totalCount = orderService.pickingDoneCount();
+		}else if(newGroup[0].equals("긴급")){
+			totalCount = orderService.pickDnEmergencyCount();
+		}else {
+			totalCount = orderService.pickDnCommonCount();
+		}
+		
+		orderService.pickingDoneCount();
 		log.info(totalCount);
 		
 		//페이저 & 필터 설정
 		Pager pager = new Pager(pageSize, 10, totalCount, pageNo); 
 		log.info("넘어온 pageNo 정보 : " + pageNo);
-		
-		computedStartRowNo =new Integer[pageSize];
-		
-		//computedStartRowNo 정보
-		for(int i=0; i<pageSize; i++) {
-			computedStartRowNo [i] = i;
-		}
-		
-		pager.setStartPageNo(4);
-		pager.setComputedStartRowNo(computedStartRowNo);
-		
-		log.info("그룹의 시작 페이지 번호 : " + pager.getStartPageNo());
+
 		pager.setNewGroup(newGroup);
 				
 		List<ReleasePacking> list = new ArrayList<>();
@@ -110,46 +106,58 @@ public class ReleaseInspectionController {
 		return map;
 	}
 	
-	@GetMapping("/listItemInfo")
-	public List<ReleasePacking> getlistItemInfo(int orderNo){
-		List<ReleasePacking> list = new ArrayList<>();
-		list = releaseInspectionService.selectByOrderNo(orderNo);
-		return list;
-	}
-	
 	//검수수량, 미출고 수량 업데이트
 	@GetMapping("/RIQtyUpdate")
-	public int releaseInspectionQtyUpdate(String releaseCode) {
+	public int releaseInspectionQtyUpdate(@RequestParam String releaseCode, @RequestParam String barCode) {
 		log.info("====================");
 		log.info(releaseCode);
-		
-		int success = releaseInspectionService.releaseInspectionQtyUpdate(releaseCode);
+		log.info("releaseCode >> " + releaseCode);
+		log.info("barCode >> " + barCode);
+		int success = releaseInspectionService.releaseInspectionQtyUpdate(releaseCode, barCode);
 		log.info(success);
 		
 		return success;
 	}
 	
-	@PostMapping("/unRleaseQtyUpdate")
-	public int unRleaseQtyUpdate(@RequestBody String releaseCode) {
-		
+	@GetMapping("/unRleaseQtyUpdate")
+	public int unRleaseQtyUpdate(@RequestParam String releaseCode, @RequestParam String barCode) {		
 		log.info("unRleaseQtyUpdate");
-		int success = releaseInspectionService.unRleaseQtyUpdate(releaseCode);
+		log.info("releaseCode >> " + releaseCode);
+		log.info("barCode >> " + barCode);
+		int success = releaseInspectionService.unRleaseQtyUpdate(releaseCode, barCode);
+		log.info(success);
 		
 		return success;
 	}
 	
 	//스캔
 	@GetMapping("/scanBtnClick")
-	public ReleaseInspection scan(@RequestParam String code, @RequestParam String kind) {
-		ReleaseInspection releaseInspection = releaseInspectionService.scan(code,kind);
-		return releaseInspection;
+	public List<ReleasePacking> scan(@RequestParam String code, @RequestParam String kind) {
+		log.info("scanBtnClick");
+		log.info(code);
+		log.info(kind);
+		List<ReleasePacking> releasePackingList = releaseInspectionService.scan(code,kind);
+		log.info(releasePackingList);
+		return releasePackingList;
 	}
 	
-	//박스별품목정보
+	//박스별품목정보(총검수수량)
 	@GetMapping("/selectByReleaseCode")
 	public List<ReleasePacking> selectByReleaseCode(@RequestParam String releaseCode){
 		List<ReleasePacking> list = new ArrayList<>();
 		list = releaseInspectionService.selectByReleaseCode(releaseCode);
+		return list;
+	}
+	
+	//박스별품목정보
+	@GetMapping("/getBoxInfobyOrdNo")
+	public List<ReleasePacking> selectByOrderNo(@RequestParam String orderNo, @RequestParam int index){
+		log.info("===========================================/getBoxInfobyOrdNo");
+		log.info("orderNo >> " + orderNo);
+		log.info("index >> " + index);
+		
+		List<ReleasePacking> list = new ArrayList<>();
+		list = releaseInspectionService.selectByOrderNo(orderNo, index);
 		return list;
 	}
 	
@@ -177,14 +185,23 @@ public class ReleaseInspectionController {
 		return map;
 	}
 	
-	// n번째 박스 패킹 완료 버튼 클릭
-	@PostMapping("/packing")
-	public int packing(@RequestBody List<Box> boxArray) {
-			
-		int result1 = boxService.insert(boxArray);
-		int result2 = releaseInspectionService.update(boxArray);
+	// n번째 박스 패킹 완료 버튼 클릭 -> 업데이트로 수정
+	@PostMapping("/updateBoxTable")
+	public int packing(@RequestBody List<Box> boxArrays) {
 		
-		return result1+result2;
+		log.info("====================================");
+		log.info(boxArrays);
+		int updateCount = boxService.update(boxArrays);
+		
+		return updateCount;
+	}
+	
+	// 박스 추가 버튼 클릭
+	@PostMapping("/insertToBoxTable")
+	public int insertToBoxTable(@RequestBody List<Box> boxArrays) {
+		log.info(boxArrays);
+		int result = boxService.insert(boxArrays);
+		return result;
 	}
 	
 	// 패킹 최종 완료

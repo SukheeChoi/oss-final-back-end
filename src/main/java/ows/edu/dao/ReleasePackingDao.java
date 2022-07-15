@@ -25,7 +25,7 @@ public interface ReleasePackingDao {
 	public List<ReleasePacking> selectByPage(Pager pager);
 	
 	//스캔했을 때, 박스별품목정보 띄어주는 용도 
-	public List<ReleasePacking> selectByOrderNo(@Param("orderNo") int orderNo, @Param("index") int index);
+	public List<ReleasePacking> selectByOrderNo(@Param("orderNo") String orderNo, @Param("index") int index);
 	
 	//페이징처리&필터
 	public List<ReleasePacking> selectByFilterPage(Pager pager);

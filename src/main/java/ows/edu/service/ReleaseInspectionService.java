@@ -66,7 +66,7 @@ public interface ReleaseInspectionService {
 	
 	public List<ReleasePacking> selectByPage(Pager pager);
 	
-	public List<ReleasePacking> selectByOrderNo(int orderNo, int index);
+	public List<ReleasePacking> selectByOrderNo(String orderNo, int index);
 
 	
 	//검수수량, 미출고 수량 업데이트
