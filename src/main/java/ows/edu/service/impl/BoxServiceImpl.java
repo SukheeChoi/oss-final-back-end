@@ -31,7 +31,7 @@ public class BoxServiceImpl implements BoxService{
 	@Override
 	public int update(List<Box> boxArrays) {
 		int updateCount = 0;
-		
+
 		for(Box boxArray : boxArrays) {
 			updateCount =+ boxDao.update(boxArray);	//업데이트 되면 1씩 증가
 		}

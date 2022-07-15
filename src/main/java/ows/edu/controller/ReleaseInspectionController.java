@@ -188,12 +188,11 @@ public class ReleaseInspectionController {
 	// n번째 박스 패킹 완료 버튼 클릭 -> 업데이트로 수정
 	@PostMapping("/updateBoxTable")
 	public int packing(@RequestBody List<Box> boxArrays) {
-		
 		log.info("====================================");
 		log.info(boxArrays);
-		int updateCount = boxService.update(boxArrays);
-		
-		return updateCount;
+		int updateCount1 = boxService.update(boxArrays);
+		int updateCount2 = releaseService.updateReleaseBoxQty(boxArrays.get(0));
+		return updateCount1+updateCount2;
 	}
 	
 	// 박스 추가 버튼 클릭
@@ -205,12 +204,9 @@ public class ReleaseInspectionController {
 	}
 	
 	// 패킹 최종 완료
-	@PostMapping("/packingDone")
-	public int packing(@RequestBody Map<String, Object> map) {
+	@GetMapping("/packingDone")
+	public int packing(@RequestParam String orderNumber) {
 		log.info("패킹 최종 완료");
-		//출고검수, 출고박스수량 업데이트
-		releaseService.updateReleaseDone(map);
-		
 		return 0;
 	}
 	
