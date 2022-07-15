@@ -1,11 +1,13 @@
 package ows.edu.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.InspectionLabelingDao;
@@ -15,6 +17,7 @@ import ows.edu.dto.InspectionLabelingView;
 import ows.edu.dto.InspectionLabelingWork;
 import ows.edu.dto.LabelingWorkTime;
 import ows.edu.dto.Pager;
+import ows.edu.dto.UpdateTime;
 
 @Service
 @Log4j2
@@ -83,7 +86,36 @@ public class InspectionLabelingService {
     list.addAll(inspectionLabelingDao.searchAllDetailByLWTNo(inspectionLabeling, pager));
     return list;
   }
-
+  
+  //잔업 가져오기
+  public List<InspectionLabelingWork> getListByLWTNoIsNull() {
+    List<InspectionLabelingWork> list = new ArrayList<>();
+    list.addAll(inspectionLabelingDao.searchAllByLWTNoIsNULL());
+    return list;
+  }
+  
+  //잔업 추가하기
+  @Transactional
+  public String updateOvertime(UpdateTime updateTime) {
+    int overTimeResult = inspectionLabelingDao.updateLabelingWorkTime(updateTime.getRecieveitem(), updateTime.getRecieveQuantity(), updateTime.getLabelingWorkTimeNo());
+    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(updateTime.getStartTime(), updateTime.getEndTime(), updateTime.getLabelingWorkTimeNo());
+    String result = "fail";
+    if(overTimeResult + workTimeResult == 2) {
+      result = "success";
+    }
+    return result;
+  }
+  
+  //작업시간 수정하기
+  public String updateWorktime(UpdateTime updateTime) {
+    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(updateTime.getStartTime(), updateTime.getEndTime(), updateTime.getLabelingWorkTimeNo());
+    String result = "fail";
+    if(workTimeResult == 1) {
+      result = "success";
+    }
+    return result;
+  }
+  
   // 라벨링 페이지 현황 가져오기
   public InspectionLabelingStatus getStatus() {
     InspectionLabelingStatus total = inspectionLabelingDao.searchStatusTotal();

@@ -26,11 +26,10 @@
 	</resultMap>
 
 	<!-- 왼쪽 업체명 기준으로 데이터 가져오기 / 3번째 트리 그리드 데이터 -->
-	<resultMap id="InspectionLabelingWorkMap"
-		type="inspectionLabelingWork">
+	<resultMap id="InspectionLabelingWorkMap" type="inspectionLabelingWork">
 		<result property="placingOrderNo" column="PO_CODE" />
 		<result property="title" column="V_NAME" />
-		<result property="receiveDate" column="ILW_RCV_DT" />
+		<result property="receiveDate" column="PO_RCV_DT" />
 		<result property="receiveItem" column="ILW_RCV_ITM" />
 		<result property="receiveQuantity" column="ILW_RCV_QTY" />
 		<result property="scheduledStartTime" column="ILW_SCH_SRT_TM" />
@@ -43,8 +42,7 @@
 		<result property="lateTime" column="ILW_LT_TM" />
 		<result property="inspectionQuantity" column="ILW_INSP_QTY" />
 		<result property="passItemQuantity" column="ILW_PAS_ITM_QTY" />
-		<result property="labelingItemQuantity"
-			column="ILW_LBL_ITM_QTY" />
+		<result property="labelingItemQuantity" column="ILW_LBL_ITM_QTY" />
 	</resultMap>
 
 	<!-- 오른쪽 작업 담당자 기준으로 데이터 가져오기 -->
@@ -55,7 +53,7 @@
 		<result property="itemCode" column="ITM_CODE" />
 		<result property="placingOrderNo" column="PO_CODE" />
 		<result property="lotCode" column="LOT_CODE" />
-		<result property="recievedQuantity" column="IL_RCV_QTY" />
+		<result property="recievedQuantity" column="POI_RCV_QTY" />
 		<result property="inspectionQuantity" column="IL_INSP_QTY" />
 		<result property="passedItemQuantity" column="IL_PAS_ITM_QTY" />
 		<result property="missingItemQuantity" column="IL_MIS_ITM_QTY" />
@@ -134,7 +132,7 @@
 	<select id="searchAllByLWTNo" parameterType="int" resultMap="InspectionLabelingWorkMap">
 		SELECT ilw.PO_CODE 
 			, vnd.V_NAME
-			, DATE_FORMAT(ilw.ILW_RCV_DT, '%m-%d %H:%i') AS ILW_RCV_DT
+			, DATE_FORMAT(po.PO_RCV_DT, '%m-%d %H:%i') AS PO_RCV_DT
 			, ilw.ILW_RCV_ITM
 			, ilw.ILW_RCV_QTY
 			, DATE_FORMAT(ilw.ILW_SCH_SRT_TM, '%H:%i') AS ILW_SCH_SRT_TM
@@ -164,7 +162,7 @@
 		, itm.ITM_CODE
 		, ilw.PO_CODE
 		, poi.LOT_CODE
-		, il.IL_RCV_QTY
+		, poi.POI_RCV_QTY
 		, il.IL_INSP_QTY
 		, il.IL_PAS_ITM_QTY
 		, il.IL_MIS_ITM_QTY
@@ -201,7 +199,21 @@
 		LIMIT #{pager.rowsPerPage} OFFSET
 		#{pager.startRowIndex}
 	</select>
-
+	
+	<!-- 잔업 데이터 불러오기 -->
+	<select id="searchAllByLWTNoIsNULL"
+		resultMap="InspectionLabelingWorkMap">
+		SELECT po.PO_CODE
+		, ilw.ILW_RCV_ITM
+		, ilw.ILW_RCV_QTY
+		, vnd.V_NAME
+		, po.PO_RCV_DT
+		 FROM FOUREVER.TB_INSP_LBL_WRK ilw
+		JOIN TB_PLC_ORD po ON po.PO_CODE = ilw.PO_CODE
+		JOIN TB_VND vnd ON po.V_NO = vnd.V_NO
+		where LWT_NO IS NULL
+	</select>
+	
 	<select id="countDetailByLWTNO" resultType="int">
 		SELECT count(*)
 		FROM TB_LBL_WRK_TM lwt
@@ -254,5 +266,26 @@
 			, SUM(IL_DMG_ITM_QTY) AS SUM_DMG_QTY
 		FROM TB_INSP_LBL
 	</select>
+	
+	<!-- 잔업 추가 -->
+	<update id="updateLabelingWorkTime">
+		UPDATE TB_LBL_WRK_TM 
+		SET LWT_RCV_ITM = LWT_RCV_ITM + #{recieveitem}
+			, LWT_RCV_QTY = LWT_RCV_QTY + #{recieveQuantity}
+		WHERE LWT_NO = #{labelingWorkTimeNo};
+	</update>
+	
+	<!-- 예정시간 수정 -->
+	<update id="updateInspectionLabelingWork">
+		UPDATE TB_INSP_LBL_WRK 
+		SET 
+			ILW_SCH_SRT_TM = #{'2022-07-27 17:00:00'}
+			, ILW_SCH_END_TM = #{'2022-07-27 18:00:00'}
+			<if test="labelingWorkTimeNo != null">
+				, LWT_NO = #{3}
+			</if>
+		WHERE PO_CODE = #{'P220106016'};
+	</update>
+	
 </mapper>
 
