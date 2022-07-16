@@ -270,8 +270,8 @@
 	<!-- 잔업 추가 -->
 	<update id="updateLabelingWorkTime">
 		UPDATE TB_LBL_WRK_TM 
-		SET LWT_RCV_ITM = LWT_RCV_ITM + #{recieveitem}
-			, LWT_RCV_QTY = LWT_RCV_QTY + #{recieveQuantity}
+		SET LWT_RCV_ITM = LWT_RCV_ITM + #{receiveItem}
+			, LWT_RCV_QTY = LWT_RCV_QTY + #{receiveQuantity}
 		WHERE LWT_NO = #{labelingWorkTimeNo};
 	</update>
 	
@@ -279,12 +279,12 @@
 	<update id="updateInspectionLabelingWork">
 		UPDATE TB_INSP_LBL_WRK 
 		SET 
-			ILW_SCH_SRT_TM = #{'2022-07-27 17:00:00'}
-			, ILW_SCH_END_TM = #{'2022-07-27 18:00:00'}
+			ILW_SCH_SRT_TM = #{startTime}
+			, ILW_SCH_END_TM = #{endTime}
 			<if test="labelingWorkTimeNo != null">
-				, LWT_NO = #{3}
+				, LWT_NO = #{labelingWorkTimeNo}
 			</if>
-		WHERE PO_CODE = #{'P220106016'};
+		WHERE PO_CODE = #{placingOrderNo};
 	</update>
 	
 </mapper>

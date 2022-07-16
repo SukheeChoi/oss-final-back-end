@@ -1,7 +1,7 @@
 package ows.edu.controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -88,9 +89,14 @@ public class LabelingController {
   //잔업 추가하기
   @Transactional
   @PutMapping("/updateOvertime")
-  public Map<String, String> updateOvertime(UpdateTime updateTime) {
-    
-    String result = inspectionLabelingService.updateOvertime(updateTime);
+  public Map<String, String> updateOvertime(@RequestBody UpdateTime updateTime) {
+    log.info(updateTime);
+    String result;
+    try {
+      result = inspectionLabelingService.updateOvertime(updateTime);
+    } catch (ParseException e) {
+      result = "error";
+    }
     
     Map<String, String> map = new HashMap<>();
 
@@ -100,12 +106,16 @@ public class LabelingController {
   
   //작업시간 수정하기
   @PutMapping("/updateWorktime")
-  public Map<String, String> updateWorktime(UpdateTime updateTime) {
+  public Map<String, String> updateWorktime(@RequestBody UpdateTime updateTime) {
     
-    String result = inspectionLabelingService.updateWorktime(updateTime);
+    String result;
+    try {
+      result = inspectionLabelingService.updateWorktime(updateTime);
+    } catch (ParseException e) {
+      result = "error";
+    }
     
     Map<String, String> map = new HashMap<>();
-
     map.put("result", result);
     return map;
   }

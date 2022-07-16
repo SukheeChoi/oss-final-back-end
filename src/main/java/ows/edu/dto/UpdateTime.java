@@ -6,9 +6,10 @@ import lombok.Data;
 
 @Data
 public class UpdateTime {
-  private int recieveitem;
-  private int recieveQuantity;
+  private int receiveItem;
+  private int receiveQuantity;
   private int labelingWorkTimeNo;
-  private Date startTime;
-  private Date endTime;
+  private String startTime;
+  private String endTime;
+  private String placingOrderNo;
 }

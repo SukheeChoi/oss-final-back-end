@@ -1,5 +1,7 @@
 package ows.edu.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,21 +98,59 @@ public class InspectionLabelingService {
   
   //잔업 추가하기
   @Transactional
-  public String updateOvertime(UpdateTime updateTime) {
-    int overTimeResult = inspectionLabelingDao.updateLabelingWorkTime(updateTime.getRecieveitem(), updateTime.getRecieveQuantity(), updateTime.getLabelingWorkTimeNo());
-    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(updateTime.getStartTime(), updateTime.getEndTime(), updateTime.getLabelingWorkTimeNo());
+  public String updateOvertime(UpdateTime updateTime) throws ParseException {
+    log.info(updateTime);
+    //날짜 형식변환
+    String startTime = updateTime.getStartTime();
+    String endTime = updateTime.getEndTime();
+
+    SimpleDateFormat sdfYMD = new SimpleDateFormat("yyyy년 MM월 dd일");
+    String date = sdfYMD.format(new Date());
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일HH:mm");
+    Date lastStartDate = sdf.parse(date + startTime);
+    Date lastEndDate = sdf.parse(date + endTime);
+    
+    Date testStartDate =sdf.parse("2022년 07월 27일" + startTime);
+    Date testEndDate = sdf.parse("2022년 07월 27일"  + endTime);
+    
+
+    int overTimeResult = inspectionLabelingDao.updateLabelingWorkTime(updateTime.getReceiveItem(), updateTime.getReceiveQuantity(), updateTime.getLabelingWorkTimeNo());
+    int testTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(testStartDate, testEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
+//    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
+
     String result = "fail";
-    if(overTimeResult + workTimeResult == 2) {
+    if(overTimeResult + testTimeResult == 2) {
       result = "success";
     }
     return result;
   }
   
   //작업시간 수정하기
-  public String updateWorktime(UpdateTime updateTime) {
-    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(updateTime.getStartTime(), updateTime.getEndTime(), updateTime.getLabelingWorkTimeNo());
+  public String updateWorktime(UpdateTime updateTime) throws ParseException {
+    //날짜 형식변환
+    String startTime = updateTime.getStartTime();
+    String endTime = updateTime.getEndTime();
+
+    SimpleDateFormat sdfYMD = new SimpleDateFormat("yyyy년 MM월 dd일");
+    String date = sdfYMD.format(new Date());
+    log.info(startTime);
+    log.info(endTime);
+    log.info(date);
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일HH:mm");
+//    Date lastStartDate = sdf.parse(date + startTime);
+//    Date lastEndDate = sdf.parse(date + endTime);
+    
+    Date testStartDate =sdf.parse("2022년 07월 27일" + startTime);
+    Date testEndDate = sdf.parse("2022년 07월 27일"  + endTime);
+    
+    log.info(testStartDate);
+    log.info(testEndDate);
+//    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
+    int testTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(testStartDate, testEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
     String result = "fail";
-    if(workTimeResult == 1) {
+    if(testTimeResult == 1) {
       result = "success";
     }
     return result;
