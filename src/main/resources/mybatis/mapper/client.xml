@@ -64,8 +64,6 @@
 	 	</if>
 		GROUP BY OI.OI_NO
 		ORDER BY UNRELEASE DESC, O.ORD_STS
-		LIMIT 10
-		OFFSET 0;
 	</select>
 	
 	<!-- 배송구분, 미출로 필터링 -->
@@ -101,8 +99,6 @@
 	 		AND O.ORD_STS != 0
 		GROUP BY OI.OI_NO
 		ORDER BY UNRELEASE DESC, O.ORD_STS
-		LIMIT 10
-		OFFSET 0;
 	</select>
 	
 	<!-- 주문 단계마다 카운트 --> 
