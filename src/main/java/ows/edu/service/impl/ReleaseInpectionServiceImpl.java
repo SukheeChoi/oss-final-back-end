@@ -14,9 +14,10 @@ import ows.edu.dao.OrderDao;
 import ows.edu.dao.PackingDao;
 import ows.edu.dao.PickingDirectionDao;
 import ows.edu.dao.ReleaseInspectionDao;
-import ows.edu.dao.ReleaseInspectionViewDao;
+import ows.edu.dao.ReleasePackingDao;
+import ows.edu.dto.Box;
 import ows.edu.dto.Pager;
-import ows.edu.dto.ReleaseInspectionView;
+import ows.edu.dto.ReleasePacking;
 import ows.edu.service.ReleaseInspectionService;
 
 @Service
@@ -32,7 +33,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	@Resource
 	PackingDao packingDao;
 	@Resource
-	ReleaseInspectionViewDao releaseInspectionViewDao;
+	ReleasePackingDao releasePackingDao;
 	@Resource
 	AfterPickingViewDao afterPickingViewDao;
 	
@@ -266,8 +267,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	
 	private String releaseCode ="";
 	
-	public List<ReleaseInspectionView> select(){
-		List<ReleaseInspectionView> list = releaseInspectionViewDao.select();
+	public List<ReleasePacking> select(){
+		List<ReleasePacking> list = releasePackingDao.select();
 		int count = 0;
 		
 		for(int i=0; i<list.size(); i++ ) {
@@ -280,33 +281,79 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		return list;
 	}
 	
-	public List<ReleaseInspectionView> selectByFilterPage(Pager pager){
-		List<ReleaseInspectionView> list = releaseInspectionViewDao.selectByFilterPage(pager);
+	public List<ReleasePacking> selectByFilterPage(Pager pager){
+		List<ReleasePacking> list = releasePackingDao.selectByFilterPage(pager);
 		
-		int count = 0;
-		
-		for(int i=0; i<list.size(); i++ ) {
-			if(!list.get(i).getReleaseCode().equals(releaseCode)) {
-				releaseCode = list.get(i).getReleaseCode();
-				count++;
-			}
-			list.get(i).setNo(count);
-		}		
+//		int count = pager.getStartRowIndex();
+//		
+//		//현재 페이지 번호
+//		int pageNo = pager.getPageNo();
+//		
+//		//이전까지의 releseCode 개수
+//		
+//		
+//		for(int i=0; i<list.size(); i++ ) {
+//			if(!list.get(i).getReleaseCode().equals(releaseCode)) {
+//				releaseCode = list.get(i).getReleaseCode();
+//				count++;
+//			}
+//			list.get(i).setNo(count);
+//		}		
 		
 		return list;
 	}
 	
 	public int count() {
-		return releaseInspectionViewDao.count();
+		return releasePackingDao.count();
 	}
 	
-	public List<ReleaseInspectionView> selectByPage(Pager pager){
-		return releaseInspectionViewDao.selectByPage(pager);
+	public List<ReleasePacking> selectByPage(Pager pager){
+		return releasePackingDao.selectByPage(pager);
 	}
 	
-	public List<ReleaseInspectionView> selectByOrderNo(int orderNo){
-		return releaseInspectionViewDao.selectByOrderNo(orderNo);
+	public List<ReleasePacking> selectByOrderNo(String orderNo, int index){
+		return releasePackingDao.selectByOrderNo(orderNo, index);
+	}
+	
+	//검수수량, 미출고 수량 업데이트
+	@Override
+	public int releaseInspectionQtyUpdate(String releaseCode, String barCode) {
+		// TODO Auto-generated method stub
+		return releaseInspectionDao.releaseInspectionQtyUpdate(releaseCode, barCode);
 	}
 
+	@Override
+	public int unRleaseQtyUpdate(String releaseCode, String barCode) {
+		// TODO Auto-generated method stub
+		return releaseInspectionDao.unRleaseQtyUpdate(releaseCode, barCode);
+	}
+
+	//스캔
+	@Override
+	public List<ReleasePacking> scan(String release, String kind) {
+		return releasePackingDao.scan(release, kind);
+	}
+
+	@Override
+	public int update(List<Box> boxArrays) {
+		int updateCount = 0;
+		System.out.println("========update=========");
+		for(Box boxArray : boxArrays) {
+			
+			Map<String, Integer> map = new HashMap<>();
+//			map.put("releaseInspectionQty", boxArray.getReleaseInspectionQty());
+//			System.out.println(boxArray.getReleaseInspectionQty());
+			map.put("orderItemNo", boxArray.getOrderItemNo());
+			System.out.println(boxArray.getOrderItemNo());
+			updateCount =+ releaseInspectionDao.update(map);
+		}		
+		return updateCount; 
+	}
+
+	@Override
+	public List<ReleasePacking> selectByReleaseCode(String releaseCode) {
+		// TODO Auto-generated method stub
+		return releasePackingDao.selectByReleaseCode(releaseCode);
+	}
 	
 }

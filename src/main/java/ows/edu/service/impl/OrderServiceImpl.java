@@ -15,17 +15,58 @@ public class OrderServiceImpl implements OrderService {
 	@Resource
 	OrderDao orderDao;
 	
-//	@Override
-//	public List<String> getOrderNoList(Pager pager) {
-//	List<String> list = new ArrayList<>();
-//	orderDao.selectByPage(pager);
-//	
-//		return list;
-//	}
-
 	@Override
 	public int getTotalOrders() {
-		return orderDao.count();
+		return orderDao.countProgressOrder();
+	}
+
+	//현황(주문건)
+	@Override
+	public int count() {
+		// TODO Auto-generated method stub
+		return orderDao.countProgressOrder();
+	}
+
+	@Override
+	public int pickingDoneCount() {
+		// TODO Auto-generated method stub
+		return orderDao.pickingDoneCount();
+	}
+
+	@Override
+	public int pickDnCommonCount() {
+		// TODO Auto-generated method stub
+		return orderDao.pickDnCommonCount();
+	}
+
+	@Override
+	public int pickDnEmergencyCount() {
+		// TODO Auto-generated method stub
+		return orderDao.pickDnEmergencyCount();
+	}
+
+	@Override
+	public int rlsInspPackingCount() {
+		// TODO Auto-generated method stub
+		return orderDao.rlsInspPackingCount();
+	}
+
+	@Override
+	public int rlsInspPackCommonCount() {
+		// TODO Auto-generated method stub
+		return orderDao.rlsInspPackCommonCount();
+	}
+
+	@Override
+	public int rlsInspPackEmergencyCount() {
+		// TODO Auto-generated method stub
+		return orderDao.rlsInspPackEmergencyCount();
+	}
+
+	@Override
+	public int updateOrdSts(long orderNo) {
+		// TODO Auto-generated method stub
+		return orderDao.updateOrdSts(orderNo);
 	}
 	
 }

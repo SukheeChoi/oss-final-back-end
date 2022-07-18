@@ -5,11 +5,11 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class ReleaseInspectionView {
+public class ReleasePacking {
 	private int no;
 	
 	//order
-	private int orderNo;				//주문번호
+	private String orderNo;				//주문번호
 	private Date date;					//주문일시
 	private int clientNo;				//거래처번호
 	private String shippingWay;			//배송방식(합배송, 직배송)
@@ -18,11 +18,13 @@ public class ReleaseInspectionView {
 	private String shippingAddress;		//주소
 	private String orderWay;			//주문방법
 	private String category;			//긴급, 일반
+
 	
 	//order Item
 	private int orderItemNo;			
 	private String code;
-	private int orderItemqty;
+	private int orderItemQuantity;
+	private int oderItemUnreleaseQuantity;
 	
 	//Item
 	private String itemName;
@@ -30,21 +32,19 @@ public class ReleaseInspectionView {
 	
 	//Release
 	private String releaseCode;
-	private int done;
+	private String done;				//출고검수 여부
+	private int releaseBoxQty;
+	private long releaseBarcode;
 	
 	//ReleaseInspection
 	private int releaseInspectionQuantity;
 	private String note;
 	private Date releasePrintDate;
 	private Date receiptePrintDate;
-	private long releaseInspectionBarcode;
 	private int unReleased;
 	
 	//picking
 	private int pickingQty;
-	
-	//packing
-	private int boxQty;
 	
 	//vendor
 	private String vendorName;
@@ -54,4 +54,13 @@ public class ReleaseInspectionView {
 	
 	//client
 	private String clientName;
+	
+	//barcode
+	private int barCode;
+	private int barCodeDone;
+	
+	//box
+	private int boxItemQuantity;
+	private int boxNum;
+	
 }
