@@ -1,12 +1,16 @@
 package ows.edu.controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +19,10 @@ import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.InspectionLabeling;
 import ows.edu.dto.InspectionLabelingStatus;
 import ows.edu.dto.InspectionLabelingView;
+import ows.edu.dto.InspectionLabelingWork;
 import ows.edu.dto.LabelingWorkTime;
 import ows.edu.dto.Pager;
+import ows.edu.dto.UpdateTime;
 import ows.edu.service.InspectionLabelingService;
 
 @RestController
@@ -50,6 +56,17 @@ public class LabelingController {
     return map;
   }
   
+  //잔업 가져오기
+  @GetMapping("/getOverTime")
+  public Map<String, Object> getOverTime() {
+    List<InspectionLabelingWork> data = new ArrayList<>();
+    data.addAll(inspectionLabelingService.getListByLWTNoIsNull());
+    Map<String, Object> map = new HashMap<>();
+    map.put("data", data);
+    return map;
+  }
+  
+  
   //담당자별 검품검수 및 라벨링 내역
   @GetMapping("/getListByLWTNo")
   public Map<String, Object> getListByLWTNo(InspectionLabeling inspectionLabeling
@@ -68,5 +85,41 @@ public class LabelingController {
     log.info("map : " + map);
     return map;
   }
+  
+  //잔업 추가하기
+  @Transactional
+  @PutMapping("/updateOvertime")
+  public Map<String, String> updateOvertime(@RequestBody UpdateTime updateTime) {
+    log.info(updateTime);
+    String result;
+    try {
+      result = inspectionLabelingService.updateOvertime(updateTime);
+    } catch (ParseException e) {
+      result = "error";
+    }
+    
+    Map<String, String> map = new HashMap<>();
+
+    map.put("result", result);
+    return map;
+  }
+  
+  //작업시간 수정하기
+  @PutMapping("/updateWorktime")
+  public Map<String, String> updateWorktime(@RequestBody UpdateTime updateTime) {
+    
+    String result;
+    try {
+      result = inspectionLabelingService.updateWorktime(updateTime);
+    } catch (ParseException e) {
+      result = "error";
+    }
+    
+    Map<String, String> map = new HashMap<>();
+    map.put("result", result);
+    return map;
+  }
+  
+  
 
 }
