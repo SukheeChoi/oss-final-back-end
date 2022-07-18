@@ -71,8 +71,8 @@ public class CombineShippingController {
 	public Map<String, Object> geReceiptList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="vendorName", defaultValue="전체") String vendorName
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
-											, @RequestParam(value="pageNo") int pageNo
-											, @RequestParam(value="perPage") int rowsPerPage){
+											, @RequestParam(value="pageNo", defaultValue="1") int pageNo
+											, @RequestParam(value="perPage", defaultValue="40") int rowsPerPage){
 		log.info("getReceiptList - toDo : " + toDo);
 		log.info("getReceiptList - vendorName : " + vendorName);
 		log.info("getReceiptList - dateList : " + dateList);
