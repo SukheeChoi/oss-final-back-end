@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.CombineShippingDao;
 import ows.edu.dao.OrderItemDao;
 import ows.edu.dto.CombineShipping;
+import ows.edu.dto.CombineShippingPartner;
 import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
@@ -59,10 +60,13 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	// '수령' 탭 선택된 경우.
 	@Override
-	public Map<String, Object> getReceiptList(int toDo
-									, String vendorName
-									, String[] dateList
-									, int pageNo
+	public Map<String, Object> getReceiptList(
+			int toDo
+			, String vendorName
+			, String[] dateList
+//			, Pager pager
+			, int pageNo
+			, int rowsPerPage
 		) {
 		log.info("실행");
 		
@@ -78,7 +82,8 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 					toDo, vendorName, startDate, endDate
 				);
 		log.info("## getReceiptList - totalRows" + totalRows);
-		Pager pager = new Pager(20, 10, totalRows, pageNo);
+//		pager.setTotalRows(totalRows);
+		Pager pager = new Pager(rowsPerPage, 10, totalRows, pageNo);
 		
 		List<String> orderItemNoList = combineShippingDao
 									.selectReceiptList(
@@ -153,18 +158,19 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	// TB_CMB_SHP CS_RCV_QTY && CS_RCV_CHK && CS_RCV_URLS_QTY 업데이트.
 	// TB_ORD_ITM OI_URLS_QTY 업데이트.
 	@Override
-	public String updateReceipt(CombineShipping[] combineShippingList) {
+	public String updateReceipt(CombineShippingPartner[] combineShippingPartnerList) {
+//	public String updateReceipt(CombineShipping[] combineShippingList) {
 		String result = "fail";
 		int totalAffectedRows = 0;
-		for(CombineShipping combineShipping : combineShippingList) {
-			int affectedRowNo = combineShippingDao.updateAReceipt(combineShipping);
+		for(CombineShippingPartner combineShippingPartner : combineShippingPartnerList) {
+			int affectedRowNo = combineShippingDao.updateAReceipt(combineShippingPartner);
 			if(affectedRowNo == 1) {
 				totalAffectedRows++;				
 			}
 			// 미출고 수량 업데이트.
-			orderItemDao.updateOiUnreleaseQuantity(combineShipping);
+			orderItemDao.updateOiUnreleaseQuantity(combineShippingPartner);
 		}
-		if(totalAffectedRows == combineShippingList.length) {
+		if(totalAffectedRows == combineShippingPartnerList.length) {
 			result = "success";
 			
 		}

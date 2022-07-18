@@ -16,6 +16,7 @@ import ows.edu.dao.PickingDirectionDao;
 import ows.edu.dao.ReleaseInspectionDao;
 import ows.edu.dao.ReleasePackingDao;
 import ows.edu.dto.Box;
+//kosa3.iptime.org:13000/4ever/final-back-end.git
 import ows.edu.dto.Pager;
 import ows.edu.dto.ReleasePacking;
 import ows.edu.service.ReleaseInspectionService;
@@ -136,6 +137,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	@Override
 //	public List<AfterPicking> getAfterPickingList(
 	public List<HashMap<String, String>> getAfterPickingList(
+//	public List<AfterPickingView> getAfterPickingList(
 		String shippingCategory
 		, String shippingWay
 		, String released
@@ -144,8 +146,6 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		, String clientName
 		, String shippingDestination
 		, String vendorName
-		
-//		, int pageNo
 		, Pager pager
 	) {
 		
@@ -167,6 +167,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		
 //		List<AfterPickingView> ap = afterPickingViewDao.selectAll();
 		List<HashMap<String, String>> ap = afterPickingViewDao.selectAll(
+//		List<AfterPickingView> ap = afterPickingViewDao.selectAll(
 				shippingCategory
 				, shippingWay
 				, released
@@ -175,90 +176,187 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				, clientName
 				, shippingDestination
 				, vendorName
-//				, pager
 				, pager
 			);
 		
 		log.info("ap : " + ap);
 		log.info("ap.size() : " + ap.size());
+		
+//		DateFormat df = new SimpleDateFormat("MM-dd HH:mm");
+//		String strFormedDate = null;
+//		for(int i=0; i<ap.size(); i++) {
+//			log.info("ap.get(i) : " + ap.get(i));
+//			
+//			if(ap.get(i) != null && ap.get(i).getReleaseInspection() != null) {
+//				if(ap.get(i).getReleaseInspection().getReleasePrintDate() != null) {
+//					// 출고요청서 출력일시 포멧팅.
+//					strFormedDate = null;
+//					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReleasePrintDate());
+//					ap.get(i)
+//						.setStrReleasePrintDate(
+//							ap.get(i).getReleaseInspectionEmployeeName()
+//							+ "\n" 
+//							+ "("
+//							+ strFormedDate
+//							+ ")"
+//						);
+//				}
+//				if(ap.get(i).getReleaseInspection().getReceiptPrintDate() != null) {
+//					// 거래명세서 출력일시 포멧팅.
+//					strFormedDate = null;
+//					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReceiptPrintDate());
+//					ap.get(i)
+//						.setStrReceiptPrintDate(
+//							ap.get(i).getReleaseInspectionEmployeeName()
+//							+ "\n" 
+//							+ "("
+//							+ strFormedDate
+//							+ ")"
+//						);
+//				}
+//				if(ap.get(i).getReleaseInspection().getReleaseInspectionDate() != null) {
+//					// 검수일시 포멧팅.
+//					strFormedDate = null;
+//					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReleaseInspectionDate());
+//					ap.get(i)
+//						.setStrReleaseInspectionDate(
+//							strFormedDate
+//						);
+//				}
+//				
+//				// OI_URLS_QTY 컬럼 :
+//				// 		RI_QTY != null && OI_URLS_QTY == null -> OI_URLS_QTY = 0
+//				// 현재 데이터 문제로 0처리해줌.
+//				if(
+//					ap.get(i).getReleaseInspection().getReleaseInspectionQuantity() != null
+//					&&
+//					ap.get(i).getOrderItem().getUnreleaseQuantity() == null
+//				) {
+//					ap.get(i).getOrderItem().setUnreleaseQuantity(0);
+//				}
+//			}
+//			
+//			// 합배송 && 협력사 제품 -> 피킹수량 = 전달수량. 
+//			//	협력사 직배송은 출고검수 테이블에 데이터가 없으므로, 합배송 여부 검사는 불필요.
+//			if(ap.get(i) != null && ap.get(i).getCombineShippingPartner() != null) {
+//				if(
+//					ap.get(i).getItem().getItemOsstem() == false
+//				) {
+//					Picking pic = new Picking();
+//					pic.setPickingQuantity(ap.get(i).getCombineShippingPartner().getDeliveryQuantity());
+//					
+//					ap.get(i).setPicking(pic);
+//				}
+//			}
+//			 
+//			 
+//		}
+		/////////========================================================
+		
 		HashMap<String, String> map = new HashMap<>();
 		for(int i=0; i<ap.size(); i++) {
 			map = ap.get(i);
 			
 			// 출고요청서 출력일시 컬럼 값을 '담당자성명+\n+(+mm:dd+ +hh:MM+)'형태로 만듦.
-			map.replace(
-				"RI_RLS_PRT_DT"
-				, ap.get(i).get("RI_EMP_NAME") 
-				+ "\n" 
-				+ "("
-				+ String.valueOf( ap.get(i).get("RI_RLS_PRT_DT")).substring(5, 10) 
-				+ " " 
-				+ String.valueOf( ap.get(i).get("RI_RLS_PRT_DT")).substring(11, 16) 
-				+")"
-			);
+			if(
+				ap.get(i).get("RI_EMP_NAME") != null
+				&&
+				ap.get(i).get("RI_RLS_PRT_DT") != null
+				&&
+				!ap.get(i).get("RI_RLS_PRT_DT").equals(" ")
+			) {
+				map.replace(
+						"RI_RLS_PRT_DT"
+						, ap.get(i).get("RI_EMP_NAME") 
+						+ "\n" 
+						+ "("
+						+ String.valueOf( ap.get(i).get("RI_RLS_PRT_DT")).substring(5, 10) 
+						+ " " 
+						+ String.valueOf( ap.get(i).get("RI_RLS_PRT_DT")).substring(11, 16) 
+						+")"
+					);
+			}
 			
 			// 거래명세서 출력일시 컬럼 값을 '담당자성명+\n+(+mm:dd+ +hh:MM+)'형태로 만듦.
-			map.replace(
-				"RI_RCPT_PRT_DT"
-				, ap.get(i).get("RI_EMP_NAME") 
-				+ "\n" 
-				+ "("
-				+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(5, 10) 
-				+ " " 
-				+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(11, 16) 
-				+")"
-			);
+			if(
+				ap.get(i).get("RI_EMP_NAME") != null
+				&&
+				ap.get(i).get("RI_RCPT_PRT_DT") != null
+				&&
+				!ap.get(i).get("RI_RCPT_PRT_DT").equals(" ")
+			) {
+				map.replace(
+						"RI_RCPT_PRT_DT"
+						, ap.get(i).get("RI_EMP_NAME") 
+						+ "\n" 
+						+ "("
+						+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(5, 10) 
+						+ " " 
+						+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(11, 16) 
+						+")"
+					);
+			}
 			
 			// 검수일시 컬럼 값을 'mm:dd+ +hh:MM'형태로 만듦.
-			map.replace(
-				"RI_DT"
-				, String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(5, 10) 
-				+ " " 
-				+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(11, 16) 
-			);
+			if(
+				ap.get(i).get("RI_RCPT_PRT_DT") != null
+				&&
+				!ap.get(i).get("RI_RCPT_PRT_DT").equals(" ")
+			) {
+				map.replace(
+						"RI_DT"
+						, String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(5, 10) 
+						+ " " 
+						+ String.valueOf( ap.get(i).get("RI_RCPT_PRT_DT")).substring(11, 16) 
+					);
+			}
+			
+			// OI_URLS_QTY 컬럼 :
+			// 		RI_QTY != null && OI_URLS_QTY == null -> OI_URLS_QTY = 0
+			if(map.get("RI_QTY") != null && map.get("OI_URLS_QTY") == null) {
+				map.replace(
+					"OI_URLS_QTY"
+					, String.valueOf(0)
+				);
+			}
+			
+			// 합배송 && 협력사 제품 -> 피킹수량 = 전달수량. 
+			//	협력사 직배송은 출고검수 테이블에 데이터가 없으므로, 합배송 여부 검사는 불필요.
+			if(String.valueOf(map.get("ITM_OSS")).equals("0")) {
+				map.replace(
+					"PIC_QTY"
+					, String.valueOf(map.get("CSP_DLV_QTY"))
+				);
+			}
+			
+			// 출고 담당자가 배정되지 않은 상태 -> 검수수량 = " " && 미출고수량 = " "
+			if(
+				String.valueOf(map.get("RI_EMP_NAME")).equals(" ")
+			) {
+				map.replace(
+					"RI_QTY"
+					, " "
+				);
+				map.replace(
+					"OI_URLS_QTY"
+					, " "
+				);
+			}
+			// 검수일시가 " " (검수 미완료 경우.) -> 출고 박스 수량 " ".
+			if(String.valueOf(map.get("RI_DT")).equals(" ")) {
+				map.replace(
+					"RLS_BX_QTY"
+					,  " "
+				);
+			}
+			
 			
 			ap.set(i, map);
-			log.info("new String.valueOf( ap.get(i).get(\"RI_RLS_PRT_DT\")) : " + String.valueOf( ap.get(i).get("RI_RLS_PRT_DT")));
 
 			// 다음번 for문 순회하기 전에 HashMap 객체 초기화.
 			map = null;
 		}
-//		Iterator<String> iterator = ap.get(0).keySet().iterator();
-//		while(iterator.hasNext()) {
-//			String key = iterator.next();
-//			String value = String.valueOf(ap.get(0).get(key));
-//			log.info("key : " + key);
-//			log.info("value : " + value);
-//		}
-		///
 		
-		// 불필요해진 코드 주석처리.
-//		for(int i=0; i<list.size(); i++) {
-//			// packing의 미출고가 null인 경우에는, 출고검수의 미출고를 검토.
-//			if(list.get(i).getStrPackingUnreleased().equals(" ")) {
-//				// 출고검수 미출고가 null인지 아닌지 검토.
-//				// 출고검수 미출고가 null인 경우: 출고검수 진행중. 미완료 상태.
-//				// strAfterPickingUnreleased에 공백문자 할당.
-//				if(list.get(i).getStrReleaseInspectionUnreleased().equals(" ")) {
-//					// 패킹 미출고 == null && 출고검수 미출고 == null인 경우.
-//					// 아직 출고검수 미완료.
-//					// strAfterPickingUnreleased에 공백문자 할당.
-//					list.get(i).setStrAfterPickingUnreleased(" ");
-//				} else {
-//					// 패킹 미출고 == null && 출고검수 미출고 != null
-//					// 출고검수에서 미출고로 인해 작업중단 됐거나 미출고X+패킹 진행중(미완료) 상태.
-//					// strAfterPickingUnreleased에 출고검수 미출고 값 그대로 할당.
-//					list.get(i).setStrAfterPickingUnreleased(list.get(i).getStrReleaseInspectionUnreleased());
-//				}
-//				
-//			} else {// 이외에 경우에는 패킹의 미출고 값을 그대로 strAfterPickingUnreleased에 할당.
-//				// packing의 미출고가 null이 아닌 경우: 출고검수는 완료(미출고 0)인 상태.
-//				// strAfterPickingUnreleased에 패킹의 미출고값 할당.
-//				list.get(i).setStrAfterPickingUnreleased(list.get(i).getStrPackingUnreleased());
-//			}
-//			
-//			log.info("list.get(i) : " + list.get(i));
-//		}
 		return ap;
 	}
 

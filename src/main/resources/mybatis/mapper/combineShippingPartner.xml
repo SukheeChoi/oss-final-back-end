@@ -47,6 +47,9 @@
 			<result property="employeeId" column="EMP_ID"/>
 			<result property="releaseDate" column="RLS_DT"/>
 		</association>
+		<association property="informationPartner" javaType="informationPartner">
+			<result property="releaseQuantity" column="IP_RLS_QTY"/>
+		</association>
 	</resultMap>
 	
 	<resultMap id="employeeMap" type="employee">
@@ -159,8 +162,8 @@
 		SELECT @ROWNUM := @ROWNUM+1 AS ROWNUM, SQ.*   
 		FROM(
 			SELECT OI.ORD_NO, R.RLS_CODE, I.ITM_NAME, OI.ITM_CODE, OI.OI_URLS_QTY
-				, IP.IP_RLS_SCH_QTY, IP.IP_RLS_QTY
-				, CSP.CSP_RCV_URLS, CSP.CSP_DLV_URLS, CSP.CSP_RCV_QTY, CSP.CSP_DLV_QTY
+				, IP.IP_RLS_SCH_DT, IP.IP_RLS_QTY
+				, CSP.CSP_RCV_URLS_QTY, CSP.CSP_DLV_URLS_QTY, CSP.CSP_RCV_QTY, CSP.CSP_DLV_QTY
 				, OI.OI_QTY, OI.OI_NO
 		        , CSP.CSP_RCV_DT, CSP.CSP_DLV_DT
 		        , V.V_NAME
@@ -169,6 +172,10 @@
 				ON (CSP.OI_NO=IP.OI_NO)
 			LEFT JOIN TB_ORD_ITM OI
 				ON (CSP.OI_NO=OI.OI_NO)
+			LEFT JOIN TB_ORD O
+				ON (OI.ORD_NO=O.ORD_NO)
+			LEFT JOIN TB_RLS R
+				ON (O.ORD_NO=R.ORD_NO)
 			LEFT JOIN TB_ITM I
 				ON (OI.ITM_CODE=I.ITM_CODE)
 			LEFT JOIN TB_VND V
@@ -216,7 +223,7 @@
 			ON (CSP.EMP_ID=E.EMP_ID)
 		<where>
 			<if test='!employeeId.equals("")'>
-				AND CS.EMP_ID=#{employeeId}
+				AND CSP.EMP_ID=#{employeeId}
 			</if>
 			<choose>
 				<when test="toDo != 1">
@@ -242,14 +249,16 @@
 		SELECT @ROWNUM := @ROWNUM+1 AS ROWNUM, SQ.*   
 		FROM(
 			SELECT OI.ORD_NO, R.RLS_CODE, I.ITM_NAME, OI.ITM_CODE
-				, CS.CS_DLV_URLS, CS.CS_RCV_QTY, CS.CS_DLV_QTY
-				, OI.OI_QTY, CS.CS_DLV_CHK, OI.OI_NO
-		        , CS.CS_DLV_DT, E.EMP_NAME
+				, CSP.CSP_RCV_URLS_QTY, CSP.CSP_RCV_QTY, CSP.CSP_DLV_QTY
+				, OI.OI_QTY, OI.OI_NO
+		        , CSP.CSP_DLV_DT, E.EMP_NAME
 			FROM TB_CMB_SHP_PTN CSP
 			LEFT JOIN TB_INF_PTN IP
 				ON (CSP.OI_NO=IP.OI_NO)
 			LEFT JOIN TB_ORD_ITM OI
 				ON (CSP.OI_NO=OI.OI_NO)
+			LEFT JOIN TB_ITM I
+				ON (OI.ITM_CODE=I.ITM_CODE)
 			LEFT JOIN TB_ORD O
 				ON (OI.ORD_NO=O.ORD_NO)
 			LEFT JOIN TB_RLS R
@@ -292,8 +301,12 @@
 	<!-- 수령항목 정보 update. -->
 	<update id="updateAReceipt" parameterType="combineShippingPartner">
 		UPDATE TB_CMB_SHP_PTN
-		SET CSP_RCV_URLS=#{receiveUnrelease}
-			, CSP_RCV_QTY=(CSP_RLS_QTY - #{receiveUnrelease})
+		SET CSP_RCV_URLS_QTY=#{receiveUnreleaseQuantity}
+			, CSP_RCV_QTY=(
+							(SELECT IP_RLS_QTY FROM TB_INF_PTN WHERE OI_NO=#{orderItemNo})
+							-
+							#{receiveUnreleaseQuantity}
+						  )
 			, CSP_RCV_DT=DATE_FORMAT(CURDATE(), '%Y-%m-%d')
 		WHERE OI_NO=#{orderItemNo}
 	</update>
@@ -302,25 +315,11 @@
 	<update id="updateADelivery" parameterType="int">
 		UPDATE TB_CMB_SHP_PTN
 		SET CSP_DLV_QTY=CSP_RCV_QTY
-		    , CSP_DLV_URLS=0
+		    , CSP_DLV_URLS_QTY=0
 		    , CSP_DLV_DT=DATE_FORMAT(CURDATE(), '%Y-%m-%d')
 		WHERE OI_NO=#{orderItemNo}
 	</update>
-<!-- 	
-	<select id="getReceiptListByDate" resultMap="combineShippingMap">
-		SELECT OI.OI_NO, I.ITM_NAME, OI.ITM_CODE
-			, CS.CS_RCV_URLS, CS.CS_RCV_QTY, CS.CS_RCV_CHK
-		FROM TB_CMB_SHP CS
-		JOIN TB_ORD_ITM OI ON (CS.OI_NO = OI.OI_NO)
-		JOIN TB_ITM I ON (I.ITM_CODE = OI.ITM_CODE)
-		JOIN TB_RLS R ON (OI.ORD_NO = R.ORD_NO)
-		<![CDATA[
-		WHERE DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
-			AND DATE_FORMAT(CS_RCV_DT, '%Y-%m-%d') <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-		]]>
-		ORDER BY I.ITM_NAME
-	</select>
- -->	
+
 </mapper>
 
 

@@ -23,6 +23,7 @@ public interface AfterPickingViewDao {
 
 	
 	public List<HashMap<String, String>> selectAll(
+//	public List<AfterPickingView> selectAll(
 			String shippingCategory
 			, String shippingWay
 			, String released
