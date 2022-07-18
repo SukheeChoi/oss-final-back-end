@@ -20,7 +20,14 @@ public class Pager {
 	
 	//필터조건
 	private String[] newGroup;
- 
+	
+	//releaseInspectionPager 조건
+	private Integer[] noArray = new Integer[3];
+	
+	//startRowNo
+	private Integer[] computedStartRowNo;
+	
+	//pageSeize <= rowsPerPage,
 	public Pager(int rowsPerPage, int pagesPerGroup, int totalRows, int pageNo) {
 		this.rowsPerPage = rowsPerPage;
 		this.pagesPerGroup = pagesPerGroup;
@@ -43,7 +50,9 @@ public class Pager {
 		startRowNo = (pageNo - 1) * rowsPerPage + 1;
 		startRowIndex = startRowNo - 1;
 		endRowNo = pageNo * rowsPerPage;
-		endRowIndex = endRowNo - 1;
+
+		endRowIndex = endRowNo - 1; 
+
 	}
 }
 
