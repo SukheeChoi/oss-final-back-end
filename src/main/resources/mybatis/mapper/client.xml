@@ -133,8 +133,6 @@
 	 		AND O.ORD_STS != 0
 		GROUP BY OI.OI_NO
 		ORDER BY UNRELEASE DESC, O.ORD_STS
-<<<<<<< HEAD
-=======
 		LIMIT #{pageSize}
 		OFFSET #{startRowIndex};
 	</select> -->
@@ -164,7 +162,6 @@
 		ORDER BY O.ORD_STS
 <!-- 		LIMIT #{pageSize}
 		OFFSET #{startRowIndex}; -->
->>>>>>> branch 'master' of http://kosa3.iptime.org:13000/4ever/final-back-end.git
 	</select>
 	
 	<!-- 주문 단계마다 카운트 --> 
