@@ -28,4 +28,7 @@ public interface OrderService {
 	
 	//출고검수/패킹건 -> 긴급
 	public int rlsInspPackEmergencyCount();
+	
+	//출고검수완료 버튼 클릭
+	public int updateOrdSts(long orderNo);
 }

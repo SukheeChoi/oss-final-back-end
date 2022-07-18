@@ -199,15 +199,17 @@ public class ReleaseInspectionController {
 	@PostMapping("/insertToBoxTable")
 	public int insertToBoxTable(@RequestBody List<Box> boxArrays) {
 		log.info(boxArrays);
-		int result = boxService.insert(boxArrays);
-		return result;
+		int insertCount = boxService.insert(boxArrays);
+		//출고Box수량도 업데이트
+		int updateCount = releaseService.updateReleaseBoxQty(boxArrays.get(0));
+
+		return insertCount+updateCount;
 	}
 	
 	// 패킹 최종 완료
 	@GetMapping("/packingDone")
-	public int packing(@RequestParam String orderNumber) {
-		log.info("패킹 최종 완료");
-		return 0;
+	public int packing(@RequestParam long orderNo) {
+		return orderService.updateOrdSts(orderNo);
 	}
 	
 	

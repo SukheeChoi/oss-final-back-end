@@ -62,5 +62,11 @@ public class OrderServiceImpl implements OrderService {
 		// TODO Auto-generated method stub
 		return orderDao.rlsInspPackEmergencyCount();
 	}
+
+	@Override
+	public int updateOrdSts(long orderNo) {
+		// TODO Auto-generated method stub
+		return orderDao.updateOrdSts(orderNo);
+	}
 	
 }

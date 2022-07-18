@@ -72,6 +72,12 @@
         WHERE ORD_STS IN (5,6) and ord_shp_cat = "긴급"	
 	</select>	
 
+	<!-- 패킹 최종 완료 -->
+	<update id="updateOrdSts" parameterType="long">
+		update tb_ord
+		set ord_sts = 5
+		where ord_no = #{ord_no}
+	</update>
 
 </mapper>
 
