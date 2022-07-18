@@ -51,29 +51,34 @@ public class ClientController {
 		log.info("orderUnrelease : " + orderUnrelease);
 		log.info("orderNo : " + orderNo);
 		log.info("clientName : " + clientName);
-		List<Client> list = null;
+		List<Client> list1 = null;
+		List<Client> list2 = null;
 //		List<HashMap<String, String>> list;
 	
 		Map<String, Object> map1 = new HashMap<>();
 		map1.put("shippingCategory", shippingCategory);
+		map1.put("status", status);
 		map1.put("orderUnrelease", orderUnrelease);
 		map1.put("orderNo", orderNo);
 		map1.put("clientName", clientName);
 		log.info("clientcontroller - map1: " + map1);
 
-		if(status == -1) {
-			list = clientService.getListByShippingCategory(map1);
-//			list = clientService.getList(shippingCategory, status, orderUnrelease, orderNo, clientName, pageNo, pageSize);
-			log.info("list1 : " + list);
-		} else {
-			map1.put("status", status);
-			list = clientService.getList(map1);
-//			list = clientService.getListByShippingCategory(shippingCategory, orderUnrelease, orderNo, clientName, pageNo, pageSize);
-			log.info("list2 : " + list);
-		}
+		list1 = clientService.getList(map1);
+		list2 = clientService.getListByShippingCategory(map1);
+//		if(status == -1) {
+//			list = clientService.getListByShippingCategory(map1);
+////			list = clientService.getList(shippingCategory, status, orderUnrelease, orderNo, clientName, pageNo, pageSize);
+//			log.info("list1 : " + list);
+//		} else {
+//			map1.put("status", status);
+//			list = clientService.getList(map1);
+////			list = clientService.getListByShippingCategory(shippingCategory, orderUnrelease, orderNo, clientName, pageNo, pageSize);
+//			log.info("list2 : " + list);
+//		}
 		
 		Map<String, Object> map2 = new HashMap<>();
-		map2.put("list", list);
+		map2.put("list1", list1);
+		map2.put("list2", list2);
 		log.info("map2 : " + map2);
 		return map2;
 	}
