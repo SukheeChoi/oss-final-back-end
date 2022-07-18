@@ -118,7 +118,7 @@ public class InspectionLabelingService {
     int overTimeResult = inspectionLabelingDao.updateLabelingWorkTime(updateTime.getReceiveItem(), updateTime.getReceiveQuantity(), updateTime.getLabelingWorkTimeNo());
     int testTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(testStartDate, testEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
 //    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
-
+    
     String result = "fail";
     if(overTimeResult + testTimeResult == 2) {
       result = "success";
@@ -142,7 +142,7 @@ public class InspectionLabelingService {
 //    Date lastStartDate = sdf.parse(date + startTime);
 //    Date lastEndDate = sdf.parse(date + endTime);
     
-    Date testStartDate =sdf.parse("2022년 07월 27일" + startTime);
+    Date testStartDate = sdf.parse("2022년 07월 27일" + startTime);
     Date testEndDate = sdf.parse("2022년 07월 27일"  + endTime);
     
     log.info(testStartDate);
