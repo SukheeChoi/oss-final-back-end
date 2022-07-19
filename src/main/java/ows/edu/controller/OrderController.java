@@ -33,7 +33,7 @@ public class OrderController {
     OrderStatus orderStatus = orderViewService.getStatus();
     
     Map<String, Object> map = new HashMap<>();
-    map.put("list", orderStatus);
+    map.put("status", orderStatus);
     return orderStatus;
   }
   

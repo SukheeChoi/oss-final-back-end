@@ -67,13 +67,12 @@ public class LabelingController {
   }
   
   
-  //담당자별 검품검수 및 라벨링 내역
+  //담당자별 검품검수 및 라벨링 세부내역
   @GetMapping("/getListByLWTNo")
   public Map<String, Object> getListByLWTNo(InspectionLabeling inspectionLabeling
                                                   , @RequestParam(defaultValue = "1") int pageNo
                                                   , @RequestParam(defaultValue = "5") int pageSize) {
     
-    log.info(inspectionLabeling);
     int totalCount = inspectionLabelingService.getTotalNum(inspectionLabeling);
     Pager pager = new Pager(pageSize, 5, totalCount, pageNo);
     
@@ -82,12 +81,10 @@ public class LabelingController {
     Map<String, Object> map = new HashMap<>();
     map.put("data", data);
     map.put("totalCount", totalCount);
-    log.info("map : " + map);
     return map;
   }
   
   //잔업 추가하기
-  @Transactional
   @PutMapping("/updateOvertime")
   public Map<String, String> updateOvertime(@RequestBody UpdateTime updateTime) {
     log.info(updateTime);
@@ -108,7 +105,7 @@ public class LabelingController {
   @PutMapping("/updateWorktime")
   public Map<String, String> updateWorktime(@RequestBody UpdateTime updateTime) {
     
-    String result;
+    String result = null;
     try {
       result = inspectionLabelingService.updateWorktime(updateTime);
     } catch (ParseException e) {
@@ -120,6 +117,4 @@ public class LabelingController {
     return map;
   }
   
-  
-
 }

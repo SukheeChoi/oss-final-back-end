@@ -67,7 +67,6 @@
 		GROUP BY clt.CLT_NO
 	</select>
 	
-	
 	<!-- 진행 주문 정보 -->
 	<select id="searchRecentOrder" parameterType="string" resultMap="recentOrderMap">
 		SELECT ord.ORD_NO
@@ -92,7 +91,6 @@
 		WHERE ord.ORD_NO = #{orderNo}
 	</select>
 	
-	<!-- DATE_FORMAT(ilw.ILW_RCV_DT, '%m-%d %H:%i') AS ILW_RCV_DT -->
 	<!-- 과거 주문 이력 -->
 	<select id="searchAllPastOrder" resultMap="pastOrderMap">
 		select clt.CLT_NAME
