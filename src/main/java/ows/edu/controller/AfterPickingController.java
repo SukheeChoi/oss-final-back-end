@@ -62,7 +62,6 @@ public class AfterPickingController {
 	}
 
 	@PostMapping("/")
-//	public Map<String, Object> getList(
 	public Map<String, Object> getList(
 			@RequestParam(value="shippingCategory", defaultValue="") String shippingCategory
 			, @RequestParam(value="shippingWay", defaultValue="") String shippingWay

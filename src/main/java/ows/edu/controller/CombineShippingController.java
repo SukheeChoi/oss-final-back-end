@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.CombineShippingPartner;
-import ows.edu.dto.Pager;
+import ows.edu.dto.Employee;
 import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
 
@@ -56,7 +56,7 @@ public class CombineShippingController {
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
 		
 		Map<String, Object> map = new HashMap<>();
-		List<String> list = combineShippingService.getAssigneeListByDate(toDo, dateList);
+		List<Employee> list = combineShippingService.getAssigneeListByDate(toDo, dateList);
 		if(list.isEmpty()) {
 			map.put("list", null);
 		} else {
@@ -69,12 +69,13 @@ public class CombineShippingController {
 //	선택된 담당자를 기준으로 수령 목록 조회.
 	@PostMapping("/receiptList")
 	public Map<String, Object> geReceiptList(@RequestParam(value="toDo", defaultValue="1") int toDo
-											, @RequestParam(value="vendorName", defaultValue="전체") String vendorName
+//											, @RequestParam(value="vendorName", defaultValue="전체") String vendorName
+											, @RequestParam(value="vendorId", defaultValue="전체") String vendorId
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
 											, @RequestParam(value="pageNo", defaultValue="1") int pageNo
 											, @RequestParam(value="perPage", defaultValue="40") int rowsPerPage){
 		log.info("getReceiptList - toDo : " + toDo);
-		log.info("getReceiptList - vendorName : " + vendorName);
+		log.info("getReceiptList - vendorId : " + vendorId);
 		log.info("getReceiptList - dateList : " + dateList);
 		log.info("getReceiptList - pageNo : " + pageNo);
 		log.info("getReceiptList - rowsPerPage : " + rowsPerPage);
@@ -84,7 +85,7 @@ public class CombineShippingController {
 		map = combineShippingService
 				.getReceiptList(
 					toDo
-					, vendorName
+					, vendorId
 					, dateList
 					, pageNo
 					, rowsPerPage
@@ -94,18 +95,22 @@ public class CombineShippingController {
 //	선택된 담당자를 기준으로 전달 목록 조회.
 	@PostMapping("/deliveryList")
 	public Map<String, Object> getDeliveryList(@RequestParam(value="toDo", defaultValue="1") int toDo
-											, @RequestParam(value="employeeName", defaultValue="전체") String employeeName
+											, @RequestParam(value="employeeId", defaultValue="전체") String employeeId
+//											, @RequestParam(value="employeeName", defaultValue="전체") String employeeName
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
 											, @RequestParam(value="pageNo", defaultValue="1") int pageNo
+											, @RequestParam(value="perPage", defaultValue="40") int rowsPerPage
 			) {
 		log.info("getDeliveryList - toDo : " + toDo);
-		log.info("getDeliveryList - employeeName : " + employeeName);
+		log.info("getDeliveryList - employeeId : " + employeeId);
 		log.info("getDeliveryList - dateList : " + dateList);
+		log.info("getDeliveryList - pageNo : " + pageNo);
 
 		Map<String, Object> map = combineShippingService
 									.getDeliveryList(
-											toDo, employeeName, dateList
+											toDo, employeeId, dateList
 											, pageNo
+											, rowsPerPage
 									);
 		
 		return map;
