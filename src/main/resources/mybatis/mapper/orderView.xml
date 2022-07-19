@@ -42,28 +42,27 @@
 	
 	<!-- 상단 현황 전체 건수 -->
 	<select id="countAll" resultType="int">
-		SELECT count(*) FROM ord_view
+		SELECT COUNT(*) FROM TB_ORD
 	</select>
 	
 	<!-- 상단 오스템 전체 건수 -->
 	<select id="countOsstem" resultType="int">
-		SELECT count(*) FROM ord_view WHERE ITM_OSS = 1
+		SELECT COUNT(*) FROM TB_ORD WHERE ORD_SHP_WAY = '오스템'
 	</select>
 	
 	<!-- 상단 협력사합배송 전체 건수 -->
 	<select id="countVendorPlus" resultType="int">
-		SELECT count(*) FROM ord_view WHERE ITM_OSS = 0 AND ORD_SHP_WAY = '합배송'
+		SELECT COUNT(*) FROM TB_ORD WHERE ORD_SHP_WAY = '합배송'
 	</select>
 	
 	<!-- 상단 협력사직배송 전체 건수 -->
 	<select id="countVendorDir" resultType="int">
-		SELECT count(*) FROM ord_view WHERE ITM_OSS = 0 AND ORD_SHP_WAY = '직배송'
+		SELECT COUNT(*) FROM TB_ORD WHERE ORD_SHP_WAY = '협력사'
 	</select>
 	
 	<!-- 상단 미출고 전체 건수 -->
 	<select id="countunleased" resultType="int">
-		SELECT COUNT(*) FROM ord_view
-		WHERE OI_URLS_QTY > 0
+		SELECT COUNT(*) FROM TB_ORD ord WHERE ORD_NO IN (select ORD_NO FROM TB_ORD_ITM WHERE OI_URLS_QTY GROUP BY ORD_NO)
 	</select>
 	
 	<select id="select" resultMap="orderViewMap">
