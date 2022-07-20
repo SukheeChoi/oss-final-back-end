@@ -92,6 +92,7 @@
 			]]>
 			</otherwise>
 		</choose>
+		ORDER BY V.V_NAME
 	</select>
 	
 	<!--
@@ -213,6 +214,8 @@
 						]]>
 					</otherwise>
 				</choose>
+				<!-- 1개의 업체(협력사)에서 오스템 상품을 제조하는 동시에 협력사 제품을 취급하는 경우가 있으므로 GROUP BY 사용. -->
+				GROUP BY OI.OI_NO
 				ORDER BY OI.OI_NO
 			</where>
 			) SQ
@@ -301,6 +304,8 @@
 					</otherwise>
 				</choose>
 			</where>
+			<!-- 1개의 업체(협력사)에서 오스템 상품을 제조하는 동시에 협력사 제품을 취급하는 경우가 있으므로 GROUP BY 사용. -->
+				GROUP BY OI.OI_NO
 				ORDER BY O.ORD_NO, OI.OI_NO
 			) SQ
 				, (SELECT @ROWNUM := 0) AS R
