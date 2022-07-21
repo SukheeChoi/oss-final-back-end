@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,11 +84,19 @@ public class InspectionLabelingService {
   }
 
   // (오른쪽) 담당자 세부 작업목록 가져오기
-  public List<InspectionLabelingView> getListByLWTNo(InspectionLabeling inspectionLabeling,
-      Pager pager) {
-    List<InspectionLabelingView> list = new ArrayList<>();
-    list.addAll(inspectionLabelingDao.searchAllDetailByLWTNo(inspectionLabeling, pager));
-    return list;
+  public Map<String, Object> getListByLWTNo(InspectionLabeling inspectionLabeling, int pageNo, int pageSize) {
+    
+    List<InspectionLabelingView> data = new ArrayList<>();
+    
+    int totalCount = inspectionLabelingDao.countDetailByLWTNO(inspectionLabeling);
+    Pager pager = new Pager(pageSize, 5, totalCount, pageNo);
+    
+    data.addAll(inspectionLabelingDao.searchAllDetailByLWTNo(inspectionLabeling, pager));
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("data", data);
+    map.put("totalCount", totalCount);
+    return map;
   }
   
   //잔업 가져오기

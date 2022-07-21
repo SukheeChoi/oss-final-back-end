@@ -34,7 +34,7 @@ public class LabelingController {
   private InspectionLabelingService inspectionLabelingService;
   
   //현황 가져오기
-  @GetMapping("/getStatus")
+  @GetMapping("/status")
   public Map<String, Object> getStatus() {
     
     InspectionLabelingStatus inspectionLabelingStatus = inspectionLabelingService.getStatus();
@@ -45,7 +45,7 @@ public class LabelingController {
   }
   
   //당일 트리 그리드 데이터 
-  @GetMapping("/getTreeList")
+  @GetMapping("/treeList")
   public Map<String, Object> getTreeList() {
 
     List<LabelingWorkTime> data = new ArrayList<>();
@@ -57,7 +57,7 @@ public class LabelingController {
   }
   
   //잔업 가져오기
-  @GetMapping("/getOverTime")
+  @GetMapping("/overTime")
   public Map<String, Object> getOverTime() {
     List<InspectionLabelingWork> data = new ArrayList<>();
     data.addAll(inspectionLabelingService.getListByLWTNoIsNull());
@@ -68,24 +68,17 @@ public class LabelingController {
   
   
   //담당자별 검품검수 및 라벨링 세부내역
-  @GetMapping("/getListByLWTNo")
+  @GetMapping("/workDetail")
   public Map<String, Object> getListByLWTNo(InspectionLabeling inspectionLabeling
                                                   , @RequestParam(defaultValue = "1") int pageNo
                                                   , @RequestParam(defaultValue = "5") int pageSize) {
-    
-    int totalCount = inspectionLabelingService.getTotalNum(inspectionLabeling);
-    Pager pager = new Pager(pageSize, 5, totalCount, pageNo);
-    
-    List<InspectionLabelingView> data = inspectionLabelingService.getListByLWTNo(inspectionLabeling, pager);
-    
-    Map<String, Object> map = new HashMap<>();
-    map.put("data", data);
-    map.put("totalCount", totalCount);
+      
+    Map<String, Object> map = inspectionLabelingService.getListByLWTNo(inspectionLabeling, pageNo, pageSize);
     return map;
   }
   
   //잔업 추가하기
-  @PutMapping("/updateOvertime")
+  @PutMapping("/overtime")
   public Map<String, String> updateOvertime(@RequestBody UpdateTime updateTime) {
     log.info(updateTime);
     String result;
@@ -102,7 +95,7 @@ public class LabelingController {
   }
   
   //작업시간 수정하기
-  @PutMapping("/updateWorktime")
+  @PutMapping("/worktime")
   public Map<String, String> updateWorktime(@RequestBody UpdateTime updateTime) {
     
     String result = null;

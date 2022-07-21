@@ -2,7 +2,9 @@ package ows.edu.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,11 +34,12 @@ public class OrderViewService {
   }
   
   //조건에 맞는 리스트
-  public List<OrderView> getListByFilter(OrderFilter orderfilter, Pager pager) {
+  public Map<String, Object> getListByFilter(OrderFilter orderfilter, int pageNo, int pageSize) {
     List<OrderView> list = new ArrayList<>();
     
     orderfilter = setData(orderfilter);
-    
+    int totalRows = orderViewDao.count(orderfilter);
+    Pager pager = new Pager(pageSize, 5, totalRows, pageNo);
     list.addAll(orderViewDao.selectByFilter(orderfilter, pager));
     
     //주문 상태에 맞게 미출고 처리
@@ -52,16 +55,10 @@ public class OrderViewService {
       }
     }
     
-    return list;
-  }
-  
-  //그리드 페이지용 전체 갯수
-  public int getTotalNum(OrderFilter orderfilter) {
-    
-    orderfilter = setData(orderfilter);
-    log.info("## orderfilter : ", orderfilter);
-    
-    return orderViewDao.count(orderfilter);
+    Map<String, Object> map = new HashMap<>();
+    map.put("data", list);
+    map.put("totalCount", totalRows);
+    return map;
   }
   
   //데이터 정제
