@@ -45,32 +45,34 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		
 		Map<String, Object> map = new HashMap<>();
 		// 주문건수 조회.(TB_ORD에서 ORD_STS > 0 건수 집계)
-		int progressOrderNo  = orderDao.countProgressOrder();
-		map.put("progressOrderNo", progressOrderNo);
+		int progressOrderNum  = orderDao.countProgressOrder();
+		map.put("progressOrderNum", progressOrderNum);
 		// 피킹지시 건수 조회.(TB_ORD에서 ORD_STS = 2 건수 집계)
-		int pickingDirectionNo = pickingDirectionDao.countPickingDirection();
-		map.put("pickingDirectionNo", pickingDirectionNo);
+		int pickingDirectionNum= pickingDirectionDao.countPickingDirection();
+		map.put("pickingDirectionNum", pickingDirectionNum);
 		// 출고검수/패킹 건수 조회.(TB_ORD에서 ORD_STS = 5 건수 집계)
 		// 출고검수와 패킹은 동일한 담당자가 연달아 작업한다는 가정으로, ORD_STS에서 같은 상태값(5)으로 표기.
-		int releaseInspectionNo = releaseInspectionDao.countReleaseInspection();
-		map.put("releaseInspectionNo", releaseInspectionNo);
+		int releaseInspectionNum = releaseInspectionDao.countReleaseInspection();
+		map.put("releaseInspectionNum", releaseInspectionNum);
 		// 미출고 건수 조회.(
 		// 	이전 단계의 미출고가 0건이 되어야 다음 단계로 진행할 수 있기 때문에
 		// 	현재 처리단계를 확인하지 않고, 출고검수 미출고와 패킹의 미출고 건수를 합함.
 		//	null 주의. 
 		// )
 		// TB_RLS_INSP의 ORD_NO별 SUM(RI_URLS) > 0 인 건수 집계.
-		int releaseInspectionUnreleased = releaseInspectionDao.sumUnreleased();
-		int packingUnreleased = packingDao.sumUnreleased();
-		int unreleasedNo = releaseInspectionUnreleased + packingUnreleased;
-		map.put("unreleasedNo", unreleasedNo);
+		// new: 출고검수와 패킹의 진행 단계를 동일한 값으로 표시하기 때문에 더이상 합산 불필요.
+		// ORD_STS = 4인 미출고값 조회.
+		int unreleasedNum = releaseInspectionDao.sumUnreleased();
+//		int packingUnreleased = packingDao.sumUnreleased();
+//		int unreleasedNum = releaseInspectionUnreleased + packingUnreleased;
+		map.put("unreleasedNum", unreleasedNum);
 		
 		// 긴급 건수 조회.
-		int expressShippingNo = releaseInspectionDao.countExpressShipping();
-		map.put("expressShippingNo", expressShippingNo);
+		int expressShippingNum = releaseInspectionDao.countExpressShipping();
+		map.put("expressShippingNum", expressShippingNum);
 		// 일반 건수 조회.
-		int normalShippingNo = releaseInspectionDao.countNormalShipping();
-		map.put("normalShippingNo", normalShippingNo);
+		int normalShippingNum = releaseInspectionDao.countNormalShipping();
+		map.put("normalShippingNum", normalShippingNum);
 		
 		
 		return map;

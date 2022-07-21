@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import ows.edu.dto.CombineShipping;
 import ows.edu.dto.CombineShippingPartner;
+import ows.edu.dto.Employee;
 import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
 
@@ -18,17 +19,18 @@ public interface CombineShippingDao {
 									, @Param("endDate") String endDate);
 
 	// 담당자 필터링을 위한 조회.
-	public List<String> selectAssigneeList(@Param("toDo") int toDo
+//	public List<String> selectAssigneeList(@Param("toDo") int toDo
+	public List<Employee> selectAssigneeList(@Param("toDo") int toDo
 												, @Param("startDate") String startDate
 												, @Param("endDate") String endDate);
 	
 	public int selectCountAllReceipt(@Param("toDo") int toDo
-									, @Param("vendorName") String vendorName
+									, @Param("vendorId") String vendorId
 									, @Param("startDate") String startDate
 									, @Param("endDate") String endDate);
 	
 	public List<String> selectReceiptList(@Param("toDo") int toDo
-													, @Param("vendorName") String vendorName
+													, @Param("vendorId") String vendorId
 													, @Param("startDate") String startDate
 													, @Param("endDate") String endDate
 													, @Param("pager") Pager pager);
@@ -40,7 +42,7 @@ public interface CombineShippingDao {
 
 	
 	public List<CombineShipping> selectDeliveryList(@Param("toDo") int toDo
-													, @Param("employeeName") String employeeName
+													, @Param("employeeId") String employeeId
 													, @Param("startDate") String startDate
 													, @Param("endDate") String endDate
 													, @Param("pager") Pager pager);

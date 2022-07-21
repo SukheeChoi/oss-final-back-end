@@ -64,7 +64,7 @@
 				GROUP BY O.ORD_NO
 			) SQ
 			WHERE SQ.ORD_STS = 4
-				AND SQ.SUM_OI_URLS_QTY > 0
+				AND SQ.SUM_OI_URLS_QTY != 0
 	</select>
 	<select id="countExpressShipping" resultType="int">
 		SELECT COUNT(*)
