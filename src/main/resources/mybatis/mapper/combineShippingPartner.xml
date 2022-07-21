@@ -332,6 +332,10 @@
 	<update id="updateADelivery" parameterType="int">
 		UPDATE TB_CMB_SHP_PTN
 		SET CSP_DLV_QTY=CSP_RCV_QTY
+			<!-- 미출고가 생신 수령 물품은 협력사로부터 추가 제품을 받아서,
+			미출고가 0이 된 상태에서야 전달하는 것으로 물류 흐름 파악했기 때문에
+			전달 시에는 무조건 미출고 값이 0. -->
+		    <!-- , CSP_DLV_URLS_QTY=CSP_RCV_URLS_QTY -->
 		    , CSP_DLV_URLS_QTY=0
 		    , CSP_DLV_DT=DATE_FORMAT(CURDATE(), '%Y-%m-%d')
 		WHERE OI_NO=#{orderItemNo}
