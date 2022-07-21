@@ -78,14 +78,21 @@
 				#{shippingCategory}
 			</foreach>
 			)
-			AND OI.OI_URLS_QTY = 0
-			OR OI.OI_URLS_QTY IS NULL
+			AND O.ORD_STS != 0
+			AND (OI.OI_URLS_QTY = 0
+			OR OI.OI_URLS_QTY IS NULL)
 		<if test = 'orderUnrelease == true'>
 			AND OI.OI_URLS_QTY IS NOT NULL
+  			AND OI.OI_URLS_QTY != 0
 		</if>
-		<if test = 'status != -1'>		
-			AND O.ORD_STS = #{status}
-		</if>
+		<choose>
+			<when test = 'status == 2'>
+				AND O.ORD_STS IN (2,3)
+			</when>
+			<when test = 'status != 2 and status != -1'>
+				AND O.ORD_STS = #{status}
+			</when>
+		</choose>
  		<if test='orderNo != null'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
@@ -146,11 +153,17 @@
 				#{shippingCategory}
 			</foreach>
 			)
+			AND O.ORD_STS != 0
 			AND OI.OI_URLS_QTY IS NOT NULL
-  				AND OI.OI_URLS_QTY != 0
-  		<if test = 'status != -1'>		
-			AND O.ORD_STS = #{status}
-		</if>
+  			AND OI.OI_URLS_QTY != 0
+		<choose>
+			<when test = 'status == 2'>
+				AND O.ORD_STS IN (2,3)
+			</when>
+			<when test = 'status != 2 and status != -1'>
+				AND O.ORD_STS = #{status}
+			</when>
+		</choose>
  		<if test='orderNo != null'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
@@ -177,6 +190,6 @@
 		SELECT COUNT(*)
 		FROM TB_ORD_ITM
 		WHERE OI_URLS_QTY != 0
-			AND OI_URLS_QTY != '';
+			AND OI_URLS_QTY IS NOT NULL;
 	</select>
 </mapper>
