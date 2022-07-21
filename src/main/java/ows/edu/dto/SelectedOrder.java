@@ -3,7 +3,7 @@ package ows.edu.dto;
 import lombok.Data;
 
 @Data
-public class RecentOrder {
+public class SelectedOrder {
   private String orderNo;
   private String orderShippingWay;
   private String orderDate;

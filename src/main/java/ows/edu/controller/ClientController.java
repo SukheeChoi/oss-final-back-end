@@ -20,9 +20,9 @@ import ows.edu.dto.Client;
 import ows.edu.dto.ClientDetail;
 import ows.edu.dto.ClientFilter;
 import ows.edu.dto.Pager;
-import ows.edu.dto.PastOrder;
-import ows.edu.dto.PastOrderDetail;
-import ows.edu.dto.RecentOrder;
+import ows.edu.dto.ClientOrder;
+import ows.edu.dto.ClientOrderDetail;
+import ows.edu.dto.SelectedOrder;
 import ows.edu.service.ClientModalService;
 import ows.edu.service.ClientService;
 
@@ -86,33 +86,18 @@ public class ClientController {
 	
 	@GetMapping("/modal")
 	public Map<String, Object> getModal(@RequestParam int clientNo, @RequestParam String orderNo) {
-	  log.info(orderNo);
-	  Map<String, Object> map = new HashMap<>();
-	  //거래처 정보
-	  ClientDetail clientDetail = clientModalService.getClientDetailByClientNo(clientNo);
-
-	  //진행 주문 정보
-	  List<RecentOrder> recentOrder = clientModalService.getRecentOrderByOrderNo(orderNo);
-	  
-	  //과거 주문 이력
-	  List<PastOrder> pastOrder = clientModalService.getPastOrderListByClientNo(clientNo, orderNo);
-	  
-    map.put("clientDetail", clientDetail);
-    map.put("recentOrder", recentOrder);
-    map.put("pastOrder", pastOrder);
-    return map;
+	  //모달 정보
+	  Map<String, Object> data = clientModalService.getModal(clientNo, orderNo);
+    return data;
 	}
 	
-	@GetMapping("modalDetail")
+	@GetMapping("/modalDetail")
 	public Map<String, Object> getModalDetail(@RequestParam String orderNo) {
+    //상세 내역
+    List<ClientOrderDetail> clientOrderDetail = clientModalService.getClientOrderDetailByOrderNo(orderNo);
     
     Map<String, Object> map = new HashMap<>();
-
-    //상세 내역
-    List<PastOrderDetail> pastOrderDetail = clientModalService.getPastOrderDetailByOrderNo(orderNo);
-
-    map.put("pastOrderDetail", pastOrderDetail);
-
+    map.put("clientOrderDetail", clientOrderDetail);
     return map;
   }
 }

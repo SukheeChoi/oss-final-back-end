@@ -157,22 +157,21 @@
 	<select id="searchAllDetailByLWTNo"
 		resultMap="InspectionLabelingViewMap">
 		SELECT lwt.EMP_ID
-		, vnd.V_NAME
-		, itm.ITM_NAME
-		, itm.ITM_CODE
-		, ilw.PO_CODE
-		, poi.LOT_CODE
-		, poi.POI_RCV_QTY
-		, il.IL_INSP_QTY
-		, il.IL_PAS_ITM_QTY
-		, il.IL_MIS_ITM_QTY
-		, il.IL_DMG_ITM_QTY
-		, il.IL_ETC_ITM_QTY
-		, il.IL_ACP
-		, il.IL_LBL_ITM_QTY
+			 , vnd.V_NAME
+			 , itm.ITM_NAME
+		     , itm.ITM_CODE
+		     , ilw.PO_CODE
+		     , poi.LOT_CODE
+		     , poi.POI_RCV_QTY
+		     , IF(IL_ACP = 0, NULL, il.IL_INSP_QTY) AS IL_INSP_QTY
+		     , IF(IL_ACP = 0, NULL, il.IL_PAS_ITM_QTY) AS IL_PAS_ITM_QTY
+		     , IF(IL_ACP = 0, NULL, il.IL_MIS_ITM_QTY) AS IL_MIS_ITM_QTY
+		     , IF(IL_ACP = 0, NULL, il.IL_DMG_ITM_QTY) AS IL_DMG_ITM_QTY
+		     , IF(IL_ACP = 0, NULL, il.IL_ETC_ITM_QTY) AS IL_ETC_ITM_QTY
+		     , il.IL_ACP
+		     , IF(IL_ACP = 0, NULL, il.IL_LBL_ITM_QTY) AS IL_LBL_ITM_QTY
 		FROM TB_LBL_WRK_TM lwt
-		JOIN TB_INSP_LBL_WRK ilw ON
-		lwt.LWT_NO = ilw.LWT_NO
+		JOIN TB_INSP_LBL_WRK ilw ON lwt.LWT_NO = ilw.LWT_NO
 		JOIN TB_PLC_ORD_ITM poi ON ilw.PO_CODE = poi.PO_CODE
 		JOIN TB_PLC_ORD po ON poi.PO_CODE = po.PO_CODE
 		JOIN TB_ITM itm ON itm.ITM_CODE = poi.ITM_CODE
@@ -248,22 +247,22 @@
 		resultMap="InspectionLabelingStatusMap">
 		SELECT SUM(ILW_RCV_ITM) AS SUM_RCV_ITM
 			, SUM(ILW_RCV_QTY) AS SUM_RCV_QTY 
-		FROM TB_INSP_LBL_WRK;
+		FROM TB_INSP_LBL_WRK WHERE LWT_NO IS NOT NULL;
 	</select>
 
 	<!-- 현황 가져오기(검품검수 품목/개수, 라벨링 품목/개수, 양품 품목/개수, 누락 품목/개수, 파손 품목/개수 ) -->
 	<select id="searchStatus"
 		resultMap="InspectionLabelingStatusMap">
-		SELECT COUNT(CASE WHEN IL_INSP_QTY THEN 1 END) AS CNT_INSP_QTY
-			, SUM(IL_INSP_QTY) AS SUM_INSP_QTY
-			, COUNT(CASE WHEN IL_LBL_ITM_QTY THEN 1 END) AS CNT_LBL_QTY
-			, SUM(IL_LBL_ITM_QTY) AS SUM_LBL_QTY
-			, COUNT(CASE WHEN IL_PAS_ITM_QTY THEN 1 END) AS CNT_PAS_QTY
-			, SUM(IL_PAS_ITM_QTY) AS SUM_PAS_QTY
-			, COUNT(CASE WHEN IL_MIS_ITM_QTY THEN 1 END) AS CNT_MIS_QTY
-			, SUM(IL_MIS_ITM_QTY) AS SUM_MIS_QTY
-			, COUNT(CASE WHEN IL_DMG_ITM_QTY THEN 1 END) AS CNT_DMG_QTY
-			, SUM(IL_DMG_ITM_QTY) AS SUM_DMG_QTY
+		SELECT COUNT(IL_INSP_QTY) AS CNT_INSP_QTY
+			 , SUM(IL_INSP_QTY) AS SUM_INSP_QTY
+		     , COUNT(IL_LBL_ITM_QTY) AS CNT_LBL_QTY
+		     , SUM(IL_LBL_ITM_QTY) AS SUM_LBL_QTY
+		     , COUNT(IL_PAS_ITM_QTY) AS CNT_PAS_QTY
+		     , SUM(IL_PAS_ITM_QTY) AS SUM_PAS_QTY
+		     , COUNT(IL_MIS_ITM_QTY) AS CNT_MIS_QTY
+		     , SUM(IL_MIS_ITM_QTY) AS SUM_MIS_QTY
+		     , COUNT(IL_DMG_ITM_QTY) AS CNT_DMG_QTY
+		     , SUM(IL_DMG_ITM_QTY) AS SUM_DMG_QTY
 		FROM TB_INSP_LBL
 	</select>
 	
