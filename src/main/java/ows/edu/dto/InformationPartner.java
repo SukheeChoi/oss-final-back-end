@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class InformationPartner {
 
-  private int orderItemNo;
+  private Integer orderItemNo;
   private Date orderCheckDate;
   private Date releaseCheckDate;
-  private int releaseQuantity;
+  private Integer releaseQuantity;
 
 }

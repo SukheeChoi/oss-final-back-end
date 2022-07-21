@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
+import ows.edu.dto.AfterPickingView;
 import ows.edu.dto.Pager;
 import ows.edu.service.ReleaseInspectionService;
 
@@ -61,7 +62,6 @@ public class AfterPickingController {
 	}
 
 	@PostMapping("/")
-//	public Map<String, Object> getList(
 	public Map<String, Object> getList(
 			@RequestParam(value="shippingCategory", defaultValue="") String shippingCategory
 			, @RequestParam(value="shippingWay", defaultValue="") String shippingWay
@@ -106,6 +106,7 @@ public class AfterPickingController {
 		Map<String, Object> map = new HashMap<>();
 //		List<AfterPicking> list = releaseInspectionService
 		List<HashMap<String, String>> list = releaseInspectionService
+//		List<AfterPickingView> list = releaseInspectionService
 				.getAfterPickingList(
 					shippingCategory
 					, shippingWay
@@ -119,7 +120,7 @@ public class AfterPickingController {
 //					, pageNo
 					, pager
 				);
-		
+		log.info("pager : " + pager);
 		map.put("pager", pager);
 		map.put("list", list);
 		return map;

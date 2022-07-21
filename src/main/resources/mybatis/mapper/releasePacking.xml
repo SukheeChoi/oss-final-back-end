@@ -38,12 +38,12 @@
 		<result property="boxNum" column="BX_NUM"/>
 	</resultMap>
 
-	<select id="select" resultMap="releasePackingMap">
+	<!-- <select id="select" resultMap="releasePackingMap"> -->
 <!-- 		SELECT CLT_NAME, ORD_ORD_WAY, RLS_CODE, ORD_SHP_DEST, ORD_NO, V_NAME, ITM_NAME, ITM_CODE,
 				PIC_QTY, EMP_NAME, RI_RLS_PRT_DT, PAC_BX_QTY, RLS_DN, RI_RCPT_PRT_DT, RI_NT
 		FROM rls_insp_view
 		ORDER BY RLS_CODE DESC, V_NAME; -->
-		SELECT 
+		<!-- SELECT 
 		  @rownum:=@rownum+1, A.* 
 		FROM 
 		  (		
@@ -54,7 +54,7 @@
 		  (SELECT @ROWNUM := 0) R
 		 ORDER BY CLT_NAME DESC
 	</select>
-	
+	 -->
 <!-- 	<select id="selectByFilterPage" parameterType="pager" resultMap="releasePackingMap">
 		SELECT 
 		  if(a.rls_code like a.rls_prev, @rownum:=@rownum+0, @rownum:=@rownum+1) as 'no' , A.* 
@@ -133,10 +133,6 @@
 		LIMIT #{pager.rowsPerPage} OFFSET #{pager.startRowIndex} -->
 	</select>
 	
-	<select id="count" resultType="int">
-		select count(*) from rls_insp_view
-	</select>
-	
 	<select id="countReleaseCode" parameterType="int" resultType="int">
 
 	</select>
@@ -155,7 +151,7 @@
 		INNER JOIN TB_BX AS B ON `OI`.`OI_NO` = B.OI_NO
 		WHERE O.ORD_NO = #{orderNo} and B.BX_NUM = #{index}
 	</select>
-	
+<!-- 	
 	<select id="selectByReleaseCode" parameterType="String" resultMap="releasePackingMap">
 		select *
 		from (
@@ -171,7 +167,7 @@
 		) as C
 		where C.rls_code = #{releaseCode};		
 	</select> 
-	
+ -->	
 	<!-- 출고번호 scan버튼 눌렀을때 정보 띄우기 -->
 	<select id="scan" resultMap="releasePackingMap">
 <!-- 		select sum(TB_RLS_INSP.RI_QTY) as "RI_QTY", TB_RLS_INSP.RI_DT, TB_RLS_INSP.RI_RLS_PRT_DT, TB_RLS_INSP.RI_RCPT_PRT_DT,

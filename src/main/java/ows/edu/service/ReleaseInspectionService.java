@@ -42,6 +42,7 @@ public interface ReleaseInspectionService {
 
 //	List<AfterPicking> getAfterPickingList(
 	List<HashMap<String, String>> getAfterPickingList(
+//	List<AfterPickingView> getAfterPickingList(
 			String shippingCategory
 			, String shippingWay
 			, String released
