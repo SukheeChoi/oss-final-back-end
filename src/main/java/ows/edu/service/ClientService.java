@@ -1,18 +1,17 @@
 package ows.edu.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.ClientDao;
 import ows.edu.dto.Client;
-import ows.edu.dto.Pager;
 
 @Log4j2
 @Service
@@ -21,15 +20,14 @@ public class ClientService {
 	ClientDao clientDao;
 	
 	
-	//주문 단계 중 한가지를 선택했을 때, 배송구분과 주문단계, 미출고로 필터링
-	public List<Client> getList(Map<String, Object> map){
-		return clientDao.getList(map);
+	//출고 리스트(긴급, 상태, 미출고로 필터링)
+	public List<Client> getReleaseList(Map<String, Object> map){
+		return clientDao.getReleaseList(map);
 	}
 	
-	//주문 단계를 전체 선택했을 때, 배송구분과 미출고로 필터링
-	public List<Client> getListByShippingCategory(Map<String, Object> map){
-		log.info("ClientService - map " + map.keySet());
-		return clientDao.getListByShippingCategory(map);
+	//미출고 리스트(긴급, 상태로 필터링)
+	public List<Client> getUnreleaseList(Map<String, Object> map){
+		return clientDao.getUnreleaseList(map);
 	}
 
 	//미출고 건수 조회
@@ -45,5 +43,4 @@ public class ClientService {
 		}
 		return list;
 	}
-	
 }

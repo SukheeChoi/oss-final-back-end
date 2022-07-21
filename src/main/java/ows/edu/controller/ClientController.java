@@ -38,22 +38,14 @@ public class ClientController {
 	
 	//배송구분, 주문 단계, 미출고로 필터링
 	@PostMapping("/getFilterList")
-	public Map<String, Object> getFilterList(@RequestBody ClientFilter filterList) {
+	public Map<String, Object> getFilterList(@RequestBody ClientFilter filterList,
+											@RequestParam(value="pageNo", defaultValue="1") int pageNo) {
 		log.info(filterList);
 		String[] shippingCategory = filterList.getShippingCategory();
 		int status = filterList.getStatus();
 		boolean orderUnrelease = filterList.isUnrelease();
 		Long orderNo = filterList.getOrderNo();
 		String clientName = filterList.getClientName();
-		
-		log.info("shippingCategory : " + Arrays.toString(shippingCategory));
-		log.info("status : " + status);
-		log.info("orderUnrelease : " + orderUnrelease);
-		log.info("orderNo : " + orderNo);
-		log.info("clientName : " + clientName);
-		List<Client> list1 = null;
-		List<Client> list2 = null;
-//		List<HashMap<String, String>> list;
 	
 		Map<String, Object> map1 = new HashMap<>();
 		map1.put("shippingCategory", shippingCategory);
@@ -61,20 +53,11 @@ public class ClientController {
 		map1.put("orderUnrelease", orderUnrelease);
 		map1.put("orderNo", orderNo);
 		map1.put("clientName", clientName);
+		map1.put("pageNo", pageNo);
 		log.info("clientcontroller - map1: " + map1);
 
-		list1 = clientService.getList(map1);
-		list2 = clientService.getListByShippingCategory(map1);
-//		if(status == -1) {
-//			list = clientService.getListByShippingCategory(map1);
-////			list = clientService.getList(shippingCategory, status, orderUnrelease, orderNo, clientName, pageNo, pageSize);
-//			log.info("list1 : " + list);
-//		} else {
-//			map1.put("status", status);
-//			list = clientService.getList(map1);
-////			list = clientService.getListByShippingCategory(shippingCategory, orderUnrelease, orderNo, clientName, pageNo, pageSize);
-//			log.info("list2 : " + list);
-//		}
+		List<Client> list1 = clientService.getReleaseList(map1);
+		List<Client> list2 = clientService.getUnreleaseList(map1);
 		
 		Map<String, Object> map2 = new HashMap<>();
 		map2.put("list1", list1);
@@ -98,7 +81,6 @@ public class ClientController {
 	@GetMapping("/unreleaseCnt")
 	public int unreleaseCnt() {
 		int unreleaseCnt = clientService.unreleaseCnt();
-		log.info("unreleaseCnt : " + unreleaseCnt);
 		return unreleaseCnt;
 	}
 	

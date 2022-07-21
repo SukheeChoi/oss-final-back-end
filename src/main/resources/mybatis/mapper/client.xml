@@ -30,45 +30,8 @@
 		</association>
 	</resultMap>
 
-	<!-- 배송구분, 회사, 미출고로 필터링 -->
-	<!-- <select id="getList" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY, SUM(OI.OI_URLS_QTY) AS UNRELEASE
-		FROM TB_ORD O
-		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
-		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
- 		<choose>
-			<when test='orderUnrelease == true'>
-				WHERE O.ORD_SHP_CAT IN (
-					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
-						#{shippingCategory}
-					</foreach>
-					)
-					AND O.ORD_STS = #{status}
-					AND OI.OI_URLS_QTY IS NOT NULL
-    				AND OI.OI_URLS_QTY != 0
-			</when>
-			<when test='orderUnrelease == false'>
-				WHERE O.ORD_SHP_CAT IN (
-					<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
-						#{shippingCategory}
-					</foreach>
-					)
-					AND O.ORD_STS = #{status}
-			</when>
-		</choose>
- 		<if test='orderNo != null'>
-			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
-		</if>
-	   	<if test='!clientName.equals("")'>
-	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
-	 	</if>
-		GROUP BY OI.OI_NO
-		ORDER BY UNRELEASE DESC, O.ORD_STS
-		Pager
-		LIMIT #{pageSize}
-		OFFSET #{startRowIndex};
-	</select> -->
-	<select id="getList" resultMap="clientMap" parameterType="hashmap">
+	<!-- 출고인 데이터 가져오기, 필터링 -->
+	<select id="getReleaseList" resultMap="clientMap" parameterType="hashmap">
 		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
@@ -101,49 +64,14 @@
 	 	</if>
 		GROUP BY OI.OI_NO
 		ORDER BY O.ORD_STS
-<!-- 		Pager
-		LIMIT #{pageSize}
-		OFFSET #{startRowIndex}; -->
+		<!-- Pager -->
+		<!-- LIMIT #{pager.rowsPerPage}
+		OFFSET #{pager.startRowIndex}; -->
 	</select>
 	
 	
-	<!-- 배송구분, 미출로 필터링 -->
-	<!-- <select id="getListByShippingCategory" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY, SUM(OI.OI_URLS_QTY) AS UNRELEASE
-		FROM TB_ORD O
-		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
-		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
-		<choose>
-			<when test='orderUnrelease == true'>
-				WHERE O.ORD_SHP_CAT IN (
-					<foreach collection="shippingCategory" item="shippingCategory" separator=",">
-						#{shippingCategory}
-					</foreach>
-					)
-					AND OI.OI_URLS_QTY IS NOT NULL
-    				AND OI.OI_URLS_QTY != 0
-			</when>
-			<when test='orderUnrelease == false'>
-				WHERE O.ORD_SHP_CAT IN (
-				<foreach collection="shippingCategory" item="shippingCategory" separator=",">
-					#{shippingCategory}
-				</foreach>
-				)
-			</when>
-		</choose>
- 		<if test='orderNo != null'>
-			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
-		</if>
-	   	<if test='!clientName.equals("")'>
-	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
-	 	</if>
-	 		AND O.ORD_STS != 0
-		GROUP BY OI.OI_NO
-		ORDER BY UNRELEASE DESC, O.ORD_STS
-		LIMIT #{pageSize}
-		OFFSET #{startRowIndex};
-	</select> -->
-	<select id="getListByShippingCategory" resultMap="clientMap" parameterType="hashmap">
+	<!-- 미출고인 데이터 가져오기, 필터링 -->
+	<select id="getUnreleaseList" resultMap="clientMap" parameterType="hashmap">
 		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
@@ -173,8 +101,8 @@
 	 		AND O.ORD_STS != 0
 		GROUP BY OI.OI_NO
 		ORDER BY O.ORD_STS
-<!-- 		LIMIT #{pageSize}
-		OFFSET #{startRowIndex}; -->
+		<!-- LIMIT #{pager.rowsPerPage}
+		OFFSET #{pager.startRowIndex}; -->
 	</select>
 	
 	<!-- 주문 단계마다 카운트 --> 
