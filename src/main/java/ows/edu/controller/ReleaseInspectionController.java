@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -107,27 +108,14 @@ public class ReleaseInspectionController {
 	}
 	
 	//검수수량, 미출고 수량 업데이트
-	@GetMapping("/RIQtyUpdate")
+	@PutMapping("/RIQtyUpdate")
 	public int releaseInspectionQtyUpdate(@RequestParam String releaseCode, @RequestParam String barCode) {
-		log.info("====================");
-		log.info(releaseCode);
-		log.info("releaseCode >> " + releaseCode);
-		log.info("barCode >> " + barCode);
-		int success = releaseInspectionService.releaseInspectionQtyUpdate(releaseCode, barCode);
-		log.info(success);
-		
-		return success;
+		return releaseInspectionService.releaseInspectionQtyUpdate(releaseCode, barCode);
 	}
 	
-	@GetMapping("/unRleaseQtyUpdate")
+	@PutMapping("/unRleaseQtyUpdate")
 	public int unRleaseQtyUpdate(@RequestParam String releaseCode, @RequestParam String barCode) {		
-		log.info("unRleaseQtyUpdate");
-		log.info("releaseCode >> " + releaseCode);
-		log.info("barCode >> " + barCode);
-		int success = releaseInspectionService.unRleaseQtyUpdate(releaseCode, barCode);
-		log.info(success);
-		
-		return success;
+		return releaseInspectionService.unRleaseQtyUpdate(releaseCode, barCode);
 	}
 	
 	//스캔
@@ -152,7 +140,6 @@ public class ReleaseInspectionController {
 	//박스별품목정보
 	@GetMapping("/getBoxInfobyOrdNo")
 	public List<ReleasePacking> selectByOrderNo(@RequestParam String orderNo, @RequestParam int index){
-		log.info("===========================================/getBoxInfobyOrdNo");
 		log.info("orderNo >> " + orderNo);
 		log.info("index >> " + index);
 		
@@ -209,7 +196,9 @@ public class ReleaseInspectionController {
 	// 패킹 최종 완료
 	@GetMapping("/packingDone")
 	public int packing(@RequestParam long orderNo) {
-		return orderService.updateOrdSts(orderNo);
+		int updateRlsDate = releaseInspectionService.updateReleaseInspectionDate(orderNo);
+		int updateOrdSts = orderService.updateOrdSts(orderNo);
+		return updateRlsDate + updateOrdSts;
 	}
 	
 	

@@ -44,5 +44,8 @@ public interface ReleaseInspectionDao {
 	
 	//출고검수수량 업데이트
 	public int update(Map<String, Integer> map);
+	
+	//출고검수일 업데이트
+	public int updateReleaseInspectionDate(Long orderNo);
 }
 

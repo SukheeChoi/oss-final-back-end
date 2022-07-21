@@ -82,4 +82,7 @@ public interface ReleaseInspectionService {
 	
 	//스캔했을 때, 박스별품목정보 띄어주는 용도
 	public List<ReleasePacking> selectByReleaseCode(String releaseCode);
+	
+	//출고검수일 업데이트
+	public int updateReleaseInspectionDate(Long orderNo);
 }

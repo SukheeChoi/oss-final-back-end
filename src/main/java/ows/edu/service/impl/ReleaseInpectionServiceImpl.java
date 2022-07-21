@@ -355,5 +355,12 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		// TODO Auto-generated method stub
 		return releasePackingDao.selectByReleaseCode(releaseCode);
 	}
+
+	//출고검수일 업데이트
+	@Override
+	public int updateReleaseInspectionDate(Long orderNo) {
+		// TODO Auto-generated method stub
+		return releaseInspectionDao.updateReleaseInspectionDate(orderNo);
+	}
 	
 }
