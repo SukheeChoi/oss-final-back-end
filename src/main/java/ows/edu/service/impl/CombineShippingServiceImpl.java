@@ -13,6 +13,8 @@ import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.CombineShippingDao;
 import ows.edu.dao.OrderItemDao;
 import ows.edu.dto.CombineShipping;
+import ows.edu.dto.CombineShippingPartner;
+import ows.edu.dto.Employee;
 import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
@@ -41,8 +43,7 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	// 담당자 필터링을 위한 조회.
 	@Override
-	public List<String> getAssigneeListByDate(int toDo, String[] dateList) {
-//		public List<Employee> getAssigneeListByDate(String[] dateList) {
+	public List<Employee> getAssigneeListByDate(int toDo, String[] dateList) {
 		log.info("실행");
 		String startDate = null;
 		String endDate = null;
@@ -51,18 +52,20 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 			startDate = dateList[0];
 			endDate = dateList[1];
 		}
-		List<String> list = combineShippingDao.selectAssigneeList(toDo, startDate, endDate);
-//		List<Employee> list = combineShippingDao.selectAssigneeListByDate(startDate, endDate);
+		List<Employee> list = combineShippingDao.selectAssigneeList(toDo, startDate, endDate);
 		log.info("service getAssigneeListByDate - list : " + list);
 		return list;
 	}
 	
 	// '수령' 탭 선택된 경우.
 	@Override
-	public Map<String, Object> getReceiptList(int toDo
-									, String vendorName
-									, String[] dateList
-									, int pageNo
+	public Map<String, Object> getReceiptList(
+			int toDo
+			, String vendorId
+			, String[] dateList
+//			, Pager pager
+			, int pageNo
+			, int rowsPerPage
 		) {
 		log.info("실행");
 		
@@ -75,15 +78,16 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		// pagination을 위한 Pager객체 생성.
 		int totalRows = combineShippingDao
 				.selectCountAllReceipt(
-					toDo, vendorName, startDate, endDate
+					toDo, vendorId, startDate, endDate
 				);
 		log.info("## getReceiptList - totalRows" + totalRows);
-		Pager pager = new Pager(20, 10, totalRows, pageNo);
+//		pager.setTotalRows(totalRows);
+		Pager pager = new Pager(rowsPerPage, 10, totalRows, pageNo);
 		
 		List<String> orderItemNoList = combineShippingDao
 									.selectReceiptList(
 											toDo
-											, vendorName
+											, vendorId
 											, startDate
 											, endDate
 											, pager
@@ -109,8 +113,10 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	// '전달' 탭 선택된 경우.
 	@Override
-	public Map<String, Object> getDeliveryList(int toDo, String employeeName
-										, String[] dateList, int pageNo) {
+	public Map<String, Object> getDeliveryList(int toDo, String employeeId
+										, String[] dateList, int pageNo
+										, int rowsPerPage							
+			) {
 		log.info("실행");
 		String startDate = null;
 		String endDate = null;
@@ -121,13 +127,13 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		// pagination을 위한 Pager객체 생성.
 		int totalRows = combineShippingDao
 							.selectCountAllDelivery(
-								toDo, employeeName, startDate, endDate
+								toDo, employeeId, startDate, endDate
 							);
-		Pager pager = new Pager(20, 10, totalRows, pageNo);
+		Pager pager = new Pager(rowsPerPage, 10, totalRows, pageNo);
 		
 		List<CombineShipping> orderItemNoList = new ArrayList<>();
 		orderItemNoList = combineShippingDao
-				.selectDeliveryList(toDo, employeeName
+				.selectDeliveryList(toDo, employeeId
 				, startDate, endDate
 				, pager);
 		
@@ -145,6 +151,7 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 //		}
 			map.put("pager", pager);
 			map.put("deliveryList", orderItemNoList);
+			log.info("deliveryList : " + orderItemNoList);
 		
 		return map;
 	}
@@ -153,18 +160,19 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	// TB_CMB_SHP CS_RCV_QTY && CS_RCV_CHK && CS_RCV_URLS_QTY 업데이트.
 	// TB_ORD_ITM OI_URLS_QTY 업데이트.
 	@Override
-	public String updateReceipt(CombineShipping[] combineShippingList) {
+	public String updateReceipt(CombineShippingPartner[] combineShippingPartnerList) {
+//	public String updateReceipt(CombineShipping[] combineShippingList) {
 		String result = "fail";
 		int totalAffectedRows = 0;
-		for(CombineShipping combineShipping : combineShippingList) {
-			int affectedRowNo = combineShippingDao.updateAReceipt(combineShipping);
+		for(CombineShippingPartner combineShippingPartner : combineShippingPartnerList) {
+			int affectedRowNo = combineShippingDao.updateAReceipt(combineShippingPartner);
 			if(affectedRowNo == 1) {
 				totalAffectedRows++;				
 			}
 			// 미출고 수량 업데이트.
-			orderItemDao.updateOiUnreleaseQuantity(combineShipping);
+			orderItemDao.updateOiUnreleaseQuantity(combineShippingPartner);
 		}
-		if(totalAffectedRows == combineShippingList.length) {
+		if(totalAffectedRows == combineShippingPartnerList.length) {
 			result = "success";
 			
 		}
