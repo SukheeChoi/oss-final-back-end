@@ -20,7 +20,7 @@ public class OrderViewService {
   @Autowired
   private OrderViewDao orderViewDao;
 
-//  상단 현황 조회
+  //상단 현황 조회
   public OrderStatus getStatus() {
     OrderStatus orderStatus = new OrderStatus();
     orderStatus.setTotal(orderViewDao.countAll());
@@ -28,72 +28,85 @@ public class OrderViewService {
     orderStatus.setVendorShippingPlus(orderViewDao.countVendorPlus());
     orderStatus.setVendorShippingDir(orderViewDao.countVendorDir());
     orderStatus.setUnreleased(orderViewDao.countunleased());
-    log.info(orderStatus);
     return orderStatus;
   }
   
-  public List<OrderView> getList() {
+  //조건에 맞는 리스트
+  public List<OrderView> getListByFilter(OrderFilter orderfilter, Pager pager) {
     List<OrderView> list = new ArrayList<>();
-    list.addAll(orderViewDao.select());
-    log.info(list);
-    return list;
-  }
-  
-  public List<OrderView> getList(Pager pager) {
-    List<OrderView> list = new ArrayList<>();
-    list.addAll(orderViewDao.selectByPage(pager));
-    log.info(list);
-    return list;
-  }
-  
-  public List<OrderView> getListByFilter(OrderFilter orderfilter) {
-    List<OrderView> list = new ArrayList<>();
-    //오스템 제품
     
-    if(Arrays.toString(orderfilter.getCompany()).contains("osstemItem")) {
+    orderfilter = setData(orderfilter);
+    
+    list.addAll(orderViewDao.selectByFilter(orderfilter, pager));
+    
+    //주문 상태에 맞게 미출고 처리
+    for(OrderView ov : list) {
+      //피킹 지시 단계
+      if(ov.getOrderStatus() == 2) {
+        ov.setPickingDirectionUnrelease(ov.getUnrelease());
+        
+        //피킹 단계
+      } else if(ov.getOrderStatus() == 3) {
+        ov.setPickingUnrelease(ov.getUnrelease());
+      }
+    }
+    
+    return list;
+  }
+  
+  //그리드 페이지용 전체 갯수
+  public int getTotalNum(OrderFilter orderfilter) {
+    
+    orderfilter = setData(orderfilter);
+    log.info("## orderfilter : ", orderfilter);
+    
+    return orderViewDao.count(orderfilter);
+  }
+  
+  //데이터 정제
+  private OrderFilter setData(OrderFilter orderfilter) {
+    
+    //회사 제품 조건 검색
+    String[] company = orderfilter.getCompany();
+    //오스템 제품
+    if(Arrays.asList(company).contains("osstemItem")) {
       orderfilter.setItemOSS(1);
     }
     //오스템 상품
-    if(Arrays.toString(orderfilter.getCompany()).contains("osstemProduct")) {
+    if(Arrays.asList(company).contains("osstemProduct")) {
       orderfilter.setItemOSSPRO(1);
     }
     //협력사 직배송
-    if(Arrays.toString(orderfilter.getCompany()).contains("vendorproductDir")) {
+    if(Arrays.asList(company).contains("vendorproductDir")) {
       orderfilter.setItemVND(1);
     }
     //협력사 합배송
-    if(Arrays.toString(orderfilter.getCompany()).contains("vendorproductPlus")) {
+    if(Arrays.asList(company).contains("vendorproductPlus")) {
       orderfilter.setItemVNDPLUS(1);
     }
     
     //긴급 일반 조건 검색
-    if(orderfilter.getShippingway().length != 2) {
-      if(Arrays.toString(orderfilter.getShippingway()).contains("emergency")) {
+    String[] shippgingWay = orderfilter.getShippingway();
+    if(shippgingWay.length != 2) {
+      if(Arrays.asList(shippgingWay).contains("emergency")) {
         orderfilter.setShippingCategory(1);
       } 
-      if(Arrays.toString(orderfilter.getShippingway()).contains("normal")) {
+      if(Arrays.asList(shippgingWay).contains("normal")) {
         orderfilter.setShippingCategory(2);
       }
     }
-    log.info(orderfilter.getShippingway().length);
     
     //출고 미출고 조건 검색
-    if(orderfilter.getUnreleased().length != 2) {
-      if(Arrays.toString(orderfilter.getUnreleased()).contains("released")) {
+    String[] unReleased = orderfilter.getUnreleased();
+    if(unReleased.length != 2) {
+      if(Arrays.asList(unReleased).contains("released")) {
         orderfilter.setPickingdirectionUnreleased(1);
-      } 
-      if(Arrays.toString(orderfilter.getUnreleased()).contains("unreleased")) {
+      }
+      if(Arrays.asList(unReleased).contains("unreleased")) {
         orderfilter.setPickingdirectionUnreleased(2);
       }
     }
-    
-    log.info(orderfilter);
-    
-    list.addAll(orderViewDao.selectByFilter(orderfilter));
-    return list;
+    return orderfilter;
   }
   
-  public int getTotalNum() {
-    return orderViewDao.count();
-  }
 }

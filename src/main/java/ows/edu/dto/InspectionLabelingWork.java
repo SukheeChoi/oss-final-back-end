@@ -5,22 +5,25 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class InspectionLabelingWork {
-	private int placeOrderNo;          //발주번호는 숫자고 앞에 P붙이기?? 뭔가 String으로 바꿔야 할 거 같음
-	private String employeeId;
-	private Date receiveMonthDay;
-	private Date receiveHourMinute;
+public class InspectionLabelingWork {   //왼쪽 화면(3번)
+	private String placingOrderNo;
+	private String title;        //여기서는 담당자가 아니라 업체명이 들어감
+
+	private String receiveDate;
 	private int receiveItem;
-	private int receiveQuentity;
-	private Date scheduledStartTime;
-	private Date scheduledEndTime;
-	private Date startTime;
-	private Date workTime;
-	private int progressRate;
-	private int status;
-	private int lateTime;
-	private int inspectionQuentity;
-	private int passItemQuentity;
-	private int labelingItemQuentity;
+	private int receiveQuantity;
+	private String scheduledStartTime;
+	private String scheduledEndTime;
+	private String scheduledTime;        //정제된 예정 시간
+	private int totalWorkTime; 
+	private String startTime;
+	private String workTime;
+	private Integer progressRate;
+	private String status;
+	private Integer lateTime;
+	private Integer inspectionQuantity;
+	private Integer passItemQuantity;
+	private Integer labelingItemQuantity;
 	
+	private String employeeName;
 }

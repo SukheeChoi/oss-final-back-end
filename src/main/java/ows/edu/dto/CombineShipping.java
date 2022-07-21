@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 public class CombineShipping {
+  private int rownum;
+	
   private int orderItemNo;
   private Date orderCheckDate;
   private boolean receiveCheck;
@@ -16,6 +18,7 @@ public class CombineShipping {
   private int releaseScheduleDate;
   private Date receiveDate;
   private int releaseQuantity;
+  private int receiveQuantity;
   private int deliveryQuantity;
   private int vendorNo;
   private Date deliveryDate;

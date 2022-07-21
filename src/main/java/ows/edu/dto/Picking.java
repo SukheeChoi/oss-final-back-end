@@ -6,11 +6,10 @@ import lombok.Data;
 
 @Data
 public class Picking {
-	private int pickingNo;
-	private int pickingQty;
-	private int orderItemNo;
+	private Integer pickingNo;
+	private Integer orderItemNo;
 	private String employeeId;
-	private String locationCode;
+	private Integer pickingQuantity;
 	private Date date;
-	private Boolean done;
+	
 }

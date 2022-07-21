@@ -1,10 +1,12 @@
 package ows.edu.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-import ows.edu.dto.ReleaseInspection;
+import ows.edu.dto.AfterPicking;
 
 @Mapper
 public interface ReleaseInspectionDao {
@@ -18,7 +20,8 @@ public interface ReleaseInspectionDao {
 	public int countNormalShipping();
 	
 	// 출고검수/패킹 진행 페이지에 대한 전체 조회.
-	public List<ReleaseInspection> selectAfterPickingList(
+//	public List<AfterPicking> selectAfterPickingList(
+	public List<AfterPicking> selectAfterPickingList(
 		String shippingCategory
 		, String shippingWay
 		, String released
@@ -32,5 +35,14 @@ public interface ReleaseInspectionDao {
 		, String vendorName
 	);
 
-
+	//========================현주========================
+	//검수수량 업데이트
+	public int releaseInspectionQtyUpdate(@Param("releaseCode") String releaseCode, @Param("barCode") String barCode);
+	
+	//미출고수량 업데이트
+	public int unRleaseQtyUpdate(@Param("releaseCode") String releaseCode, @Param("barCode") String barCode);
+	
+	//출고검수수량 업데이트
+	public int update(Map<String, Integer> map);
 }
+

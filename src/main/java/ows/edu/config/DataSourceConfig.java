@@ -18,15 +18,13 @@ public class DataSourceConfig {
 	    log.info("실행");
 	    HikariConfig config = new HikariConfig();
 	    config.setDriverClassName("org.mariadb.jdbc.Driver");
-	    config.setJdbcUrl("jdbc:mariadb://localhost:3306/osstem");
-//	    config.setJdbcUrl("jdbc:mariadb://kosa1.iptime.org:50121/osstem");
+	    config.setJdbcUrl("jdbc:mariadb://localhost:3306/FOUREVER");
 	    config.setUsername("root");
 
 	    config.setPassword("shsh");
-//	    config.setPassword("1111");
-//	    config.setPassword("mariadb");
 	    config.setMaximumPoolSize(3);
 	    HikariDataSource hikariDataSource = new HikariDataSource(config);
 	    return hikariDataSource;
 	}
+
 }

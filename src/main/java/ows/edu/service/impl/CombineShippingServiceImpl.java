@@ -1,6 +1,9 @@
 package ows.edu.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -8,8 +11,11 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.CombineShippingDao;
+import ows.edu.dao.OrderItemDao;
 import ows.edu.dto.CombineShipping;
+import ows.edu.dto.CombineShippingPartner;
 import ows.edu.dto.Employee;
+import ows.edu.dto.Pager;
 import ows.edu.dto.Vendor;
 import ows.edu.service.CombineShippingService;
 
@@ -19,45 +25,98 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	@Resource
 	CombineShippingDao combineShippingDao;
+	@Resource
+	OrderItemDao orderItemDao;
 	
 	@Override
-	public List<Vendor> getVendorList(String[] strNowDateList) {
-		List<Vendor> list = combineShippingDao.getVendorList(strNowDateList);
+	public List<Vendor> getVendorList(int toDo, String[] dateList) {
+		log.info("실행");
+		String startDate = null;
+		String endDate = null;
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		List<Vendor> list = combineShippingDao.getVendorList(toDo, startDate, endDate);
 		return list;
 	}
 	
 	// 담당자 필터링을 위한 조회.
 	@Override
-	public List<Employee> getAssigneeListByDate() {
+	public List<Employee> getAssigneeListByDate(int toDo, String[] dateList) {
 		log.info("실행");
-		List<Employee> list = combineShippingDao.selectAssigneeListByDate();
+		String startDate = null;
+		String endDate = null;
+		log.info("dateList.length" + dateList.length);
+		if(dateList.length == 2) {
+			startDate = dateList[0];
+			endDate = dateList[1];
+		}
+		List<Employee> list = combineShippingDao.selectAssigneeList(toDo, startDate, endDate);
+		log.info("service getAssigneeListByDate - list : " + list);
 		return list;
 	}
 	
 	// '수령' 탭 선택된 경우.
 	@Override
-	public List<String> getReceiptOrderItemNoList(int toDo, String employeeId, String[] dateList) {
+	public Map<String, Object> getReceiptList(
+			int toDo
+			, String vendorId
+			, String[] dateList
+//			, Pager pager
+			, int pageNo
+			, int rowsPerPage
+		) {
 		log.info("실행");
+		
 		String startDate = null;
 		String endDate = null;
 		if(dateList.length == 2) {
 			startDate = dateList[0];
 			endDate = dateList[1];
 		}
-		List<String> list = combineShippingDao.selectReceiptOrderItemNoList(toDo, employeeId, startDate, endDate);
+		// pagination을 위한 Pager객체 생성.
+		int totalRows = combineShippingDao
+				.selectCountAllReceipt(
+					toDo, vendorId, startDate, endDate
+				);
+		log.info("## getReceiptList - totalRows" + totalRows);
+//		pager.setTotalRows(totalRows);
+		Pager pager = new Pager(rowsPerPage, 10, totalRows, pageNo);
 		
-		return list;
+		List<String> orderItemNoList = combineShippingDao
+									.selectReceiptList(
+											toDo
+											, vendorId
+											, startDate
+											, endDate
+											, pager
+									);
+		
+		Map<String, Object> map = new HashMap<>();
+//		if(orderItemNoList.isEmpty()) {
+//			map.put("receiptList", null);
+//		} else {
+//			List<CombineShipping> receiptList = new ArrayList<>();
+//			for(String orderItemNo : orderItemNoList) {
+//				log.info("orderItemNo : " + orderItemNo);
+//				receiptList.add(combineShippingDao.selectAReceipt(orderItemNo));
+//			}
+//			log.info("receiptList : " + receiptList);
+//			map.put("receiptList", receiptList);
+//		}
+			map.put("pager", pager);
+			map.put("receiptList", orderItemNoList);
+		
+		return map;
 	}
 	
-	@Override
-	public CombineShipping getAReceipt(String orderItemNo) {
-		log.info("실행");
-		CombineShipping combineShipping = combineShippingDao.selectAReceipt(orderItemNo);
-		return combineShipping;
-	}
 	// '전달' 탭 선택된 경우.
 	@Override
-	public List<String> getDeliveryOrderItemNoList(int toDo, String employeeId, String[] dateList) {
+	public Map<String, Object> getDeliveryList(int toDo, String employeeId
+										, String[] dateList, int pageNo
+										, int rowsPerPage							
+			) {
 		log.info("실행");
 		String startDate = null;
 		String endDate = null;
@@ -65,62 +124,81 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 			startDate = dateList[0];
 			endDate = dateList[1];
 		}
-		log.info("getDeliveryOrderItemNoList - employeeId.getClass().getName() : " + employeeId.getClass().getName());
-//		log.info("getDeliveryOrderItemNoList - startDate.getClass().getName(): " + startDate.getClass().getName());
-		List<String> list = combineShippingDao.selectDeliveryOrderItemNoList(toDo, employeeId, startDate, endDate);
-		return list;
-	}
-	
-	@Override
-	public CombineShipping getADelivery(String orderItemNo) {
-		log.info("실행");
-		CombineShipping combineShipping = combineShippingDao.selectADelivery(orderItemNo);
-		return combineShipping;
+		// pagination을 위한 Pager객체 생성.
+		int totalRows = combineShippingDao
+							.selectCountAllDelivery(
+								toDo, employeeId, startDate, endDate
+							);
+		Pager pager = new Pager(rowsPerPage, 10, totalRows, pageNo);
+		
+		List<CombineShipping> orderItemNoList = new ArrayList<>();
+		orderItemNoList = combineShippingDao
+				.selectDeliveryList(toDo, employeeId
+				, startDate, endDate
+				, pager);
+		
+		Map<String, Object> map = new HashMap<>();
+//		if(orderItemNoList.isEmpty()) {
+//			map.put("deliveryList", null);
+//		} else {
+//			List<CombineShipping> deliveryList = new ArrayList<>();
+//			for(String orderItemNo : orderItemNoList) {
+//				log.info("orderItemNo : " + orderItemNo);
+//				deliveryList.add(combineShippingDao.selectADelivery(orderItemNo));
+//				log.info("deliveryList : " + deliveryList);
+//			}
+//			map.put("deliveryList", deliveryList);
+//		}
+			map.put("pager", pager);
+			map.put("deliveryList", orderItemNoList);
+			log.info("deliveryList : " + orderItemNoList);
+		
+		return map;
 	}
 
-	// 수령여부 update: 미출고, 수령여부 컬럼.
+	// 수령여부 update: 수령 수량, 수령여부, 미출고 수량.
+	// TB_CMB_SHP CS_RCV_QTY && CS_RCV_CHK && CS_RCV_URLS_QTY 업데이트.
+	// TB_ORD_ITM OI_URLS_QTY 업데이트.
 	@Override
-	public String updateReceipt(CombineShipping[] combineShippingList) {
+	public String updateReceipt(CombineShippingPartner[] combineShippingPartnerList) {
+//	public String updateReceipt(CombineShipping[] combineShippingList) {
 		String result = "fail";
 		int totalAffectedRows = 0;
-		for(CombineShipping combineShipping : combineShippingList) {
-			int affectedRowNo = combineShippingDao.updateAReceipt(combineShipping);
+		for(CombineShippingPartner combineShippingPartner : combineShippingPartnerList) {
+			int affectedRowNo = combineShippingDao.updateAReceipt(combineShippingPartner);
 			if(affectedRowNo == 1) {
 				totalAffectedRows++;				
 			}
+			// 미출고 수량 업데이트.
+			orderItemDao.updateOiUnreleaseQuantity(combineShippingPartner);
 		}
-		if(totalAffectedRows == combineShippingList.length) {
+		if(totalAffectedRows == combineShippingPartnerList.length) {
 			result = "success";
+			
 		}
 		
 		return result;
 	}
 	
 	// 전달여부 update.
+	// TB_CMB_SHP CS_DLV_QTY && CS_DLV_CHK && ((CS_RCV_URLS_QTY &&)) CS_DLV_URLS_QTY 업데이트.
+	// TB_ORD_ITM OI_URLS_QTY 업데이트.
+	// TB_ORD ORD_STS 업데이트.(2->4)
 	@Override
-	public String updateDelivery(CombineShipping[] combineShippingList) {
+	public String updateDelivery(int[] orderItemNoList) {
 		log.info("실행");
 		String result = "fail";
 		int totalAffectedRows = 0;
-		for(CombineShipping combineShipping : combineShippingList) {
-			int affectedRowNo = combineShippingDao.updateADelivery(combineShipping);
+		for(int orderItemNo : orderItemNoList) {
+			int affectedRowNo = combineShippingDao.updateADelivery(orderItemNo);
 			if(affectedRowNo == 1) {
 				totalAffectedRows++;				
 			}
 		}
-		if(totalAffectedRows == combineShippingList.length) {
+		if(totalAffectedRows == orderItemNoList.length) {
 			result = "success";
 		}
 		return result;
 	}
-
-
-//	@Override
-//	public List<CombineShipping> getReceiptListByDate(String[] dateList) {
-//		String startDate = dateList[0];
-//		String endDate = dateList[1];
-//		List<CombineShipping> list = combineShippingDao.getReceiptListByDate(startDate, endDate);
-//		return list;
-//	}
 
 }
