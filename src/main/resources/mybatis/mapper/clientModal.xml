@@ -16,7 +16,7 @@
 	</resultMap>
 
 	<!-- 진행 주문 정보 -->
-	<resultMap id="recentOrderMap" type="recentOrder">
+	<resultMap id="recentOrderMap" type="selectedOrder">
 		<result property="orderNo" column="ORD_NO" />
 		<result property="orderShippingWay" column="ORD_SHP_CAT" />
 		<result property="orderDate" column="ORD_DT" />
@@ -31,7 +31,7 @@
 	</resultMap>
 
 	<!-- 과거 주문 이력 -->
-	<resultMap id="pastOrderMap" type="pastOrder">
+	<resultMap id="pastOrderMap" type="clientOrder">
 		<result property="clientName" column="CLT_NAME" />
 		<result property="orderDate" column="ORD_DT" />
 		<result property="itemName" column="ITM_CODE" />
@@ -43,7 +43,7 @@
 	</resultMap>
 
 	<!-- 과거 주문 상세 내역 -->
-	<resultMap id="pastOrderDetailMap" type="pastOrderDetail">
+	<resultMap id="pastOrderDetailMap" type="clientOrderDetail">
 		<result property="itemName" column="ITM_NAME" />
 		<result property="itemCode" column="ITM_CODE" />
 		<result property="itemQuantity" column="OI_QTY" />
@@ -67,9 +67,8 @@
 		GROUP BY clt.CLT_NO
 	</select>
 	
-	
 	<!-- 진행 주문 정보 -->
-	<select id="searchRecentOrder" parameterType="string" resultMap="recentOrderMap">
+	<select id="searchSelectedOrder" parameterType="string" resultMap="recentOrderMap">
 		SELECT ord.ORD_NO
 			, ord.ORD_SHP_CAT
 		    , DATE_FORMAT(ord.ORD_DT, '%m-%d %H:%i') AS ORD_DT
@@ -78,7 +77,7 @@
 		    , vnd.V_NAME
 		    , orditm.OI_QTY
 		    , IF(pic.OI_NO IS NOT NULL, pic.PIC_QTY, csp.CSP_DLV_QTY) AS PIC_QTY
-		    , IF(ri.OI_NO IS NOT NULL, '완료', '미완료') AS RI_COM
+		    , IF(ri.OI_NO IS NOT NULL AND orditm.OI_URLS_QTY = 0, '완료', '미완료') AS RI_COM
 		    , rls.RLS_IVC_CODE
 		    , ord.ORD_SHP_ADDR
 		FROM TB_ORD ord
@@ -92,9 +91,8 @@
 		WHERE ord.ORD_NO = #{orderNo}
 	</select>
 	
-	<!-- DATE_FORMAT(ilw.ILW_RCV_DT, '%m-%d %H:%i') AS ILW_RCV_DT -->
 	<!-- 과거 주문 이력 -->
-	<select id="searchAllPastOrder" resultMap="pastOrderMap">
+	<select id="searchAllClientOrder" resultMap="pastOrderMap">
 		select clt.CLT_NAME
 			, DATE_FORMAT(ord.ORD_DT, '%Y-%m-%d') AS ORD_DT
 			, orditm.ITM_CODE
@@ -113,7 +111,7 @@
 	</select>
 
 	<!-- 과거 주문 상세 내역 -->
-	<select id="searchAllPasOrderDetail" parameterType="string" resultMap="pastOrderDetailMap">
+	<select id="searchAllClientOrderDetail" parameterType="string" resultMap="pastOrderDetailMap">
 		select itm.ITM_NAME
 		, orditm.ITM_CODE
 		, orditm.OI_QTY

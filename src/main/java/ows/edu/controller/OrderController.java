@@ -28,29 +28,24 @@ public class OrderController {
   private OrderViewService orderViewService;
   
   //주문확인 현황
-  @GetMapping("/orderStatus")
+  @GetMapping("/status")
   public OrderStatus getStatus() {
     OrderStatus orderStatus = orderViewService.getStatus();
     
     Map<String, Object> map = new HashMap<>();
-    map.put("list", orderStatus);
+    map.put("status", orderStatus);
     return orderStatus;
   }
   
   //조건에 맞게 주문확인 리스트 보내주는 컨트롤러
-  @GetMapping("/orderFilter")
+  @GetMapping("/orderList")
   public Map<String, Object> getfilterList(OrderFilter orderFilter
                          , @RequestParam(defaultValue = "1") int pageNo
                          , @RequestParam(defaultValue = "5") int pageSize) {
     
-    int totalRows = orderViewService.getTotalNum(orderFilter);
-    Pager pager = new Pager(pageSize, 5, totalRows, pageNo);
+    Map<String, Object> map = orderViewService.getListByFilter(orderFilter, pageNo, pageSize);
     
-    List<OrderView> list = orderViewService.getListByFilter(orderFilter, pager);
-    
-    Map<String, Object> map = new HashMap<>();
-    map.put("data", list);
-    map.put("totalCount", totalRows);
+
     return map;
   }
 }

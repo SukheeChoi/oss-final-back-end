@@ -8,16 +8,17 @@ import lombok.Data;
 public class CombineShippingPartner {
   private int rownum;
 	
-  private int orderItemNo;
+  private Integer orderItemNo;
   private String employeeId;
   private Date receiveDate;
   private Date deliveryDate;
-  private int receiveQuantity;
-  private int deliveryQuantity;
-  private int receiveUnreleaseQuantity;
-  private int deliveryUnreleaseQuantity;
+  private Integer receiveQuantity;
+  private Integer deliveryQuantity;
+  private Integer receiveUnreleaseQuantity;
+  private Integer deliveryUnreleaseQuantity;
   
   private OrderItem orderItem;
   private Item item;
   private Release release;
+  private InformationPartner informationPartner;
 }

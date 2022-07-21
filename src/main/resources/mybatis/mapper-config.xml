@@ -44,9 +44,9 @@
 		<typeAlias type="ows.edu.dto.Board" alias="board"/>
 		<typeAlias type="ows.edu.dto.Box" alias="box"/>		
 		<typeAlias type="ows.edu.dto.ClientDetail" alias="clientDetail"/>
-		<typeAlias type="ows.edu.dto.RecentOrder" alias="recentOrder"/>
-		<typeAlias type="ows.edu.dto.PastOrder" alias="pastOrder"/>
-		<typeAlias type="ows.edu.dto.PastOrderDetail" alias="pastOrderDetail"/>
+		<typeAlias type="ows.edu.dto.SelectedOrder" alias="selectedOrder"/>
+		<typeAlias type="ows.edu.dto.ClientOrder" alias="clientOrder"/>
+		<typeAlias type="ows.edu.dto.ClientOrderDetail" alias="clientOrderDetail"/>
 
 	</typeAliases>	
 </configuration>

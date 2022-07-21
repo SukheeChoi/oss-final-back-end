@@ -12,7 +12,7 @@
 		WHERE O.ORD_PRC_ORD IS NULL
 	</select> -->
 	<select id="sumUnreleased" resultType="int">
-		SELECT COUNT(*)
+<!-- 		SELECT COUNT(*)
 		FROM (
 			SELECT O.ORD_STS ORD_STS
 				, SUM(OI.OI_URLS_QTY) AS SUM_OI_URLS_QTY
@@ -22,7 +22,7 @@
 			GROUP BY O.ORD_NO
 		) SQ
 		WHERE SQ.ORD_STS = 4
-			AND SQ.SUM_OI_URLS_QTY > 0
+			AND SQ.SUM_OI_URLS_QTY > 0 -->
 	</select>
 </mapper>
 
