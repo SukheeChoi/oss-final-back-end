@@ -13,12 +13,11 @@ import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.AfterPickingViewDao;
 import ows.edu.dao.BarcodeDao;
 import ows.edu.dao.OrderDao;
-import ows.edu.dao.PackingDao;
+//import ows.edu.dao.PackingDao;
 import ows.edu.dao.PickingDirectionDao;
 import ows.edu.dao.ReleaseInspectionDao;
 import ows.edu.dao.ReleasePackingDao;
 import ows.edu.dto.Box;
-//kosa3.iptime.org:13000/4ever/final-back-end.git
 import ows.edu.dto.Pager;
 import ows.edu.dto.ReleasePacking;
 import ows.edu.service.ReleaseInspectionService;
@@ -33,8 +32,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	OrderDao orderDao;
 	@Resource
 	PickingDirectionDao pickingDirectionDao;
-	@Resource
-	PackingDao packingDao;
+//	@Resource
+//	PackingDao packingDao;
 	@Resource
 	ReleasePackingDao releasePackingDao;
 	@Resource
