@@ -28,7 +28,7 @@ import ows.edu.service.InspectionLabelingService;
 @RestController
 @Log4j2
 @RequestMapping("/label")
-public class LabelingController {
+public class inspectionLabelingController {
   
   @Autowired
   private InspectionLabelingService inspectionLabelingService;
