@@ -190,8 +190,8 @@
 			<!-- #이미 검수 였던거 다시 검수 눌렀을 때, RI_QTY 증가 x -->	
 		SET tb_rls_insp.ri_qty = IF(TB_BRCD.BRCD_DN = 1, tb_rls_insp.ri_qty, tb_rls_insp.ri_qty + 1),
 			<!-- #미출고였던거 검수로 바꾸었을 때, 미출고수량 하나 다운 -->
-			TB_ORD_ITM.OI_URLS_QTY = IF(TB_BRCD.BRCD_DN = 0, TB_ORD_ITM.OI_URLS_QTY - 1 , TB_ORD_ITM.OI_URLS_QTY),
-		    TB_BRCD.BRCD_DN = 1
+			TB_ORD_ITM.OI_URLS_QTY = IF(TB_BRCD.BRCD_DN = 0, TB_ORD_ITM.OI_URLS_QTY - 1 , TB_ORD_ITM.OI_URLS_QTY)
+		    <!-- TB_BRCD.BRCD_DN = 1 -->
 		WHERE TB_BRCD.BRCD_NO = #{barCode}
 	</update>
 	
@@ -203,8 +203,8 @@
 			<!-- #이미 미출고 였던거 다시 미출고 눌렀을 때, OI_URLS_QTY 증가 x -->	
 		SET TB_ORD_ITM.OI_URLS_QTY = IF(TB_BRCD.BRCD_DN = 0, TB_ORD_ITM.OI_URLS_QTY, TB_ORD_ITM.OI_URLS_QTY+1),
 			<!-- #검수되었던거 미출고로 바꾸었을 때, 검수수량 하나 다운 -->	
-			TB_RLS_INSP.RI_QTY = IF(TB_BRCD.BRCD_DN = 1, TB_RLS_INSP.RI_QTY - 1, TB_RLS_INSP.RI_QTY), 
-		    TB_BRCD.BRCD_DN = 0
+			TB_RLS_INSP.RI_QTY = IF(TB_BRCD.BRCD_DN = 1, TB_RLS_INSP.RI_QTY - 1, TB_RLS_INSP.RI_QTY)
+		    <!-- TB_BRCD.BRCD_DN = 0 -->
 		WHERE TB_BRCD.BRCD_NO = #{barCode}
 	</update>
 	

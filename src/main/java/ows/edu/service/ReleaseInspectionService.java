@@ -71,9 +71,9 @@ public interface ReleaseInspectionService {
 
 	
 	//검수수량, 미출고 수량 업데이트
-	public int releaseInspectionQtyUpdate(String releaseCode, String barCode);
+	public void releaseInspectionQtyUpdate(String barCode);
 
-	public int unRleaseQtyUpdate(String releaseCode, String barCode);
+	public void unRleaseQtyUpdate(String barCode);
 	
 	//스캔
 	public List<ReleasePacking> scan(String code, String kind);

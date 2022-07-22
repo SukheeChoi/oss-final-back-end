@@ -7,9 +7,11 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.AfterPickingViewDao;
+import ows.edu.dao.BarcodeDao;
 import ows.edu.dao.OrderDao;
 import ows.edu.dao.PackingDao;
 import ows.edu.dao.PickingDirectionDao;
@@ -37,6 +39,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	ReleasePackingDao releasePackingDao;
 	@Resource
 	AfterPickingViewDao afterPickingViewDao;
+	@Resource
+	BarcodeDao barcodeDao;
 	
 	@Override
 	public Map<String, Object> getSummary() {
@@ -416,16 +420,16 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	}
 	
 	//검수수량, 미출고 수량 업데이트
-	@Override
-	public int releaseInspectionQtyUpdate(String releaseCode, String barCode) {
-		// TODO Auto-generated method stub
-		return releaseInspectionDao.releaseInspectionQtyUpdate(releaseCode, barCode);
+	@Transactional
+	public void releaseInspectionQtyUpdate(String barCode) {
+		releaseInspectionDao.releaseInspectionQtyUpdate(barCode);
+		barcodeDao.updateBarcodeDnTrue(barCode);
 	}
 
-	@Override
-	public int unRleaseQtyUpdate(String releaseCode, String barCode) {
-		// TODO Auto-generated method stub
-		return releaseInspectionDao.unRleaseQtyUpdate(releaseCode, barCode);
+	@Transactional
+	public void unRleaseQtyUpdate(String barCode) {
+		releaseInspectionDao.unRleaseQtyUpdate(barCode);
+		barcodeDao.updateBarcodeDnFalse(barCode);
 	}
 
 	//스캔

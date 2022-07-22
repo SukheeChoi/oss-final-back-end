@@ -37,10 +37,10 @@ public interface ReleaseInspectionDao {
 
 	//========================현주========================
 	//검수수량 업데이트
-	public int releaseInspectionQtyUpdate(@Param("releaseCode") String releaseCode, @Param("barCode") String barCode);
+	public int releaseInspectionQtyUpdate(@Param("barCode") String barCode);
 	
 	//미출고수량 업데이트
-	public int unRleaseQtyUpdate(@Param("releaseCode") String releaseCode, @Param("barCode") String barCode);
+	public int unRleaseQtyUpdate(@Param("barCode") String barCode);
 	
 	//출고검수수량 업데이트
 	public int update(Map<String, Integer> map);

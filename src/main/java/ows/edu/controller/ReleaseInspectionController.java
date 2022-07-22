@@ -109,13 +109,13 @@ public class ReleaseInspectionController {
 	
 	//검수수량, 미출고 수량 업데이트
 	@PutMapping("/RIQtyUpdate")
-	public int releaseInspectionQtyUpdate(@RequestParam String releaseCode, @RequestParam String barCode) {
-		return releaseInspectionService.releaseInspectionQtyUpdate(releaseCode, barCode);
+	public void releaseInspectionQtyUpdate(@RequestParam String barCode) {
+		releaseInspectionService.releaseInspectionQtyUpdate(barCode);
 	}
 	
 	@PutMapping("/unRleaseQtyUpdate")
-	public int unRleaseQtyUpdate(@RequestParam String releaseCode, @RequestParam String barCode) {		
-		return releaseInspectionService.unRleaseQtyUpdate(releaseCode, barCode);
+	public void unRleaseQtyUpdate(@RequestParam String barCode) {		
+		releaseInspectionService.unRleaseQtyUpdate(barCode);
 	}
 	
 	//스캔
