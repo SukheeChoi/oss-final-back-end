@@ -1,7 +1,6 @@
 //김예원
 package ows.edu.controller;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.Client;
-import ows.edu.dto.ClientDetail;
 import ows.edu.dto.ClientFilter;
-import ows.edu.dto.Pager;
-import ows.edu.dto.ClientOrder;
 import ows.edu.dto.ClientOrderDetail;
-import ows.edu.dto.SelectedOrder;
 import ows.edu.service.ClientModalService;
 import ows.edu.service.ClientService;
 
@@ -38,8 +33,9 @@ public class ClientController {
 	
 	//배송구분, 주문 단계, 미출고로 필터링
 	@PostMapping("/getFilterList")
-	public Map<String, Object> getFilterList(@RequestBody ClientFilter filterList,
-											@RequestParam(value="pageNo", defaultValue="1") int pageNo) {
+	public Map<String, Object> getFilterList(@RequestBody ClientFilter filterList
+//											@RequestParam(value="pageNo", defaultValue="1") int pageNo
+											) {
 		log.info(filterList);
 		String[] shippingCategory = filterList.getShippingCategory();
 		int status = filterList.getStatus();
@@ -53,7 +49,7 @@ public class ClientController {
 		map1.put("orderUnrelease", orderUnrelease);
 		map1.put("orderNo", orderNo);
 		map1.put("clientName", clientName);
-		map1.put("pageNo", pageNo);
+//		map1.put("pageNo", pageNo);
 		log.info("clientcontroller - map1: " + map1);
 
 		List<Client> list1 = clientService.getReleaseList(map1);

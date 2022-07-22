@@ -56,10 +56,10 @@
 				AND O.ORD_STS = #{status}
 			</when>
 		</choose>
- 		<if test='orderNo != null'>
+ 		<if test='orderNo != null and !orderNo.equals("")'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
-	   	<if test='!clientName.equals("")'>
+	   	<if test='clientName != null and !clientName.equals("")'>
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	 	</if>
 		GROUP BY OI.OI_NO
@@ -92,10 +92,10 @@
 				AND O.ORD_STS = #{status}
 			</when>
 		</choose>
- 		<if test='orderNo != null'>
+ 		<if test='orderNo != null and !orderNo.equals("")'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
-	   	<if test='!clientName.equals("")'>
+	   	<if test='clientName != null and !clientName.equals("")'>
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	 	</if>
 	 		AND O.ORD_STS != 0

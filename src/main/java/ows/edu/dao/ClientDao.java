@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import ows.edu.dto.Client;
-import ows.edu.dto.Pager;
 
 @Mapper
 public interface ClientDao {
