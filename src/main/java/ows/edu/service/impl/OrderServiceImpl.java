@@ -1,11 +1,16 @@
 package ows.edu.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
+import ows.edu.dao.ClientDao;
 import ows.edu.dao.OrderDao;
+import ows.edu.dto.Client;
 import ows.edu.service.OrderService;
 
 @Service
@@ -14,6 +19,7 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Resource
 	OrderDao orderDao;
+	ClientDao clientDao;
 	
 	@Override
 	public int getTotalOrders() {
@@ -68,5 +74,4 @@ public class OrderServiceImpl implements OrderService {
 		// TODO Auto-generated method stub
 		return orderDao.updateOrdSts(orderNo);
 	}
-	
 }
