@@ -27,12 +27,12 @@ public class AfterPickingController {
 	ReleaseInspectionService releaseInspectionService;
 	
 	/**
-	 * '출고검수/패킹 진행'페이지 - 상단 현황 정보 응답.
+	 * '출고검수/패킹 진행'페이지 상단 현황 정보 응답.
 	 * 주문건수, 피킹지시건수, 출고검수+패킹 건수, 미출고건수
 	 * 출고검수 중에서 긴급/일반 건수
 	 * 
 	 * @author 최숙희
-	 * @return Map<String, Object>
+	 * @return Map<String, Object> 현황 정보
 	 */
 	@GetMapping("/summary")
 	public Map<String, Object> getSummary() {
@@ -41,6 +41,11 @@ public class AfterPickingController {
 		return summaryMap;
 	}
 	
+	/**
+	 * @author 최숙희
+	 * @param afterPickingFilter 출고검수/패킹 진행 목록 필터링에 필요한 모든 정보
+	 * @return Map<String, Object> 목록 전체를 기준으로 출고검수/패킹 담당자
+	 */
 	@PostMapping("/assigneeList")
 	public Map<String, Object> getAssigneeList(@RequestBody AfterPickingFilter afterPickingFilter) {
 		Map<String, Object> map = new HashMap<>();
@@ -52,12 +57,11 @@ public class AfterPickingController {
 
 	/**
 	 * @author 최숙희
-	 * @param afterPickingFilter 출고검수/패킹 진행 페이지용 필터링 정보 객체.
-	 * @return Map<String, Object> 처리 진행중인 출고검수/패킹 단계의 목록.
+	 * @param afterPickingFilter 출고검수/패킹 진행 목록 필터링에 필요한 모든 정보
+	 * @return Map<String, Object> 처리 진행중인 출고검수/패킹 단계의 목록
 	 */
 	@PostMapping("/")
 	public Map<String, Object> getList(@RequestBody AfterPickingFilter afterPickingFilter) {
-		log.info("!!! afterPickingFilter : " + afterPickingFilter);
 		
 		if(afterPickingFilter.getPageNo() == null || afterPickingFilter.getPageNo() == 0) {
 			afterPickingFilter.setPageNo(1);
@@ -66,17 +70,9 @@ public class AfterPickingController {
 			afterPickingFilter.setPageSize(10);
 		}
 
-		//pager 객체 생성.
-		int totalRows = releaseInspectionService
-				.getTotalRows(afterPickingFilter);
-//		// pagination을 위한 Pager 객체 생성.
-		Pager pager = new Pager(afterPickingFilter.getPageSize(), 10, totalRows, afterPickingFilter.getPageNo());
-		
 		Map<String, Object> map = new HashMap<>();
-		List<HashMap<String, String>> list = releaseInspectionService
-				.getAfterPickingList(afterPickingFilter, pager);
-		map.put("pager", pager);
-		map.put("list", list);
+		map = releaseInspectionService.getAfterPickingList(afterPickingFilter);
+
 		return map;
 	}
 

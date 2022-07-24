@@ -42,11 +42,13 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	@Resource
 	AfterPickingViewDao afterPickingViewDao;
 	
-	@Override
 	/**
-	 * 출고검수/패킹 진행 페이지의 현황 정보.
+	 * 출고검수/패킹 전체 건수 제외 모든 정보를 Mapper로부터 전달받음.
+	 * 출고검수/패킹 전체 건수는 출고검수/패킹 진행단계 중 긴급, 일반 건수 각각을 합산해서 구함.
+	 * DB사용 최소화 위함.
 	 * @author 최숙희
 	 */
+	@Override
 	public Map<String, Object> getSummary() {
 		Map<String, Object> map = new HashMap<>();
 		map = orderDao.countSummaryByStatus(4);
@@ -60,185 +62,34 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		return map;
 	}
 	
+	/**
+	 * @author 최숙희
+	 */
 	@Override
-	public List<String> getAssigneeList(
-//			String shippingCategory
-//			, String shippingWay
-//			, String released
-//			, int orderNo
-//			, String clientName
-//			, String shippingDestination
-//			, String vendorName
-			AfterPickingFilter afterPickingFilter
-			) {
-		
-		List<String> list = afterPickingViewDao
-			.selectReleaseInspectionEmployeeName(
-//				shippingCategory
-//				, shippingWay
-//				, released
-//				, orderNo
-//				, clientName
-//				, shippingDestination
-//				, vendorName
-				afterPickingFilter
-			);
+	public List<String> getAssigneeList(AfterPickingFilter afterPickingFilter) {
+		List<String> list = afterPickingViewDao.selectReleaseInspectionEmployeeName(afterPickingFilter);
 		
 		return list;
 	}
-	
-	@Override
-	public int getTotalRows(
-//			String shippingCategory
-//			, String shippingWay
-//			, String released
-//			, String assignee
-//			, int orderNo
-//			, String clientName
-//			, String shippingDestination
-//			, String vendorName
-//			, int pageNo
-			AfterPickingFilter afterPickingFilter
-	) {
-		
-		// pagination을 위한 목록의 전체 행 수 조회.
-		int totalRows = afterPickingViewDao
-				.selectCountAll(
-//						shippingCategory
-//						, shippingWay
-//						, released
-//						, assignee
-//						, orderNo
-//						, clientName
-//						, shippingDestination
-//						, vendorName
-						afterPickingFilter
-					);
-				
-		// pagination을 위한 Pager 객체 생성.
-//		Pager pager = new Pager(10, 10, totalRows, pageNo);
-		
-		return totalRows;
-	}
 
+	/**
+	 * 1. afterPickingViewDao로부터 필터링된 목록의 전체 행수 받아와서 Pager객체 생성.
+	 * 2. afterPickingViewDao로부터 페이지네이션 적용한 목록 받아옴.
+	 * 3.  
+	 * @author 최숙희
+	 */
 	@Override
-//	public List<AfterPicking> getAfterPickingList(
-	public List<HashMap<String, String>> getAfterPickingList(
-//	public List<AfterPickingView> getAfterPickingList(
-//		String shippingCategory
-//		, String shippingWay
-//		, String released
-//		, String assignee
-//		, int orderNo
-//		, String clientName
-//		, String shippingDestination
-//		, String vendorName
-		AfterPickingFilter afterPickingFilter
-		, Pager pager
-	) {
+	public Map<String, Object> getAfterPickingList(AfterPickingFilter afterPickingFilter) {
 		
 		// pagination을 위한 목록의 전체 행 수 조회.
-//		int totalRows = afterPickingViewDao
-//				.selectCountAll(
-//						shippingCategory
-//						, shippingWay
-//						, released
-//						, assignee
-//						, orderNo
-//						, clientName
-//						, shippingDestination
-//						, vendorName
-//					);
-//				
-//		// pagination을 위한 Pager 객체 생성.
-//		Pager pager = new Pager(10, 10, totalRows, pageNo);
+		int totalRows = afterPickingViewDao.selectCountAll(afterPickingFilter);
+		// pagination을 위한 Pager 객체 생성.
+		Pager pager = new Pager(afterPickingFilter.getPageSize(), 10, totalRows, afterPickingFilter.getPageNo());
 		
 		List<HashMap<String, String>> ap = afterPickingViewDao.selectAll(
-//				shippingCategory
-//				, shippingWay
-//				, released
-//				, assignee
-//				, orderNo
-//				, clientName
-//				, shippingDestination
-//				, vendorName
 				afterPickingFilter
 				, pager
 			);
-		
-		log.info("ap : " + ap);
-		log.info("ap.size() : " + ap.size());
-		
-//		DateFormat df = new SimpleDateFormat("MM-dd HH:mm");
-//		String strFormedDate = null;
-//		for(int i=0; i<ap.size(); i++) {
-//			log.info("ap.get(i) : " + ap.get(i));
-//			
-//			if(ap.get(i) != null && ap.get(i).getReleaseInspection() != null) {
-//				if(ap.get(i).getReleaseInspection().getReleasePrintDate() != null) {
-//					// 출고요청서 출력일시 포멧팅.
-//					strFormedDate = null;
-//					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReleasePrintDate());
-//					ap.get(i)
-//						.setStrReleasePrintDate(
-//							ap.get(i).getReleaseInspectionEmployeeName()
-//							+ "\n" 
-//							+ "("
-//							+ strFormedDate
-//							+ ")"
-//						);
-//				}
-//				if(ap.get(i).getReleaseInspection().getReceiptPrintDate() != null) {
-//					// 거래명세서 출력일시 포멧팅.
-//					strFormedDate = null;
-//					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReceiptPrintDate());
-//					ap.get(i)
-//						.setStrReceiptPrintDate(
-//							ap.get(i).getReleaseInspectionEmployeeName()
-//							+ "\n" 
-//							+ "("
-//							+ strFormedDate
-//							+ ")"
-//						);
-//				}
-//				if(ap.get(i).getReleaseInspection().getReleaseInspectionDate() != null) {
-//					// 검수일시 포멧팅.
-//					strFormedDate = null;
-//					strFormedDate = df.format(ap.get(i).getReleaseInspection().getReleaseInspectionDate());
-//					ap.get(i)
-//						.setStrReleaseInspectionDate(
-//							strFormedDate
-//						);
-//				}
-//				
-//				// OI_URLS_QTY 컬럼 :
-//				// 		RI_QTY != null && OI_URLS_QTY == null -> OI_URLS_QTY = 0
-//				// 현재 데이터 문제로 0처리해줌.
-//				if(
-//					ap.get(i).getReleaseInspection().getReleaseInspectionQuantity() != null
-//					&&
-//					ap.get(i).getOrderItem().getUnreleaseQuantity() == null
-//				) {
-//					ap.get(i).getOrderItem().setUnreleaseQuantity(0);
-//				}
-//			}
-//			
-//			// 합배송 && 협력사 제품 -> 피킹수량 = 전달수량. 
-//			//	협력사 직배송은 출고검수 테이블에 데이터가 없으므로, 합배송 여부 검사는 불필요.
-//			if(ap.get(i) != null && ap.get(i).getCombineShippingPartner() != null) {
-//				if(
-//					ap.get(i).getItem().getItemOsstem() == false
-//				) {
-//					Picking pic = new Picking();
-//					pic.setPickingQuantity(ap.get(i).getCombineShippingPartner().getDeliveryQuantity());
-//					
-//					ap.get(i).setPicking(pic);
-//				}
-//			}
-//			 
-//			 
-//		}
-		/////////========================================================
 		
 		HashMap<String, String> map = new HashMap<>();
 		for(int i=0; i<ap.size(); i++) {
@@ -337,14 +188,17 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				);
 			}
 			
-			
 			ap.set(i, map);
 
 			// 다음번 for문 순회하기 전에 HashMap 객체 초기화.
 			map = null;
 		}
 		
-		return ap;
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("pager", pager);
+		resultMap.put("list", ap);
+		
+		return resultMap;
 	}
 
 	
