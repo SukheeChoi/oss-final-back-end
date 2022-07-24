@@ -6,9 +6,9 @@ import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ows.edu.dto.AfterPickingFilter;
 import ows.edu.dto.Box;
 import ows.edu.dto.Pager;
-import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleasePacking;
 
 @Transactional
@@ -18,41 +18,41 @@ public interface ReleaseInspectionService {
 	
 	// 출고검수/패킹 담당자 이름 목록 조회.
 	List<String> getAssigneeList(
-			String shippingCategory
-			, String shippingWay
-			, String released
-			, int orderNo
-			, String clientName
-			, String shippingDestination
-			, String vendorName
+//			String shippingCategory
+//			, String shippingWay
+//			, String released
+//			, int orderNo
+//			, String clientName
+//			, String shippingDestination
+//			, String vendorName
+			AfterPickingFilter afterPickingFilter
 	);
 	
 	int getTotalRows(
-			String shippingCategory
-			, String shippingWay
-			, String released
-			, String assignee
-			, int orderNo
-			, String clientName
-			, String shippingDestination
-			, String vendorName
-			
-			, int pageNo
+//			String shippingCategory
+//			, String shippingWay
+//			, String released
+//			, String assignee
+//			, int orderNo
+//			, String clientName
+//			, String shippingDestination
+//			, String vendorName
+//			, int pageNo
+			AfterPickingFilter afterPickingFilter
 	);
 
 //	List<AfterPicking> getAfterPickingList(
 	List<HashMap<String, String>> getAfterPickingList(
 //	List<AfterPickingView> getAfterPickingList(
-			String shippingCategory
-			, String shippingWay
-			, String released
-			, String assignee
-			, int orderNo
-			, String clientName
-			, String shippingDestination
-			, String vendorName
-			
-//			, int pageNo
+//			String shippingCategory
+//			, String shippingWay
+//			, String released
+//			, String assignee
+//			, int orderNo
+//			, String clientName
+//			, String shippingDestination
+//			, String vendorName
+			AfterPickingFilter afterPickingFilter
 			, Pager pager
 		);
 	

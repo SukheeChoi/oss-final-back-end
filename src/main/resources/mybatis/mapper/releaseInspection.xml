@@ -2,13 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.ReleaseInspectionDao">
-
+<!-- 
  	<resultMap id="afterPickingMap" type="afterPicking">
-		<!-- <result property="strReleaseInspectionUnreleased" column="RI_URLS"/> -->
-		<!-- <result property="strPackingUnreleased" column="PAC_URLS"/> -->
-		<!-- <result property="strBoxQuantity" column="PAC_BX_QTY"/> -->
- 	
- 	
 		<association property="releaseInspection" javaType="releaseInspection">
 			<result property="releaseInspectionQuantity" column="RI_QTY"/>
 			<result property="employeeName" column="RI_EMP_NAME"/>
@@ -46,54 +41,7 @@
 			<result property="clientName" column="CLT_NAME"/>		
 		</association>
 	</resultMap>
-	
-	<select id="countReleaseInspection" resultType="int">
-		SELECT COUNT(*)
-		FROM TB_ORD
-		WHERE ORD_STS = 4
-	</select>
-	<!-- TB_RLS_INSP의 ORD_NO별 SUM(RI_URLS) > 0 인 건수 집계. -->
-	<select id="sumUnreleased" resultType="int">
-		SELECT COUNT(*)
-			FROM (
-				SELECT O.ORD_STS ORD_STS
-					, SUM(OI.OI_URLS_QTY) AS SUM_OI_URLS_QTY
-				FROM TB_ORD_ITM OI
-				LEFT JOIN TB_ORD O
-					ON (OI.ORD_NO = O.ORD_NO)
-				GROUP BY O.ORD_NO
-			) SQ
-			WHERE SQ.ORD_STS = 4
-				AND SQ.SUM_OI_URLS_QTY != 0
-	</select>
-	<select id="countExpressShipping" resultType="int">
-		SELECT COUNT(*)
-		FROM (
-			SELECT O.ORD_STS ORD_STS
-				, SUM(OI.OI_URLS_QTY) AS SUM_OI_URLS_QTY
-		        , O.ORD_SHP_CAT ORD_SHP_CAT
-			FROM TB_ORD_ITM OI
-			LEFT JOIN TB_ORD O
-				ON (OI.ORD_NO = O.ORD_NO)
-			GROUP BY O.ORD_NO
-		) SQ
-		WHERE SQ.ORD_STS = 4
-			AND SQ.ORD_SHP_CAT='긴급'
-	</select>
-	<select id="countNormalShipping" resultType="int">
-		SELECT COUNT(*)
-		FROM (
-			SELECT O.ORD_STS ORD_STS
-				, SUM(OI.OI_URLS_QTY) AS SUM_OI_URLS_QTY
-		        , O.ORD_SHP_CAT ORD_SHP_CAT
-			FROM TB_ORD_ITM OI
-			LEFT JOIN TB_ORD O
-				ON (OI.ORD_NO = O.ORD_NO)
-			GROUP BY O.ORD_NO
-		) SQ
-		WHERE SQ.ORD_STS = 4
-			AND SQ.ORD_SHP_CAT='일반'
-	</select>
+ -->
 <!-- 
  	<select id="selectAfterPickingList" resultMap="afterPickingMap">
 		SELECT R.RLS_NO, I.ITM_NAME, I.ITM_CODE, PI.PIC_NO, PI.PIC_QTY

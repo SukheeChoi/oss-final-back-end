@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.AfterPickingViewDao;
 import ows.edu.dao.OrderDao;
+import ows.edu.dao.OrderItemDao;
 import ows.edu.dao.PackingDao;
 import ows.edu.dao.PickingDirectionDao;
 import ows.edu.dao.ReleaseInspectionDao;
 import ows.edu.dao.ReleasePackingDao;
+import ows.edu.dto.AfterPickingFilter;
 import ows.edu.dto.Box;
 //kosa3.iptime.org:13000/4ever/final-back-end.git
 import ows.edu.dto.Pager;
@@ -28,6 +30,8 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	@Resource
 	ReleaseInspectionDao releaseInspectionDao;
 	@Resource
+	OrderItemDao orderItemDao;
+	@Resource
 	OrderDao orderDao;
 	@Resource
 	PickingDirectionDao pickingDirectionDao;
@@ -39,65 +43,45 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	AfterPickingViewDao afterPickingViewDao;
 	
 	@Override
+	/**
+	 * 출고검수/패킹 진행 페이지의 현황 정보.
+	 * @author 최숙희
+	 */
 	public Map<String, Object> getSummary() {
-		// 전반적으로 TB_ORD의 STS값을 활용하는 방식으로 변경할 것.
-		// (현재는 데이터가 정확하지 않은 상태라 JOIN을 이용.)
-		
 		Map<String, Object> map = new HashMap<>();
-		// 주문건수 조회.(TB_ORD에서 ORD_STS > 0 건수 집계)
-		int progressOrderNum  = orderDao.countProgressOrder();
-		map.put("progressOrderNum", progressOrderNum);
-		// 피킹지시 건수 조회.(TB_ORD에서 ORD_STS = 2 건수 집계)
-		int pickingDirectionNum= pickingDirectionDao.countPickingDirection();
-		map.put("pickingDirectionNum", pickingDirectionNum);
-		// 출고검수/패킹 건수 조회.(TB_ORD에서 ORD_STS = 5 건수 집계)
-		// 출고검수와 패킹은 동일한 담당자가 연달아 작업한다는 가정으로, ORD_STS에서 같은 상태값(5)으로 표기.
-		int releaseInspectionNum = releaseInspectionDao.countReleaseInspection();
-		map.put("releaseInspectionNum", releaseInspectionNum);
-		// 미출고 건수 조회.(
-		// 	이전 단계의 미출고가 0건이 되어야 다음 단계로 진행할 수 있기 때문에
-		// 	현재 처리단계를 확인하지 않고, 출고검수 미출고와 패킹의 미출고 건수를 합함.
-		//	null 주의. 
-		// )
-		// TB_RLS_INSP의 ORD_NO별 SUM(RI_URLS) > 0 인 건수 집계.
-		// new: 출고검수와 패킹의 진행 단계를 동일한 값으로 표시하기 때문에 더이상 합산 불필요.
-		// ORD_STS = 4인 미출고값 조회.
-		int unreleasedNum = releaseInspectionDao.sumUnreleased();
-//		int packingUnreleased = packingDao.sumUnreleased();
-//		int unreleasedNum = releaseInspectionUnreleased + packingUnreleased;
-		map.put("unreleasedNum", unreleasedNum);
-		
-		// 긴급 건수 조회.
-		int expressShippingNum = releaseInspectionDao.countExpressShipping();
-		map.put("expressShippingNum", expressShippingNum);
-		// 일반 건수 조회.
-		int normalShippingNum = releaseInspectionDao.countNormalShipping();
-		map.put("normalShippingNum", normalShippingNum);
-		
-		
+		map = orderDao.countSummaryByStatus(4);
+		// 출고검수/패킹 단계 건수는 해당 단계의 긴급/일반 배송 건수를 합산.(DB 사용 최소화)
+		map.put("RLS_INSP_NUM"
+				, Integer.parseInt(map.get("EX_NUM").toString())
+					+
+				Integer.parseInt(map.get("NM_NUM").toString())
+			);
+
 		return map;
 	}
 	
 	@Override
 	public List<String> getAssigneeList(
-			String shippingCategory
-			, String shippingWay
-			, String released
-			, int orderNo
-			, String clientName
-			, String shippingDestination
-			, String vendorName)
-	{
+//			String shippingCategory
+//			, String shippingWay
+//			, String released
+//			, int orderNo
+//			, String clientName
+//			, String shippingDestination
+//			, String vendorName
+			AfterPickingFilter afterPickingFilter
+			) {
 		
 		List<String> list = afterPickingViewDao
 			.selectReleaseInspectionEmployeeName(
-				shippingCategory
-				, shippingWay
-				, released
-				, orderNo
-				, clientName
-				, shippingDestination
-				, vendorName
+//				shippingCategory
+//				, shippingWay
+//				, released
+//				, orderNo
+//				, clientName
+//				, shippingDestination
+//				, vendorName
+				afterPickingFilter
 			);
 		
 		return list;
@@ -105,29 +89,30 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	
 	@Override
 	public int getTotalRows(
-			String shippingCategory
-			, String shippingWay
-			, String released
-			, String assignee
-			, int orderNo
-			, String clientName
-			, String shippingDestination
-			, String vendorName
-			
-			, int pageNo
+//			String shippingCategory
+//			, String shippingWay
+//			, String released
+//			, String assignee
+//			, int orderNo
+//			, String clientName
+//			, String shippingDestination
+//			, String vendorName
+//			, int pageNo
+			AfterPickingFilter afterPickingFilter
 	) {
 		
 		// pagination을 위한 목록의 전체 행 수 조회.
 		int totalRows = afterPickingViewDao
 				.selectCountAll(
-						shippingCategory
-						, shippingWay
-						, released
-						, assignee
-						, orderNo
-						, clientName
-						, shippingDestination
-						, vendorName
+//						shippingCategory
+//						, shippingWay
+//						, released
+//						, assignee
+//						, orderNo
+//						, clientName
+//						, shippingDestination
+//						, vendorName
+						afterPickingFilter
 					);
 				
 		// pagination을 위한 Pager 객체 생성.
@@ -140,14 +125,15 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 //	public List<AfterPicking> getAfterPickingList(
 	public List<HashMap<String, String>> getAfterPickingList(
 //	public List<AfterPickingView> getAfterPickingList(
-		String shippingCategory
-		, String shippingWay
-		, String released
-		, String assignee
-		, int orderNo
-		, String clientName
-		, String shippingDestination
-		, String vendorName
+//		String shippingCategory
+//		, String shippingWay
+//		, String released
+//		, String assignee
+//		, int orderNo
+//		, String clientName
+//		, String shippingDestination
+//		, String vendorName
+		AfterPickingFilter afterPickingFilter
 		, Pager pager
 	) {
 		
@@ -167,17 +153,16 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 //		// pagination을 위한 Pager 객체 생성.
 //		Pager pager = new Pager(10, 10, totalRows, pageNo);
 		
-//		List<AfterPickingView> ap = afterPickingViewDao.selectAll();
 		List<HashMap<String, String>> ap = afterPickingViewDao.selectAll(
-//		List<AfterPickingView> ap = afterPickingViewDao.selectAll(
-				shippingCategory
-				, shippingWay
-				, released
-				, assignee
-				, orderNo
-				, clientName
-				, shippingDestination
-				, vendorName
+//				shippingCategory
+//				, shippingWay
+//				, released
+//				, assignee
+//				, orderNo
+//				, clientName
+//				, shippingDestination
+//				, vendorName
+				afterPickingFilter
 				, pager
 			);
 		
