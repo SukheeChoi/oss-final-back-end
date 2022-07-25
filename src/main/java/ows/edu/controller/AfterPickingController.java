@@ -67,7 +67,7 @@ public class AfterPickingController {
 			afterPickingFilter.setPageNo(1);
 		}
 		if(afterPickingFilter.getPageSize() == null || afterPickingFilter.getPageSize() == 0) {
-			afterPickingFilter.setPageSize(10);
+			afterPickingFilter.setPageSize(18);
 		}
 
 		Map<String, Object> map = new HashMap<>();

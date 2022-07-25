@@ -59,7 +59,7 @@ public class CombineShippingController {
 		
 		log.info("assigneeList");
 		Map<String, Object> map = new HashMap<>();
-		List<Employee> list = combineShippingService.getAssigneeListByDate(toDo, dateList);
+		List<Employee> list = combineShippingService.getAssigneeList(toDo, dateList);
 		if(list.isEmpty()) {
 			map.put("list", null);
 		} else {

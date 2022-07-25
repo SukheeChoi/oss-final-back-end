@@ -139,6 +139,7 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 	<select id="selectReleaseInspectionEmployeeName" resultType="string">
 		SELECT DISTINCT RI_EMP_NAME
 		FROM V_AFT_PIC
+		WHERE RI_EMP_NAME IS NOT NULL
 		<where>
 		<!-- 배송구분 필터링: 전체/일반/긴급 -->
 	   	<if test='shippingCategory != null'>
@@ -156,10 +157,6 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 		<if test='released != null
 			and released.equals("미출고")'>
 			AND OI_URLS_QTY > 0
-		</if>
-		<!-- 출고검수/패킹 담당자 필터링 -->
-	    <if test='assignee != null'>
-			AND RI_EMP_NAME = #{assignee}
 		</if>
 		<!-- 주문번호 필터링 -->
 		<if test='orderNo != null'>
