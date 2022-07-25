@@ -32,6 +32,18 @@ public class ClientController {
 	private ClientModalService clientModalService;
 	
 	//배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링
+	
+	/**
+	 * 배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링
+	 * 
+	 * @author 김예원
+	 * @param shippingCategory 배송구분(긴급, 일반)
+	 * @param status 주문 단계(주문~인계)
+	 * @param orderUnrelease 미출고
+	 * @param orderNo 주문번호
+	 * @param clientName 거래처명
+	 * @return 배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링된 데이터를 반환
+	 */
 	@PostMapping("/getFilterList")
 	public Map<String, Object> getFilterList(@RequestBody ClientFilter filterList) {
 		String[] shippingCategory = filterList.getShippingCategory();
@@ -56,8 +68,13 @@ public class ClientController {
 		return map2;
 	}
 	
-	
-	//주문 단계 별 건수 요청
+	/**
+	 * 주문 단계 별 건수 요청
+	 * 
+	 * @author 김예원
+	 * @param statusCnt 주문 단계마다 건수
+	 * @return 주문 단계마다의 건수 데이터를 반환
+	 */
 	@GetMapping("/sts")
 	public Map<String, Object> statusCnt() {	
 		List<Integer> statusCnt = clientService.getstatusCnt();
@@ -66,8 +83,14 @@ public class ClientController {
 		map.put("statusCnt", statusCnt);
 		return map;
 	}
-	
-	//미출고 건수 조회
+
+	/**
+	 * 미출고 건수 조회
+	 * 
+	 * @author 김예원
+	 * @param unreleaseCnt 미출고 건수
+	 * @return 미출고 건수를 반환
+	 */
 	@GetMapping("/unreleaseCnt")
 	public int unreleaseCnt() {
 		int unreleaseCnt = clientService.unreleaseCnt();

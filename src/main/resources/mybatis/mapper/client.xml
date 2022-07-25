@@ -36,33 +36,41 @@
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
 		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
+		<!-- 배송구분 필터링(긴급, 일반) -->
 		WHERE O.ORD_SHP_CAT IN (
 			<foreach collection="shippingCategory" item="shippingCategory" index="index" separator=",">
 				#{shippingCategory}
 			</foreach>
 			)
 			AND O.ORD_STS != 0
+			<!-- 미출고 값이 0이거나 널인 값 : 출고 데이터 -->
 			AND (OI.OI_URLS_QTY = 0
 			OR OI.OI_URLS_QTY IS NULL)
+		<!-- '미출고 보기' 값이 true일 때 : 출고 데이터가 띄워져야하므로 미출고 조건을 줌 -->
 		<if test = 'orderUnrelease == true'>
 			AND OI.OI_URLS_QTY IS NOT NULL
   			AND OI.OI_URLS_QTY != 0
 		</if>
 		<choose>
+			<!-- 단계 2는 피킹지시와 피킹 단계를 포함함 -->
 			<when test = 'status == 2'>
 				AND O.ORD_STS IN (2,3)
 			</when>
+			<!-- 단계가 2와 -1(전체 선택)이 아닐 때 -->
 			<when test = 'status != 2 and status != -1'>
 				AND O.ORD_STS = #{status}
 			</when>
 		</choose>
+		<!-- 검색 필터링 : 주문 번호에 값이 입력되었을 때 -->
  		<if test='orderNo != null and !orderNo.equals("")'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
+		<!-- 검색 필터링 : 거래처명에 값이 입력되었을 때  -->
 	   	<if test='clientName != null and !clientName.equals("")'>
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	 	</if>
 		GROUP BY OI.OI_NO
+		<!-- 주문 단계로 정렬 -->
 		ORDER BY O.ORD_STS
 	</select>
 	
@@ -73,30 +81,36 @@
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
 		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
+		<!-- 배송구분 필터링(긴급, 일반) -->
 		WHERE O.ORD_SHP_CAT IN (
 			<foreach collection="shippingCategory" item="shippingCategory" separator=",">
 				#{shippingCategory}
 			</foreach>
 			)
 			AND O.ORD_STS != 0
+			<!-- 미출고 값이 0과 널이 아닌 값 : 미출고 데이터 -->
 			AND OI.OI_URLS_QTY IS NOT NULL
   			AND OI.OI_URLS_QTY != 0
 		<choose>
+			<!-- 단계 2는 피킹지시와 피킹 단계를 포함함 -->
 			<when test = 'status == 2'>
 				AND O.ORD_STS IN (2,3)
 			</when>
+			<!-- 단계가 2와 -1(전체 선택)이 아닐 때 -->
 			<when test = 'status != 2 and status != -1'>
 				AND O.ORD_STS = #{status}
 			</when>
 		</choose>
+		<!-- 검색 필터링 : 주문 번호에 값이 입력되었을 때 -->
  		<if test='orderNo != null and !orderNo.equals("")'>
 			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
+		<!-- 검색 필터링 : 거래처명에 값이 입력되었을 때  -->
 	   	<if test='clientName != null and !clientName.equals("")'>
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	 	</if>
-	 		AND O.ORD_STS != 0
 		GROUP BY OI.OI_NO
+		<!-- 주문 단계로 정렬 -->
 		ORDER BY O.ORD_STS
 	</select>
 	
