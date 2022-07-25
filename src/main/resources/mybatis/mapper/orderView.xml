@@ -21,10 +21,10 @@
 		<result property="pickingDate" column="PIC_DT" />
 
 		<result property="orderShippingWay" column="ORD_SHP_WAY" />
-		<result property="orderCheckDate" column="IP_ORD_CHK_DT" />
-		<result property="releaseQuantity" column="IP_RLS_QTY" />
-		<result property="releaseScheduleDate" column="IP_RLS_SCH_DT" />
-		<result property="recieveDate" column="CSP_RCV_DT" />
+		<result property="orderCheckDate" column="CS_ORD_CHK_DT" />
+		<result property="releaseQuantity" column="CS_RCV_QTY" />
+		<result property="releaseScheduleDate" column="CS_RLS_SCH_DT" />
+		<result property="recieveDate" column="CS_RCV_DT" />
 
 		<result property="packingInspectionEmployee" column="RI_NAME" />
 		<result property="inspectionDate" column="RI_DT" />
@@ -192,8 +192,9 @@
     , (SELECT EMP_NAME FROM TB_EMP WHERE EMP_ID = pic.EMP_ID) AS PIC_NAME
 		, pic.PIC_QTY
 		, date_format(pic.PIC_DT, '%m-%d %H:%i') AS PIC_DT
+		
 		, IF(ord.ORD_SHP_WAY = '협력사' OR ord.ORD_SHP_WAY = '오스템', '직배송', '합배송') AS ORD_SHP_WAY
-		, date_format(cs.CS_ORD_CHK_DT, '%m-%d %H:%i') AS CS_ORD_CHK_DT
+		, date_format(cs.CS_ORD_CHK_DT, '%m-%d %H:%i') AS CS_ORD_CHK_DT	
 		, cs.CS_RCV_QTY
 		, date_format(cs.CS_RLS_SCH_DT, '%m-%d') AS CS_RLS_SCH_DT
 		, date_format(cs.CS_RCV_DT, '%m-%d %H:%i') AS CS_RCV_DT
