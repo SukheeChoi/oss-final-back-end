@@ -52,11 +52,11 @@ public class OrderController {
    * @return 전체 데이터 개수와 페이지에 해당하는 주문확인 목록 반환
    */
   @GetMapping("/orderList")
-  public Map<String, Object> getfilterList(OrderFilter orderFilter
+  public Map<String, Object> getfilterList(OrderFilter orderfilter
                          , @RequestParam(defaultValue = "1") int pageNo
-                         , @RequestParam(defaultValue = "5") int pageSize) {
-    
-    Map<String, Object> map = orderViewService.getListByFilter(orderFilter, pageNo, pageSize);
+                         , @RequestParam(defaultValue = "16") int pageSize) {
+    log.info(orderfilter);
+    Map<String, Object> map = orderViewService.getListByFilter(orderfilter, pageNo, pageSize);
     
     return map;
   }
