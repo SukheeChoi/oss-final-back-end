@@ -10,11 +10,15 @@
  	</select>
  	
  	<select id="selectConcatNote" resultType="string">
- 		SELECT CONCAT_WS('\n',
- 		<foreach collection="oiNoList" item="oiNo" index="index" separator="," close="">
-		 (SELECT OI_NT FROM TB_ORD_ITM WHERE OI_NO=#{oiNo})
-		</foreach>
-		) as NT
+		SELECT IFNULL(SQ.NT, ' ')
+		FROM
+		(
+	 		SELECT CONCAT_WS('\n',
+	 		<foreach collection="oiNoList" item="oiNo" index="index" separator="," close="">
+			 (SELECT OI_NT FROM TB_ORD_ITM WHERE OI_NO=#{oiNo})
+			</foreach>
+			) AS NT
+		) SQ
  	</select>
  	
  	<update id="updateOiUnreleaseQuantity" parameterType="combineShippingPartner">

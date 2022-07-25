@@ -102,30 +102,35 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		Map<String, String> noteMap = new HashMap<>();
 		for(long ordNo : ordNoList) {
 			List<Integer> oiNoList = orderItemDao.selectOiNo(ordNo);
-			log.info("oiNoList : " + oiNoList);
+//			log.info("oiNoList : " + oiNoList);
 			// oiNo로 OI_NT합치기.
 			String concatNote = orderItemDao.selectConcatNote(oiNoList);
-			log.info("concatNote : " + concatNote);
+//			log.info("concatNote : " + concatNote);
 			noteMap.put(String.valueOf(ordNo), concatNote);
 		}
+		log.info("!!! noteMap : " + noteMap);
 		
 		// 
 		log.info("ap : " + ap);
 		HashMap<String, String> map = new HashMap<>();
 		for(int i=0; i<ap.size(); i++) {
 			map = ap.get(i);
-			log.info("map : " + map);
-//			log.info("ap.get(i).get(\"ORD_NO\") : " + String.valueOf( ap.get(i).get("ORD_NO") ));
 			// 비고란에 바인딩할 메모 값 조정.
-			if(
-				ap.get(i).get("ORD_NO") != null
-				&&
-				ap.get(i).get("OI_NT") != null
-			) {
-				map.replace(
-					"OI_NT"
-					, noteMap.get("ordNo")
-				);
+			if(ap.get(i).get("ORD_NO") != null) {
+				if(noteMap.get( String.valueOf(ap.get(i).get("ORD_NO"))) == null
+					|| noteMap.get( String.valueOf(ap.get(i).get("ORD_NO"))).equals("")
+				) {
+					map.replace(
+						"OI_NT"
+						, " "
+					);
+				} else {
+					map.replace(
+						"OI_NT"
+						, noteMap.get( String.valueOf(ap.get(i).get("ORD_NO")) )
+					);
+				}
+				log.info("map : " + map);
 			}
 			
 			
