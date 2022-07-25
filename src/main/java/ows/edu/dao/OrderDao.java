@@ -1,12 +1,21 @@
 package ows.edu.dao;
 
+import java.util.HashMap;
+
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface OrderDao {
-	// 미완료된 주문 건수 조회.
-	public int countProgressOrder();
+	
+	/**
+	 * @author 최숙희
+	 * @param status 주문 처리 상태값.
+	 * @param shippingCategory 배송 구분.
+	 * @return int 필터링된 주문 건수.
+	 */
+	public HashMap<String, Object> countSummaryByStatus(int status);
 
+	public int countProgressOrder();
 	//피킹완료건 -> 전체
 	public int pickingDoneCount();
 	

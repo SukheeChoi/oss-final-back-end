@@ -34,6 +34,8 @@ public class CombineShippingController {
 	@PostMapping("/vendorList")
 	public Map<String, Object> getVendorList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
+		log.info("vendorList");
+		
 		Map<String, Object> map = new HashMap<>();
 		List<Vendor> list = new ArrayList<>();
 		
@@ -55,8 +57,9 @@ public class CombineShippingController {
 	public Map<String, Object> getAssigneeList(@RequestParam(value="toDo", defaultValue="1") int toDo
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
 		
+		log.info("assigneeList");
 		Map<String, Object> map = new HashMap<>();
-		List<Employee> list = combineShippingService.getAssigneeListByDate(toDo, dateList);
+		List<Employee> list = combineShippingService.getAssigneeList(toDo, dateList);
 		if(list.isEmpty()) {
 			map.put("list", null);
 		} else {
