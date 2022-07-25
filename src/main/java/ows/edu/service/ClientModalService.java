@@ -32,13 +32,13 @@ public class ClientModalService {
     Map<String, Object> map = new HashMap<>();
     
     //거래처 정보
-    ClientDetail clientDetail = clientModalDao.searchClientDetail(clientNo);
+    ClientDetail clientDetail = clientModalDao.selectClientDetail(clientNo);
 
     //클릭한 주문 정보
-    List<SelectedOrder> selectedOrder = clientModalDao.searchSelectedOrder(orderNo);
+    List<SelectedOrder> selectedOrder = clientModalDao.selectSelectedOrder(orderNo);
     
     //전체 주문 이력(클릭한 주문 제외)
-    List<ClientOrder> clientOrder = clientModalDao.searchAllClientOrder(clientNo, orderNo);
+    List<ClientOrder> clientOrder = clientModalDao.selectAllClientOrder(clientNo, orderNo);
     
     map.put("clientDetail", clientDetail);
     map.put("selectedOrder", selectedOrder);
@@ -54,6 +54,6 @@ public class ClientModalService {
    * @return 주문 이력에 해당하는 상세 내역을 반환
    */
   public List<ClientOrderDetail> getClientOrderDetailByOrderNo(String orderNo) {
-    return clientModalDao.searchAllClientOrderDetail(orderNo);
+    return clientModalDao.selectAllClientOrderDetail(orderNo);
   };
 }

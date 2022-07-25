@@ -108,7 +108,7 @@ public class InspectionLabelingController {
    */
   @PutMapping("/overtime")
   public Map<String, String> updateOvertime(@RequestBody UpdateTime updateTime) {
-    log.info(updateTime);
+	  
     String result;
     try {
       result = inspectionLabelingService.updateOvertime(updateTime);
@@ -127,7 +127,7 @@ public class InspectionLabelingController {
    * 
    * @author 이동현
    * @param updateTime 작업번호, 발주번호, 시작시간, 끝시간을 포함
-   * @return 성공 여부 반환
+   * @return 성공여부 반환
    */
   @PutMapping("/worktime")
   public Map<String, String> updateWorktime(@RequestBody UpdateTime updateTime) {

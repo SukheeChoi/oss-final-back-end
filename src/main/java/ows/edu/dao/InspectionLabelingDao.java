@@ -22,7 +22,7 @@ public interface InspectionLabelingDao {    //select, insert, update, delete, co
    * @author 이동현
    * @return 담당자별 작업 리스트의 합산 데이터 반환
    */
-  public LabelingWorkTime searchAllByTotal();
+  public LabelingWorkTime selectAllByTotal();
   
   /**
    * 담당자별 검품검수 및 라벨링 작업 정보 반환
@@ -30,7 +30,7 @@ public interface InspectionLabelingDao {    //select, insert, update, delete, co
    * @author 이동현
    * @return 담당자별 작업 정보 목록 반환
    */
-  public List<LabelingWorkTime> searchAllByName();
+  public List<LabelingWorkTime> selectAllByName();
 
   /**
    * 담당자별 검품검수 및 라벨링 작업 업체 정보 반환
@@ -39,7 +39,7 @@ public interface InspectionLabelingDao {    //select, insert, update, delete, co
    * @param labelingWorkTimeNo 작업번호
    * @return 해당 담당자의 업체별 작업 정보 목록 반환
    */
-  public List<InspectionLabelingWork> searchAllByLWTNo(int labelingWorkTimeNo);
+  public List<InspectionLabelingWork> selectAllByLWTNo(int labelingWorkTimeNo);
   
   /**
    * 담당자별 검품검수 및 라벨링 세부내역 반환
@@ -49,7 +49,7 @@ public interface InspectionLabelingDao {    //select, insert, update, delete, co
    * @param pager 페이저 객체
    * @return 페이지에 해당하고 조건에 맞는 세부 내역 목록 반환
    */
-  public List<InspectionLabelingView> searchAllDetailByLWTNo(@Param("il") InspectionLabeling inspectionLabeling, @Param("pager") Pager pager);
+  public List<InspectionLabelingView> selectAllDetailByLWTNo(@Param("il") InspectionLabeling inspectionLabeling, @Param("pager") Pager pager);
   
   /**
    * 담당자별 검품검수 및 라벨링 세부내역 개수 반환
@@ -66,7 +66,7 @@ public interface InspectionLabelingDao {    //select, insert, update, delete, co
    * @author 이동현
    * @return 담당자가 지정되지 않은 작업 목록 반환
    */
-  public List<InspectionLabelingWork> searchAllByLWTNoIsNULL();
+  public List<InspectionLabelingWork> selectAllByLWTNoIsNULL();
   
   /**
    * 담당자의 전체 작업 개수 추가하기
@@ -97,7 +97,7 @@ public interface InspectionLabelingDao {    //select, insert, update, delete, co
    * @author 이동현
    * @return 물품 수령 품목/개수 반환
    */
-  public InspectionLabelingStatus searchStatusTotal();
+  public InspectionLabelingStatus selectStatusTotal();
   
   //세부 현황 가져오기
   
@@ -107,5 +107,5 @@ public interface InspectionLabelingDao {    //select, insert, update, delete, co
    * @author 이동현
    * @return 검품검수/라벨링/양품/누락/파손 품목 및 개수 반환
    */
-  public InspectionLabelingStatus searchStatus();
+  public InspectionLabelingStatus selectStatus();
 }

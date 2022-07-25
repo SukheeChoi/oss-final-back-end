@@ -82,7 +82,7 @@
 	</resultMap>
 
 	<!-- 왼쪽 전체 데이터 가져오기 / 전체 트리 그리드 데이터 -->
-	<select id="searchAllByTotal" resultMap="LabelingWorkTimeMap">
+	<select id="selectAllByTotal" resultMap="LabelingWorkTimeMap">
 		SELECT SUM(LWT_RCV_ITM) as LWT_RCV_ITM
 			, SUM(LWT_RCV_QTY) as LWT_RCV_QTY
 			, SUM(LWT_CRT_QTY) as LWT_CRT_QTY
@@ -103,7 +103,7 @@
 	</select>
 
 	<!-- 왼쪽 담당자 기준으로 데이터 가져오기 / 2번째 트리 그리드 데이터 -->
-	<select id="searchAllByName" resultMap="LabelingWorkTimeMap">
+	<select id="selectAllByName" resultMap="LabelingWorkTimeMap">
 		select lwt.LWT_NO
 			 , emp.EMP_name
 			 , lwt.LWT_RCV_ITM
@@ -129,7 +129,7 @@
 	</select>
 
 	<!-- 왼쪽 업체명 기준으로 데이터 가져오기 / 3번째 트리 그리드 데이터 -->
-	<select id="searchAllByLWTNo" parameterType="int" resultMap="InspectionLabelingWorkMap">
+	<select id="selectAllByLWTNo" parameterType="int" resultMap="InspectionLabelingWorkMap">
 		SELECT ilw.PO_CODE 
 			, vnd.V_NAME
 			, DATE_FORMAT(po.PO_RCV_DT, '%m-%d %H:%i') AS PO_RCV_DT
@@ -154,7 +154,7 @@
 	</select>
 
 	<!-- 오른쪽 작업 담당자 기준으로 데이터 가져오기 -->
-	<select id="searchAllDetailByLWTNo"
+	<select id="selectAllDetailByLWTNo"
 		resultMap="InspectionLabelingViewMap">
 		SELECT lwt.EMP_ID
 			 , vnd.V_NAME
@@ -200,7 +200,7 @@
 	</select>
 	
 	<!-- 잔업 데이터 불러오기 -->
-	<select id="searchAllByLWTNoIsNULL"
+	<select id="selectAllByLWTNoIsNULL"
 		resultMap="InspectionLabelingWorkMap">
 		SELECT po.PO_CODE
 		, ilw.ILW_RCV_ITM
@@ -243,7 +243,7 @@
 	</select>
 
 	<!-- 현황 가져오기(물품수령 품목/개수) -->
-	<select id="searchStatusTotal"
+	<select id="selectStatusTotal"
 		resultMap="InspectionLabelingStatusMap">
 		SELECT SUM(ILW_RCV_ITM) AS SUM_RCV_ITM
 			, SUM(ILW_RCV_QTY) AS SUM_RCV_QTY 
@@ -251,7 +251,7 @@
 	</select>
 
 	<!-- 현황 가져오기(검품검수 품목/개수, 라벨링 품목/개수, 양품 품목/개수, 누락 품목/개수, 파손 품목/개수 ) -->
-	<select id="searchStatus"
+	<select id="selectStatus"
 		resultMap="InspectionLabelingStatusMap">
 		SELECT COUNT(IL_INSP_QTY) AS CNT_INSP_QTY
 			 , SUM(IL_INSP_QTY) AS SUM_INSP_QTY

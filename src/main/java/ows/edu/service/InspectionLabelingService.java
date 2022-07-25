@@ -42,14 +42,14 @@ public class InspectionLabelingService {
     
     // 2번째 담당자별 리스트
     List<LabelingWorkTime> employeeList = new ArrayList<>();
-    employeeList.addAll(inspectionLabelingDao.searchAllByName());
+    employeeList.addAll(inspectionLabelingDao.selectAllByName());
     
     //담당자별 작업에 해당하는 업체 작업 가져오기
     for (LabelingWorkTime employee : employeeList) {
       // 3번째 업체별 리스트
       List<InspectionLabelingWork> workList = new ArrayList<>();
       labelingWorkTimeNo = employee.getLabelingWorkTimeNo();
-      workList.addAll(inspectionLabelingDao.searchAllByLWTNo(labelingWorkTimeNo));
+      workList.addAll(inspectionLabelingDao.selectAllByLWTNo(labelingWorkTimeNo));
       
       for (InspectionLabelingWork labelingWork : workList) {
         // 업체별 예정 시간 정제
@@ -71,7 +71,7 @@ public class InspectionLabelingService {
     }
 
     // 1번째 전체 리스트
-    LabelingWorkTime totalList = inspectionLabelingDao.searchAllByTotal();
+    LabelingWorkTime totalList = inspectionLabelingDao.selectAllByTotal();
     
     //전체 예정 시간 정제
     String startTime = totalList.getScheduledStartTime();
@@ -102,7 +102,7 @@ public class InspectionLabelingService {
     int totalCount = inspectionLabelingDao.countDetailByLWTNO(inspectionLabeling);
     Pager pager = new Pager(pageSize, 5, totalCount, pageNo);
     
-    data.addAll(inspectionLabelingDao.searchAllDetailByLWTNo(inspectionLabeling, pager));
+    data.addAll(inspectionLabelingDao.selectAllDetailByLWTNo(inspectionLabeling, pager));
     
     Map<String, Object> map = new HashMap<>();
     map.put("data", data);
@@ -118,7 +118,7 @@ public class InspectionLabelingService {
    */
   public List<InspectionLabelingWork> getListByLWTNoIsNull() {
     List<InspectionLabelingWork> list = new ArrayList<>();
-    list.addAll(inspectionLabelingDao.searchAllByLWTNoIsNULL());
+    list.addAll(inspectionLabelingDao.selectAllByLWTNoIsNULL());
     return list;
   }
   
@@ -201,8 +201,8 @@ public class InspectionLabelingService {
    * @return 물품수령/검품검수/라벨링/양품/누락/파손 품목 및 수량 반환
    */
   public InspectionLabelingStatus getStatus() {
-    InspectionLabelingStatus total = inspectionLabelingDao.searchStatusTotal();
-    InspectionLabelingStatus status = inspectionLabelingDao.searchStatus();
+    InspectionLabelingStatus total = inspectionLabelingDao.selectStatusTotal();
+    InspectionLabelingStatus status = inspectionLabelingDao.selectStatus();
     status.setReceiveItem(total.getReceiveItem());
     status.setReceiveItemQuantity(total.getReceiveItemQuantity());
     return status;

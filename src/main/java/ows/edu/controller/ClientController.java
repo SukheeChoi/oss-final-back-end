@@ -90,8 +90,9 @@ public class ClientController {
 	 */
 	@GetMapping("/modal")
 	public Map<String, Object> getModal(@RequestParam int clientNo, @RequestParam String orderNo) {
-	  //모달 정보
+		
 	  Map<String, Object> data = clientModalService.getModal(clientNo, orderNo);
+	  
     return data;
 	}
 	
@@ -104,11 +105,11 @@ public class ClientController {
 	 */
 	@GetMapping("/modalDetail")
 	public Map<String, Object> getModalDetail(@RequestParam String orderNo) {
-    //상세 내역
-    List<ClientOrderDetail> clientOrderDetail = clientModalService.getClientOrderDetailByOrderNo(orderNo);
+
+      List<ClientOrderDetail> clientOrderDetail = clientModalService.getClientOrderDetailByOrderNo(orderNo);
     
-    Map<String, Object> map = new HashMap<>();
-    map.put("clientOrderDetail", clientOrderDetail);
+      Map<String, Object> map = new HashMap<>();
+      map.put("clientOrderDetail", clientOrderDetail);
     return map;
   }
 }

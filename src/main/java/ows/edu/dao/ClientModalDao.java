@@ -19,7 +19,7 @@ public interface ClientModalDao {
    * @param clientNo 고객번호
    * @return 고객번호에 해당하는 거래처 정보를 반환함
    */
-  public ClientDetail searchClientDetail(int clientNo);
+  public ClientDetail selectClientDetail(int clientNo);
   
   /**
    * 진행 주문 정보 반환
@@ -28,7 +28,7 @@ public interface ClientModalDao {
    * @param orderNo 주문번호
    * @return 주문번호에 해당하는 진행 주문 정보 목록 반환
    */
-  public List<SelectedOrder> searchSelectedOrder(String orderNo);
+  public List<SelectedOrder> selectSelectedOrder(String orderNo);
   
   /**
    * 전체 주문 이력 반환
@@ -38,7 +38,7 @@ public interface ClientModalDao {
    * @param orderNo 주문번호
    * @return 고객번호에 해당하는 모든 주문 이력 목록 반환(선택한 주문 제외)
    */
-  public List<ClientOrder> searchAllClientOrder(int clientNo, String orderNo);
+  public List<ClientOrder> selectAllClientOrder(int clientNo, String orderNo);
   
   /**
    * 주문 이력 상세 정보 반환
@@ -47,5 +47,5 @@ public interface ClientModalDao {
    * @param orderNo 주문번호
    * @return 주문번호에 해당하는 주문 이력 상세 정보 목록 반환
    */
-  public List<ClientOrderDetail> searchAllClientOrderDetail(String orderNo);
+  public List<ClientOrderDetail> selectAllClientOrderDetail(String orderNo);
 }
