@@ -13,7 +13,6 @@ public class AfterPickingFilter {
 	private String released;
 	private String assignee;
 	private String orderNo;
-//	private Long orderNo;
 	private String clientName;
 	private String shippingDestination;
 	private String vendorName;

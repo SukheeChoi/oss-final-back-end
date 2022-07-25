@@ -30,9 +30,9 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	@Override
 	public List<Vendor> getVendorList(int toDo, String[] dateList) {
-		log.info("실행");
 		String startDate = null;
 		String endDate = null;
+
 		if(dateList.length == 2) {
 			startDate = dateList[0];
 			endDate = dateList[1];
@@ -44,7 +44,6 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	// 담당자 필터링을 위한 조회.
 	@Override
 	public List<Employee> getAssigneeList(int toDo, String[] dateList) {
-		log.info("실행");
 		String startDate = null;
 		String endDate = null;
 		if(dateList.length == 2) {
@@ -61,7 +60,6 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 			int toDo
 			, String vendorId
 			, String[] dateList
-//			, Pager pager
 			, int pageNo
 			, int rowsPerPage
 		) {
@@ -78,8 +76,6 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 				.selectCountAllReceipt(
 					toDo, vendorId, startDate, endDate
 				);
-		log.info("## getReceiptList - totalRows" + totalRows);
-//		pager.setTotalRows(totalRows);
 		Pager pager = new Pager(rowsPerPage, 10, totalRows, pageNo);
 		
 		List<String> orderItemNoList = combineShippingDao
@@ -104,14 +100,12 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 										, String[] dateList, int pageNo
 										, int rowsPerPage							
 			) {
-		log.info("실행");
 		String startDate = null;
 		String endDate = null;
 		if(dateList.length == 2) {
 			startDate = dateList[0];
 			endDate = dateList[1];
 		}
-		// pagination을 위한 Pager객체 생성.
 		int totalRows = combineShippingDao
 							.selectCountAllDelivery(
 								toDo, employeeId, startDate, endDate
@@ -125,20 +119,8 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 				, pager);
 		
 		Map<String, Object> map = new HashMap<>();
-//		if(orderItemNoList.isEmpty()) {
-//			map.put("deliveryList", null);
-//		} else {
-//			List<CombineShipping> deliveryList = new ArrayList<>();
-//			for(String orderItemNo : orderItemNoList) {
-//				log.info("orderItemNo : " + orderItemNo);
-//				deliveryList.add(combineShippingDao.selectADelivery(orderItemNo));
-//				log.info("deliveryList : " + deliveryList);
-//			}
-//			map.put("deliveryList", deliveryList);
-//		}
-			map.put("pager", pager);
-			map.put("deliveryList", orderItemNoList);
-			log.info("deliveryList : " + orderItemNoList);
+		map.put("pager", pager);
+		map.put("deliveryList", orderItemNoList);
 		
 		return map;
 	}
