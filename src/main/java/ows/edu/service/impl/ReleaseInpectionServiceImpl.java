@@ -67,7 +67,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	 */
 	@Override
 	public List<String> getAssigneeList(AfterPickingFilter afterPickingFilter) {
-		List<String> list = afterPickingViewDao.selectReleaseInspectionEmployeeName(afterPickingFilter);
+		List<String> list = afterPickingViewDao.selectReleaseInspectionEmpNm(afterPickingFilter);
 		
 		return list;
 	}

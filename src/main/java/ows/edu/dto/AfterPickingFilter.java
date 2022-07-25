@@ -12,7 +12,8 @@ public class AfterPickingFilter {
 	private String shippingWay;
 	private String released;
 	private String assignee;
-	private Long orderNo;
+	private String orderNo;
+//	private Long orderNo;
 	private String clientName;
 	private String shippingDestination;
 	private String vendorName;

@@ -136,7 +136,7 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 		</where>
 	</select>
 
-	<select id="selectReleaseInspectionEmployeeName" resultType="string">
+	<select id="selectReleaseInspectionEmpNm" resultType="string">
 		SELECT DISTINCT RI_EMP_NAME
 		FROM V_AFT_PIC
 		WHERE RI_EMP_NAME IS NOT NULL
@@ -160,6 +160,7 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 		</if>
 		<!-- 주문번호 필터링 -->
 		<if test='orderNo != null'>
+	   		<!-- AND ORD_NO LIKE CONCAT('%',#{orderNo},'%') -->
 	   		AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%')
 		</if>
 		<!-- 거래처 필터링 -->

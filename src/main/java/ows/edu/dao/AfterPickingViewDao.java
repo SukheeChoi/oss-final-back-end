@@ -19,6 +19,6 @@ public interface AfterPickingViewDao {
 			, @Param("pager") Pager pager
 		);
 
-	public List<String> selectReleaseInspectionEmployeeName(AfterPickingFilter afterPickingFilter);
+	public List<String> selectReleaseInspectionEmpNm(AfterPickingFilter afterPickingFilter);
 
 }
