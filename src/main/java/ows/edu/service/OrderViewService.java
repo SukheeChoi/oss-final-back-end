@@ -54,7 +54,7 @@ public class OrderViewService {
     int totalRows = orderViewDao.count(orderfilter);
     Pager pager = new Pager(pageSize, 5, totalRows, pageNo);
     list.addAll(orderViewDao.selectByFilter(orderfilter, pager));
-    log.info(orderfilter);
+
     //주문 상태에 맞게 미출고 처리
     for(OrderView ov : list) {
       //피킹 지시 단계

@@ -93,7 +93,7 @@ public class InspectionLabelingController {
   @GetMapping("/workDetail")
   public Map<String, Object> getListByLWTNo(InspectionLabeling inspectionLabeling
                                                   , @RequestParam(defaultValue = "1") int pageNo
-                                                  , @RequestParam(defaultValue = "5") int pageSize) {
+                                                  , @RequestParam(defaultValue = "15") int pageSize) {
       
     Map<String, Object> map = inspectionLabelingService.getListByLWTNo(inspectionLabeling, pageNo, pageSize);
     return map;
