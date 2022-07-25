@@ -21,7 +21,13 @@ public class ClientModalService {
   @Autowired
   private ClientModalDao clientModalDao;
   
-  //모달 정보
+  /**
+   * 주문이력 정보를 반환함
+   * 
+   * @param clientNo 고객번호
+   * @param orderNo 주문번호
+   * @return 거래처 정보, 진행 주문 정보, 주문 이력을 반환함
+   */
   public Map<String, Object> getModal(int clientNo, String orderNo) {
     Map<String, Object> map = new HashMap<>();
     
@@ -40,7 +46,13 @@ public class ClientModalService {
     return map;
   }
     
-  //상세내역
+  /**
+   * 주문 이력 상세 정보를 반환함
+   * 
+   * @author 이동현
+   * @param orderNo 주문번호
+   * @return 주문 이력에 해당하는 상세 내역을 반환
+   */
   public List<ClientOrderDetail> getClientOrderDetailByOrderNo(String orderNo) {
     return clientModalDao.searchAllClientOrderDetail(orderNo);
   };

@@ -29,8 +29,13 @@ public class InspectionLabelingService {
 
   @Autowired
   private InspectionLabelingDao inspectionLabelingDao;
-
-  // (왼쪽) 트리 그리드 데이터 합치는 곳
+  
+  /**
+   * 트리 그리드에 바인딩 할 정제된 작업 데이터 반환
+   * 
+   * @author 이동현
+   * @return 2단계의 Depth를 가진 트리 그리드 작업 데이터 반환
+   */
   public LabelingWorkTime getTreeList() {
 
     int labelingWorkTimeNo = 0;
@@ -39,13 +44,14 @@ public class InspectionLabelingService {
     List<LabelingWorkTime> employeeList = new ArrayList<>();
     employeeList.addAll(inspectionLabelingDao.searchAllByName());
     
+    //담당자별 작업에 해당하는 업체 작업 가져오기
     for (LabelingWorkTime employee : employeeList) {
       // 3번째 업체별 리스트
       List<InspectionLabelingWork> workList = new ArrayList<>();
       labelingWorkTimeNo = employee.getLabelingWorkTimeNo();
       workList.addAll(inspectionLabelingDao.searchAllByLWTNo(labelingWorkTimeNo));
+      
       for (InspectionLabelingWork labelingWork : workList) {
-        
         // 업체별 예정 시간 정제
         String startTime = labelingWork.getScheduledStartTime();
         String endTime = labelingWork.getScheduledEndTime();
@@ -77,11 +83,18 @@ public class InspectionLabelingService {
     totalList.setTitle("전체");
     totalList.setChild(employeeList);
     
-
     return totalList;
   }
 
-  // (오른쪽) 담당자 세부 작업목록 가져오기
+  /**
+   * 담당자별 검품검수 및 라벨링 세부내역 반환
+   * 
+   * @author 이동현
+   * @param inspectionLabeling 작업목록
+   * @param pageNo 페이지 번호
+   * @param pageSize 페이지당 행 수
+   * @return 페이지에 해당하고 조건에 맞는 세부 내역 목록 반환
+   */
   public Map<String, Object> getListByLWTNo(InspectionLabeling inspectionLabeling, int pageNo, int pageSize) {
     
     List<InspectionLabelingView> data = new ArrayList<>();
@@ -97,17 +110,33 @@ public class InspectionLabelingService {
     return map;
   }
   
-  //잔업 가져오기
+  /**
+   * 잔업 가져오기
+   * 
+   * @author 이동현
+   * @return 담당자가 지정되지 않은 작업 목록 반환
+   */
   public List<InspectionLabelingWork> getListByLWTNoIsNull() {
     List<InspectionLabelingWork> list = new ArrayList<>();
     list.addAll(inspectionLabelingDao.searchAllByLWTNoIsNULL());
     return list;
   }
   
-  //잔업 추가하기
+  /**
+   * 해당 담당자에게 작업 추가하기
+   * 한 가지 작업이라도 실패하면 rollback
+   * 
+   * @author 이동현
+   * @param updateTime
+   * @return 성공여부 반환(시간 수정 및 작업 개수 추가, 2가지 모두 성공 시 success 반환)
+   * @throws ParseException
+   */
   @Transactional
   public String updateOvertime(UpdateTime updateTime) throws ParseException {
-    log.info(updateTime);
+	  
+	//담당자의 당일 작업 개수 추가
+	int overTimeResult = inspectionLabelingDao.updateLabelingWorkTime(updateTime.getReceiveItem(), updateTime.getReceiveQuantity(), updateTime.getLabelingWorkTimeNo());
+
     //날짜 형식변환
     String startTime = updateTime.getStartTime();
     String endTime = updateTime.getEndTime();
@@ -118,16 +147,13 @@ public class InspectionLabelingService {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일HH:mm");
     Date lastStartDate = sdf.parse(date + startTime);
     Date lastEndDate = sdf.parse(date + endTime);
+//  int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
     
     //시연용 테스트 코드
     Date testStartDate =sdf.parse("2022년 07월 27일" + startTime);
     Date testEndDate = sdf.parse("2022년 07월 27일"  + endTime);
-    
-
-    int overTimeResult = inspectionLabelingDao.updateLabelingWorkTime(updateTime.getReceiveItem(), updateTime.getReceiveQuantity(), updateTime.getLabelingWorkTimeNo());
     int testTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(testStartDate, testEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
-//    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
-    
+
     String result = "fail";
     if(overTimeResult + testTimeResult == 2) {
       result = "success";
@@ -135,7 +161,14 @@ public class InspectionLabelingService {
     return result;
   }
   
-  //작업시간 수정하기
+  /**
+   * 해당 작업의 예정시간 수정하기
+   * 
+   * @author 이동현
+   * @param updateTime
+   * @return 성공여부 반환
+   * @throws ParseException
+   */
   public String updateWorktime(UpdateTime updateTime) throws ParseException {
     //날짜 형식변환
     String startTime = updateTime.getStartTime();
@@ -143,22 +176,17 @@ public class InspectionLabelingService {
 
     SimpleDateFormat sdfYMD = new SimpleDateFormat("yyyy년 MM월 dd일");
     String date = sdfYMD.format(new Date());
-    log.info(startTime);
-    log.info(endTime);
-    log.info(date);
     
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일HH:mm");
-//    Date lastStartDate = sdf.parse(date + startTime);
-//    Date lastEndDate = sdf.parse(date + endTime);
-
+    Date lastStartDate = sdf.parse(date + startTime);
+    Date lastEndDate = sdf.parse(date + endTime);
+//  int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
+    
     //시연용 테스트 코드
     Date testStartDate = sdf.parse("2022년 07월 27일" + startTime);
     Date testEndDate = sdf.parse("2022년 07월 27일"  + endTime);
-    
-    log.info(testStartDate);
-    log.info(testEndDate);
-//    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
     int testTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(testStartDate, testEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
+    
     String result = "fail";
     if(testTimeResult == 1) {
       result = "success";
@@ -166,7 +194,12 @@ public class InspectionLabelingService {
     return result;
   }
   
-  // 라벨링 페이지 현황 가져오기
+  /**
+   * 검품검수 및 라벨링 현황 반환
+   * 
+   * @author 이동현
+   * @return 물품수령/검품검수/라벨링/양품/누락/파손 품목 및 수량 반환
+   */
   public InspectionLabelingStatus getStatus() {
     InspectionLabelingStatus total = inspectionLabelingDao.searchStatusTotal();
     InspectionLabelingStatus status = inspectionLabelingDao.searchStatus();
@@ -175,12 +208,26 @@ public class InspectionLabelingService {
     return status;
   }
 
-  // (오른쪽) 그리드 페이지용 전체 개수
+  /**
+   * 담당자별 검품검수 및 라벨링 세부내역 개수 반환
+   * 
+   * @author 이동현
+   * @param inspectionLabeling
+   * @return 조건에 맞는 데이터 개수 반환
+   */
   public int getTotalNum(InspectionLabeling inspectionLabeling) {
     return inspectionLabelingDao.countDetailByLWTNO(inspectionLabeling);
   }
 
-  // 날짜 데이터 정제 메소드
+  /**
+   * 날짜 데이터 정제 메소드
+   * 
+   * @author 이동현
+   * @param startTime 시작시간
+   * @param endTime 종료시간
+   * @param totalTime
+   * @return 점심시간을 1시간을 제외하고 원하는 날짜데이터 포맷으로 변환 후 데이터 반환
+   */
   private String setDateTime(String startTime, String endTime, int totalTime) {
     if (Integer.parseInt(startTime.substring(0, 2)) < 13 && Integer.parseInt(endTime.substring(0, 2)) > 13) {
       totalTime -= 60;

@@ -22,7 +22,12 @@ public class OrderViewService {
   @Autowired
   private OrderViewDao orderViewDao;
 
-  //상단 현황 조회
+  /**
+   * 주문확인 현황을 반환함
+   * 
+   * @author 이동현
+   * @return 전체/오스템/협력사합배송/협력사직배송/미출고 내역을 반환
+   */
   public OrderStatus getStatus() {
     OrderStatus orderStatus = new OrderStatus();
     orderStatus.setTotal(orderViewDao.countAll());
@@ -33,7 +38,15 @@ public class OrderViewService {
     return orderStatus;
   }
   
-  //조건에 맞는 리스트
+  /**
+   * 필터링 조건에 맞는 주문확인 목록을 반환함
+   * 
+   * @author 이동현
+   * @param orderFilter 회사/배송구분/미출고/검색조건/검색내용을 포함
+   * @param pageNo 페이지 번호
+   * @param pageSize 페이지당 행 수
+   * @return 전체 데이터 개수와 페이지에 해당하는 주문확인 목록 반환
+   */
   public Map<String, Object> getListByFilter(OrderFilter orderfilter, int pageNo, int pageSize) {
     List<OrderView> list = new ArrayList<>();
     
@@ -60,8 +73,13 @@ public class OrderViewService {
     map.put("totalCount", totalRows);
     return map;
   }
-  
-  //데이터 정제
+
+  /**
+   * 조건에 해당하는 데이터 정제
+   * 
+   * @param orderfilter 회사/배송구분/미출고/검색조건/검색내용을 포함
+   * @return 오스템제품/오스템상품/협력사상품(합배송)/협력사상품(직배송)/배송구분/미출고 객체 반환
+   */
   private OrderFilter setData(OrderFilter orderfilter) {
     
     //회사 제품 조건 검색
