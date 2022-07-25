@@ -65,10 +65,6 @@
 		SELECT COUNT(*) FROM TB_ORD ord WHERE ORD_NO IN (select ORD_NO FROM TB_ORD_ITM WHERE OI_URLS_QTY GROUP BY ORD_NO)
 	</select>
 	
-	<select id="select" resultMap="orderViewMap">
-		SELECT * FROM ord_view
-	</select>
-	
 	<!-- 주문 데이터 개수 가져오기  -->
 	<select id="count" resultType="int">
 		SELECT count(*) FROM ord_view
