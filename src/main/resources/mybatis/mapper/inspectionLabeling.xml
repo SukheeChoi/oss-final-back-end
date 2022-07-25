@@ -253,17 +253,17 @@
 	<!-- 현황 가져오기(검품검수 품목/개수, 라벨링 품목/개수, 양품 품목/개수, 누락 품목/개수, 파손 품목/개수 ) -->
 	<select id="selectStatus"
 		resultMap="InspectionLabelingStatusMap">
-		SELECT COUNT(IL_INSP_QTY) AS CNT_INSP_QTY
-			 , SUM(IL_INSP_QTY) AS SUM_INSP_QTY
-		     , COUNT(IL_LBL_ITM_QTY) AS CNT_LBL_QTY
-		     , SUM(IL_LBL_ITM_QTY) AS SUM_LBL_QTY
-		     , COUNT(IL_PAS_ITM_QTY) AS CNT_PAS_QTY
-		     , SUM(IL_PAS_ITM_QTY) AS SUM_PAS_QTY
-		     , COUNT(IL_MIS_ITM_QTY) AS CNT_MIS_QTY
-		     , SUM(IL_MIS_ITM_QTY) AS SUM_MIS_QTY
-		     , COUNT(IL_DMG_ITM_QTY) AS CNT_DMG_QTY
-		     , SUM(IL_DMG_ITM_QTY) AS SUM_DMG_QTY
-		FROM TB_INSP_LBL
+    SELECT COUNT(IL_INSP_QTY) AS CNT_INSP_QTY
+       , SUM(IL_INSP_QTY) AS SUM_INSP_QTY
+         , COUNT(IL_LBL_ITM_QTY) AS CNT_LBL_QTY
+         , SUM(IL_LBL_ITM_QTY) AS SUM_LBL_QTY
+         , COUNT(IL_PAS_ITM_QTY) AS CNT_PAS_QTY
+         , SUM(IL_PAS_ITM_QTY) AS SUM_PAS_QTY
+         , COUNT(IF(IL_MIS_ITM_QTY > 0, IL_MIS_ITM_QTY, NULL)) AS CNT_MIS_QTY
+         , SUM(IL_MIS_ITM_QTY) AS SUM_MIS_QTY
+         , COUNT(IF(IL_DMG_ITM_QTY > 0, IL_DMG_ITM_QTY, NULL)) AS CNT_DMG_QTY
+         , SUM(IL_DMG_ITM_QTY) AS SUM_DMG_QTY
+    FROM TB_INSP_LBL
 	</select>
 	
 	<!-- 잔업 추가 -->
