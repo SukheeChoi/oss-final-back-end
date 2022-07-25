@@ -140,9 +140,9 @@
 			, timestampdiff(Minute, ilw.ILW_SCH_SRT_TM, ilw.ILW_SCH_END_TM) AS LWT_TTL_WRK_TM
 			, DATE_FORMAT(ilw.ILW_SRT_TM, '%H:%i') AS ILW_SRT_TM
 			, DATE_FORMAT(ilw.ILW_WRK_TM, '%H:%i') AS ILW_WRK_TM
-			, FLOOR(ROUND(ilw.ILW_LBL_ITM_QTY / ilw.ILW_RCV_QTY, 2) * 100) AS ILW_PRG_RT
+			, CONCAT(FLOOR(ROUND(ilw.ILW_LBL_ITM_QTY / ilw.ILW_RCV_QTY, 2) * 100), '%') AS ILW_PRG_RT
 			, ilw.ILW_STS
-			, ilw.ILW_LT_TM
+			, CONCAT(ilw.ILW_LT_TM, '분') AS ILW_LT_TM
 			, ilw.ILW_INSP_QTY
 			, ilw.ILW_PAS_ITM_QTY
 			, ilw.ILW_LBL_ITM_QTY

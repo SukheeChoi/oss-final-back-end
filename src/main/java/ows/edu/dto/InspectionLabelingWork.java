@@ -18,9 +18,9 @@ public class InspectionLabelingWork {   //왼쪽 화면(3번)
 	private int totalWorkTime; 
 	private String startTime;
 	private String workTime;
-	private Integer progressRate;
+	private String progressRate;
 	private String status;
-	private Integer lateTime;
+	private String lateTime;
 	private Integer inspectionQuantity;
 	private Integer passItemQuantity;
 	private Integer labelingItemQuantity;

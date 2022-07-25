@@ -28,7 +28,7 @@ import ows.edu.service.InspectionLabelingService;
 @RestController
 @Log4j2
 @RequestMapping("/label")
-public class inspectionLabelingController {
+public class InspectionLabelingController {
   
   @Autowired
   private InspectionLabelingService inspectionLabelingService;
@@ -57,7 +57,7 @@ public class inspectionLabelingController {
   }
   
   //잔업 가져오기
-  @GetMapping("/overTime")
+  @GetMapping("/overtime")
   public Map<String, Object> getOverTime() {
     List<InspectionLabelingWork> data = new ArrayList<>();
     data.addAll(inspectionLabelingService.getListByLWTNoIsNull());

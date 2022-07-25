@@ -34,8 +34,6 @@ public class InspectionLabelingService {
   public LabelingWorkTime getTreeList() {
 
     int labelingWorkTimeNo = 0;
-    int totalitem = 0;
-    int totalQuantity = 0;
     
     // 2번째 담당자별 리스트
     List<LabelingWorkTime> employeeList = new ArrayList<>();
@@ -121,6 +119,7 @@ public class InspectionLabelingService {
     Date lastStartDate = sdf.parse(date + startTime);
     Date lastEndDate = sdf.parse(date + endTime);
     
+    //시연용 테스트 코드
     Date testStartDate =sdf.parse("2022년 07월 27일" + startTime);
     Date testEndDate = sdf.parse("2022년 07월 27일"  + endTime);
     
@@ -151,7 +150,8 @@ public class InspectionLabelingService {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일HH:mm");
 //    Date lastStartDate = sdf.parse(date + startTime);
 //    Date lastEndDate = sdf.parse(date + endTime);
-    
+
+    //시연용 테스트 코드
     Date testStartDate = sdf.parse("2022년 07월 27일" + startTime);
     Date testEndDate = sdf.parse("2022년 07월 27일"  + endTime);
     
