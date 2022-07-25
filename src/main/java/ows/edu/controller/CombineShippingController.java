@@ -79,6 +79,7 @@ public class CombineShippingController {
 	}
 	
 	/**
+	 * @author 최숙희
 	 * @param toDo 할일 상태값(1=할일, 0=한일)
 	 * @param vendorId 선택된 협력사PK
 	 * @param dateList [시작일, 종료일] 선택된 날짜가 없으면 당일로 조회
@@ -92,11 +93,6 @@ public class CombineShippingController {
 											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
 											, @RequestParam(value="pageNo", defaultValue="1") int pageNo
 											, @RequestParam(value="perPage", defaultValue="40") int rowsPerPage){
-		log.info("getReceiptList - toDo : " + toDo);
-		log.info("getReceiptList - vendorId : " + vendorId);
-		log.info("getReceiptList - dateList : " + dateList);
-		log.info("getReceiptList - pageNo : " + pageNo);
-		log.info("getReceiptList - rowsPerPage : " + rowsPerPage);
 
 		Map<String, Object> map = new HashMap<>();
 		map = combineShippingService
@@ -106,6 +102,7 @@ public class CombineShippingController {
 	}
 
 	/**
+	 * @author 최숙희
 	 * @param toDo 할일 상태값(1=할일, 0=한일)
 	 * @param employeeId 선택된 전달 담당자 PK
 	 * @param dateList [시작일, 종료일] 선택된 날짜가 없으면 당일로 조회
@@ -120,10 +117,6 @@ public class CombineShippingController {
 											, @RequestParam(value="pageNo", defaultValue="1") int pageNo
 											, @RequestParam(value="perPage", defaultValue="40") int rowsPerPage
 			) {
-		log.info("getDeliveryList - toDo : " + toDo);
-		log.info("getDeliveryList - employeeId : " + employeeId);
-		log.info("getDeliveryList - dateList : " + dateList);
-		log.info("getDeliveryList - pageNo : " + pageNo);
 
 		Map<String, Object> map = combineShippingService
 									.getDeliveryList(
@@ -135,13 +128,10 @@ public class CombineShippingController {
 		return map;
 	}
 	
-	// 수령여부 선택된 행들의 정보를 []로 받아와서,
-	// OI_NO를 기준으로
-	// ITM_NAME, ITM_CODE, 
 	/**
-	 * 
+	 * @author 최숙희
 	 * @param receiptListForUpdate { PK(OI_NO), 미출고 값 }
-	 * @return ORD_ITM 
+	 * @return 업데이트 성공여부 
 	 */
 	@PutMapping("/receipt")
 	public Map<String, String> updateReceipt(@RequestBody CombineShippingPartner[] receiptListForUpdate) {
@@ -152,12 +142,13 @@ public class CombineShippingController {
 		return resultMap;
 	}
 	
-// 전달여부가 선택된 행들의 정보를 []로 받아와서,
-// OI_NO를 기준으로
-// CS_DLV_QTY, CS_DLV_URLS, CS_DLV_CHK update.
+	/**
+	 * @author 최숙희
+	 * @param orderItemNoList [ PK(OI_NO) ]
+	 * @return 업데이트 성공여부 
+	 */
 	@PutMapping("/delivery")
 	public Map<String, String> updateDelivery(@RequestBody int[] orderItemNoList) {
-//		public Map<String, String> updateDelivery(@RequestBody CombineShipping[] combineShippingList) {
 		log.info("orderItemList.length : " + orderItemNoList.length);
 
 		Map<String, String> resultMap = new HashMap<>();

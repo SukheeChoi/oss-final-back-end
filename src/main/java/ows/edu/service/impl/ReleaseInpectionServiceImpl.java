@@ -115,7 +115,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 		HashMap<String, String> map = new HashMap<>();
 		for(int i=0; i<ap.size(); i++) {
 			map = ap.get(i);
-			// 비고란에 바인딩할 메모 값 조정.
+			// 비고 란에 바인딩할 메모 값이 ORD_NO가 같다면 모두 같은 값을 가지도록 조정.
 			if(ap.get(i).get("ORD_NO") != null) {
 				if(noteMap.get( String.valueOf(ap.get(i).get("ORD_NO"))) == null
 					|| noteMap.get( String.valueOf(ap.get(i).get("ORD_NO"))).equals("")
@@ -130,9 +130,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 						, noteMap.get( String.valueOf(ap.get(i).get("ORD_NO")) )
 					);
 				}
-				log.info("map : " + map);
 			}
-			
 			
 			
 			// 출고요청서 출력일시 컬럼 값을 '담당자성명+\n+(+mm:dd+ +hh:MM+)'형태로 만듦.
