@@ -37,7 +37,7 @@ public class ClientService {
 	//주문 단계 별(clientDao.statusCnt(i)) 건수 list에 삽입
 	public List<Integer> getstatusCnt() {
 		List<Integer> list = new ArrayList<>();
-		for(int i=0; i<=6; i++) {
+		for(int i=1; i<=6; i++) {
 			list.add(clientDao.getstatusCnt(i));
 		}
 		return list;

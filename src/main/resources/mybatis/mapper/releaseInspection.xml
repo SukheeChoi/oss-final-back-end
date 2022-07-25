@@ -176,4 +176,3 @@
 		and tb_ord.ord_no = #{orderNo})
 	</update>
 </mapper>
-
