@@ -12,7 +12,7 @@
 			<result property="itemCode" column="ITN_CODE"/>
 			<result property="qty" column="OI_QTY"/>
 		</association>
-		<association property="picking" javaType="picking">
+		<!-- <association property="picking" javaType="picking">
 			<result property="orderNo" column="ORD_NO"/>
 			<result property="orderItemNo" column="oi_no"/>
 			<result property="done" column="pic_dn"/>
@@ -23,7 +23,7 @@
 			<result property="employeeId" column="EMP_ID"/>
 			<result property="releaseDate" column="RLS_DT"/>
 			<result property="releaseDone" column="RLS_DN"/>
-		</association>
+		</association> -->
 	</resultMap>
 
 	<!-- 처리완료 되지 않은 주문의 개수, 현황(주문건) -->

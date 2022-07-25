@@ -225,7 +225,7 @@ WHERE 필드이름=데이터값 -->
 		WHERE TB_BRCD.BRCD_NO = #{barCode}
 	</update>
 	
-	<resultMap id="releaseInspectionScanMap" type="releaseInspection">
+	<!-- <resultMap id="releaseInspectionScanMap" type="releaseInspection">
 		<result property="releaseInspectionQuantity" column="RI_QTY"/>
 		<result property="unReleased" column="RI_URLS"/>		
 		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
@@ -254,6 +254,6 @@ WHERE 필드이름=데이터값 -->
 		update TB_RLS_INSP set
 		ri_qty = ri_qty + #{releaseInspectionQty}
 		where oi_no = #{orderItemNo}
-	</update>
+	</update> -->
 </mapper>
 
