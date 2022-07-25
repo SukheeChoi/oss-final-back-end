@@ -15,34 +15,97 @@ import ows.edu.dto.Pager;
 
 @Mapper
 public interface InspectionLabelingDao {    //select, insert, update, delete, count
-  //(왼쪽) 전체 작업 가져오기(1)
-  public LabelingWorkTime searchAllByTotal();
-  
-  //(왼쪽) 담당자 기준으로 전체 작업 가져오기(2)
-  public List<LabelingWorkTime> searchAllByName();
 
-  //(왼쪽) 담당자별 작업 업체 가져오기(3)
-  public List<InspectionLabelingWork> searchAllByLWTNo(int labelingWorkTimeNo);
+  /**
+   * 전체 검품검수 및 라벨링 작업 합산 데이터 반환
+   * 
+   * @author 이동현
+   * @return 담당자별 작업 리스트의 합산 데이터 반환
+   */
+  public LabelingWorkTime selectAllByTotal();
   
-  //(오른쪽) 담당자 세부 작업목록 가져오기
-  public List<InspectionLabelingView> searchAllDetailByLWTNo(@Param("il") InspectionLabeling inspectionLabeling, @Param("pager") Pager pager);
+  /**
+   * 담당자별 검품검수 및 라벨링 작업 정보 반환
+   * 
+   * @author 이동현
+   * @return 담당자별 작업 정보 목록 반환
+   */
+  public List<LabelingWorkTime> selectAllByName();
+
+  /**
+   * 담당자별 검품검수 및 라벨링 작업 업체 정보 반환
+   * 
+   * @author 이동현
+   * @param labelingWorkTimeNo 작업번호
+   * @return 해당 담당자의 업체별 작업 정보 목록 반환
+   */
+  public List<InspectionLabelingWork> selectAllByLWTNo(int labelingWorkTimeNo);
   
-  //(오른쪽) 카운트
+  /**
+   * 담당자별 검품검수 및 라벨링 세부내역 반환
+   * 
+   * @author 이동현
+   * @param inspectionLabeling 작업번호, 검색조건, 검색내용을 포함
+   * @param pager 페이저 객체
+   * @return 페이지에 해당하고 조건에 맞는 세부 내역 목록 반환
+   */
+  public List<InspectionLabelingView> selectAllDetailByLWTNo(@Param("il") InspectionLabeling inspectionLabeling, @Param("pager") Pager pager);
+  
+  /**
+   * 담당자별 검품검수 및 라벨링 세부내역 개수 반환
+   * 
+   * @author 이동현
+   * @param inspectionLabeling 작업번호, 검색조건, 검색내용을 포함
+   * @return 조건에 맞는 데이터 개수 반환
+   */
   public int countDetailByLWTNO(InspectionLabeling inspectionLabeling);
   
-  //잔업 가져오기
-  public List<InspectionLabelingWork> searchAllByLWTNoIsNULL();
+  /**
+   * 잔업 가져오기
+   * 
+   * @author 이동현
+   * @return 담당자가 지정되지 않은 작업 목록 반환
+   */
+  public List<InspectionLabelingWork> selectAllByLWTNoIsNULL();
   
-  //잔업 추가하기
+  /**
+   * 담당자의 전체 작업 개수 추가하기
+   * 
+   * @author 이동현
+   * @param receiveItem 수령폼목개수
+   * @param receiveQuantity 수령수량
+   * @param labelingWorkTimeNo 작업번호
+   * @return 작업 개수 추가 성공여부(1 성공, 0 실패)
+   */
   public int updateLabelingWorkTime(int receiveItem, int receiveQuantity, int labelingWorkTimeNo);
   
-  //시간 수정하기
+  /**
+   * 예정작업시간 수정하기
+   * 
+   * @author 이동현
+   * @param startTime 시작시간
+   * @param endTime 종료시간
+   * @param labelingWorkTimeNo 작업번호
+   * @param placingOrderNo 발주번호
+   * @return 예정시간 수정 성공여부(1 성공, 0 실패)
+   */
   public int updateInspectionLabelingWork(Date startTime, Date endTime, int labelingWorkTimeNo, String placingOrderNo);
   
-  //단건일때는 널 체크 잘 하기(list는 isEmpty)
-  //전체 현황 가져오기
-  public InspectionLabelingStatus searchStatusTotal();
+  /**
+   * 물품 수령 현황 반환
+   * 
+   * @author 이동현
+   * @return 물품 수령 품목/개수 반환
+   */
+  public InspectionLabelingStatus selectStatusTotal();
   
   //세부 현황 가져오기
-  public InspectionLabelingStatus searchStatus();
+  
+  /**
+   * 검품검수 및 라벨링 현황 반환
+   * 
+   * @author 이동현
+   * @return 검품검수/라벨링/양품/누락/파손 품목 및 개수 반환
+   */
+  public InspectionLabelingStatus selectStatus();
 }

@@ -3,7 +3,51 @@
   
 <configuration>
 	<typeAliases>
-		<!-- <typeAlias type="ows.edu.dto.Board" alias="board"/> -->
+		<typeAlias type="ows.edu.dto.AfterPicking" alias="afterPicking"/>
+		<typeAlias type="ows.edu.dto.AfterPickingView" alias="afterPickingView"/>
+		<typeAlias type="ows.edu.dto.Branch" alias="branch"/>
+		<typeAlias type="ows.edu.dto.Client" alias="client"/>
+		<typeAlias type="ows.edu.dto.ClientDetail" alias="clientdetail"/>
+		<typeAlias type="ows.edu.dto.CombineShipping" alias="combineShipping"/>
+		<typeAlias type="ows.edu.dto.CombineShippingPartner" alias="combineShippingPartner"/>
+		<typeAlias type="ows.edu.dto.Department" alias="department"/>
+		<typeAlias type="ows.edu.dto.Employee" alias="employee"/>
+
+		<typeAlias type="ows.edu.dto.InspectionLabeling" alias="inspectionLabeling"/>
+		<typeAlias type="ows.edu.dto.InspectionLabelingView" alias="inspectionLabelingView"/>
+		<typeAlias type="ows.edu.dto.InspectionLabelingWork" alias="inspectionLabelingWork"/>
+		<typeAlias type="ows.edu.dto.InspectionLabelingStatus" alias="inspectionlabelingStatus"/>
+		<typeAlias type="ows.edu.dto.InformationPartner" alias="informationPartner"/>
+
+		<typeAlias type="ows.edu.dto.Item" alias="item"/>
+		<typeAlias type="ows.edu.dto.LabelingWorkTime" alias="labelingWorkTime"/>
+		<typeAlias type="ows.edu.dto.Location" alias="location"/>
+		<typeAlias type="ows.edu.dto.Lot" alias="lot"/>
+		<typeAlias type="ows.edu.dto.Lct" alias="lct"/>
+		<typeAlias type="ows.edu.dto.LotLocation" alias="lotlocation"/>
+		<typeAlias type="ows.edu.dto.Order" alias="order"/>
+		<typeAlias type="ows.edu.dto.OrderView" alias="orderView"/>
+		<typeAlias type="ows.edu.dto.OrderItem" alias="orderitem"/>
+		<typeAlias type="ows.edu.dto.OrderFilter" alias="orderfilter"/>
+		<typeAlias type="ows.edu.dto.OrderStatus" alias="orderstatus"/>
+		<typeAlias type="ows.edu.dto.Packing" alias="packing"/>
+		<typeAlias type="ows.edu.dto.Picking" alias="picking"/>
+		<typeAlias type="ows.edu.dto.PickingDirection" alias="pickingdirection"/>
+		<typeAlias type="ows.edu.dto.PlacingOrder" alias="placingorder"/>
+		<typeAlias type="ows.edu.dto.PlacingOrderItem" alias="placingorderitem"/>
+		<typeAlias type="ows.edu.dto.Release" alias="release"/>
+		<typeAlias type="ows.edu.dto.ReleaseInspection" alias="releaseinspection"/>
+		<typeAlias type="ows.edu.dto.ReleasePacking" alias="releasePacking"/>
+		<typeAlias type="ows.edu.dto.Transfer" alias="transfer"/>
+		<typeAlias type="ows.edu.dto.Vendor" alias="vendor"/>
+		<typeAlias type="ows.edu.dto.Pager" alias="pager"/>
+		<typeAlias type="ows.edu.dto.Board" alias="board"/>
+		<typeAlias type="ows.edu.dto.Box" alias="box"/>		
+		<typeAlias type="ows.edu.dto.ClientDetail" alias="clientDetail"/>
+		<typeAlias type="ows.edu.dto.SelectedOrder" alias="selectedOrder"/>
+		<typeAlias type="ows.edu.dto.ClientOrder" alias="clientOrder"/>
+		<typeAlias type="ows.edu.dto.ClientOrderDetail" alias="clientOrderDetail"/>
+
 	</typeAliases>	
 </configuration>
 

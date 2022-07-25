@@ -50,7 +50,7 @@
 	</resultMap>
 
 	<!-- 거래처 정보 -->
-	<select id="selectClientDetail" parameterType="int" resultMap="clientDetailMap">
+	<select id="searchClientDetail" parameterType="int" resultMap="clientDetailMap">
 		SELECT CONCAT(clt.CLT_NAME, '(', clt.CLT_NO, ')') AS CLT_NAME
 			, CONCAT(clt.CLT_RPR, ' 원장') AS CLT_RPR
 		    , clt.CLT_RPR_CNT
@@ -68,7 +68,7 @@
 	</select>
 	
 	<!-- 진행 주문 정보 -->
-	<select id="selectSelectedOrder" parameterType="string" resultMap="recentOrderMap">
+	<select id="searchSelectedOrder" parameterType="string" resultMap="recentOrderMap">
 		SELECT ord.ORD_NO
 			, ord.ORD_SHP_CAT
 		    , DATE_FORMAT(ord.ORD_DT, '%m-%d %H:%i') AS ORD_DT
@@ -92,7 +92,7 @@
 	</select>
 	
 	<!-- 과거 주문 이력 -->
-	<select id="selectAllClientOrder" resultMap="pastOrderMap">
+	<select id="searchAllClientOrder" resultMap="pastOrderMap">
 		select clt.CLT_NAME
 			, DATE_FORMAT(ord.ORD_DT, '%Y-%m-%d') AS ORD_DT
 			, orditm.ITM_CODE
@@ -111,7 +111,7 @@
 	</select>
 
 	<!-- 과거 주문 상세 내역 -->
-	<select id="selectAllClientOrderDetail" parameterType="string" resultMap="pastOrderDetailMap">
+	<select id="searchAllClientOrderDetail" parameterType="string" resultMap="pastOrderDetailMap">
 		select itm.ITM_NAME
 		, orditm.ITM_CODE
 		, orditm.OI_QTY

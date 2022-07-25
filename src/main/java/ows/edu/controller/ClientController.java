@@ -74,20 +74,36 @@ public class ClientController {
 		return unreleaseCnt;
 	}
 	
+	/**
+	 * 주문이력 정보를 반환함
+	 * 
+	 * @author 이동현
+	 * @param clientNo 고객번호
+	 * @param orderNo 주문번호
+	 * @return 거래처 정보, 진행 주문 정보, 주문 이력을 반환함
+	 */
 	@GetMapping("/modal")
 	public Map<String, Object> getModal(@RequestParam int clientNo, @RequestParam String orderNo) {
-	  //모달 정보
+		
 	  Map<String, Object> data = clientModalService.getModal(clientNo, orderNo);
+	  
     return data;
 	}
 	
+	/**
+	 * 주문 이력 상세 정보를 반환함
+	 * 
+	 * @author 이동현
+	 * @param orderNo 주문번호
+	 * @return 주문 이력에 해당하는 상세 내역을 반환
+	 */
 	@GetMapping("/modalDetail")
 	public Map<String, Object> getModalDetail(@RequestParam String orderNo) {
-    //상세 내역
-    List<ClientOrderDetail> clientOrderDetail = clientModalService.getClientOrderDetailByOrderNo(orderNo);
+
+      List<ClientOrderDetail> clientOrderDetail = clientModalService.getClientOrderDetailByOrderNo(orderNo);
     
-    Map<String, Object> map = new HashMap<>();
-    map.put("clientOrderDetail", clientOrderDetail);
+      Map<String, Object> map = new HashMap<>();
+      map.put("clientOrderDetail", clientOrderDetail);
     return map;
   }
 }
