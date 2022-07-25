@@ -6,5 +6,6 @@ import ows.edu.dto.CombineShippingPartner;
 
 @Mapper
 public interface OrderItemDao {
+	public int sumUnreleasedByStatus(int status);
 	public int updateOiUnreleaseQuantity(CombineShippingPartner combineShippingPartner);
 }

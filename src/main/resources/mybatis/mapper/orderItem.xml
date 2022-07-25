@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.OrderItemDao">
+
  	<update id="updateOiUnreleaseQuantity" parameterType="combineShippingPartner">
  		UPDATE TB_ORD_ITM
  		SET OI_URLS_QTY=#{receiveUnreleaseQuantity}

@@ -1,60 +1,35 @@
 package ows.edu.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ows.edu.dto.AfterPickingFilter;
 import ows.edu.dto.Box;
 import ows.edu.dto.Pager;
-import ows.edu.dto.ReleaseInspection;
 import ows.edu.dto.ReleasePacking;
 
 @Transactional
 public interface ReleaseInspectionService {
-	
+	/**
+	 * @author 최숙희
+	 * @return Map<String, Object> 출고검수/패킹 진행 페이지의 현황 정보
+	 */
 	Map<String, Object> getSummary();
 	
-	// 출고검수/패킹 담당자 이름 목록 조회.
-	List<String> getAssigneeList(
-			String shippingCategory
-			, String shippingWay
-			, String released
-			, int orderNo
-			, String clientName
-			, String shippingDestination
-			, String vendorName
-	);
-	
-	int getTotalRows(
-			String shippingCategory
-			, String shippingWay
-			, String released
-			, String assignee
-			, int orderNo
-			, String clientName
-			, String shippingDestination
-			, String vendorName
-			
-			, int pageNo
-	);
-
-//	List<AfterPicking> getAfterPickingList(
-	List<HashMap<String, String>> getAfterPickingList(
-//	List<AfterPickingView> getAfterPickingList(
-			String shippingCategory
-			, String shippingWay
-			, String released
-			, String assignee
-			, int orderNo
-			, String clientName
-			, String shippingDestination
-			, String vendorName
-			
-//			, int pageNo
-			, Pager pager
-		);
+	/**
+	 * @author 최숙희
+	 * @param afterPickingFilter 필터 객체
+	 * @return List<String> 출고검수/패킹 담당자 이름 목록
+	 */
+	List<String> getAssigneeList(AfterPickingFilter afterPickingFilter);
+	/**
+	 * @author 최숙희
+	 * @param afterPickingFilter 필터 객체
+	 * @return Map<String, Object> 출고검수/패킹 진행 목록
+	 */
+	Map<String, Object> getAfterPickingList(AfterPickingFilter afterPickingFilter);
 	
 	
 	//현주 ====================================================================================================
@@ -71,9 +46,9 @@ public interface ReleaseInspectionService {
 
 	
 	//검수수량, 미출고 수량 업데이트
-	public int releaseInspectionQtyUpdate(String releaseCode, String barCode);
+	public void releaseInspectionQtyUpdate(String barCode);
 
-	public int unRleaseQtyUpdate(String releaseCode, String barCode);
+	public void unRleaseQtyUpdate(String barCode);
 	
 	//스캔
 	public List<ReleasePacking> scan(String code, String kind);
@@ -83,4 +58,7 @@ public interface ReleaseInspectionService {
 	
 	//스캔했을 때, 박스별품목정보 띄어주는 용도
 	public List<ReleasePacking> selectByReleaseCode(String releaseCode);
+	
+	//출고검수일 업데이트
+	public int updateReleaseInspectionDate(Long orderNo);
 }

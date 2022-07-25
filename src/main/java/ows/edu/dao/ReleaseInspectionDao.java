@@ -12,15 +12,12 @@ import ows.edu.dto.AfterPicking;
 public interface ReleaseInspectionDao {
 	// 완료되지 않은 주문에 대한 출고검수 진행 건수 조회.
 	public int countReleaseInspection();
-	// 출고검수 단계의 미출고 건수 조회.
-	public int sumUnreleased();
 	// 출고검수 단계의 긴급 배송 건수 조회.
 	public int countExpressShipping();
 	// 출고검수 단계의 일반 배송 건수 조회.
 	public int countNormalShipping();
 	
 	// 출고검수/패킹 진행 페이지에 대한 전체 조회.
-//	public List<AfterPicking> selectAfterPickingList(
 	public List<AfterPicking> selectAfterPickingList(
 		String shippingCategory
 		, String shippingWay
@@ -37,12 +34,15 @@ public interface ReleaseInspectionDao {
 
 	//========================현주========================
 	//검수수량 업데이트
-	public int releaseInspectionQtyUpdate(@Param("releaseCode") String releaseCode, @Param("barCode") String barCode);
+	public int releaseInspectionQtyUpdate(@Param("barCode") String barCode);
 	
 	//미출고수량 업데이트
-	public int unRleaseQtyUpdate(@Param("releaseCode") String releaseCode, @Param("barCode") String barCode);
+	public int unRleaseQtyUpdate(@Param("barCode") String barCode);
 	
 	//출고검수수량 업데이트
 	public int update(Map<String, Integer> map);
+	
+	//출고검수일 업데이트
+	public int updateReleaseInspectionDate(Long orderNo);
 }
 
