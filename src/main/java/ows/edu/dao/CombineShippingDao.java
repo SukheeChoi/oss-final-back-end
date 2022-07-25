@@ -19,7 +19,6 @@ public interface CombineShippingDao {
 									, @Param("endDate") String endDate);
 
 	// 담당자 필터링을 위한 조회.
-//	public List<String> selectAssigneeList(@Param("toDo") int toDo
 	public List<Employee> selectAssigneeList(@Param("toDo") int toDo
 												, @Param("startDate") String startDate
 												, @Param("endDate") String endDate);
@@ -49,7 +48,6 @@ public interface CombineShippingDao {
 
 	// 수령여부 update.
 	public int updateAReceipt(CombineShippingPartner combineShippingPartner);
-//	public int updateAReceipt(CombineShipping combineShipping);
 	
 	// 전달여부 update.
 	public int updateADelivery(int orderItemNo);

@@ -43,17 +43,15 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	
 	// 담당자 필터링을 위한 조회.
 	@Override
-	public List<Employee> getAssigneeListByDate(int toDo, String[] dateList) {
+	public List<Employee> getAssigneeList(int toDo, String[] dateList) {
 		log.info("실행");
 		String startDate = null;
 		String endDate = null;
-		log.info("dateList.length" + dateList.length);
 		if(dateList.length == 2) {
 			startDate = dateList[0];
 			endDate = dateList[1];
 		}
 		List<Employee> list = combineShippingDao.selectAssigneeList(toDo, startDate, endDate);
-		log.info("service getAssigneeListByDate - list : " + list);
 		return list;
 	}
 	
@@ -94,17 +92,6 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 									);
 		
 		Map<String, Object> map = new HashMap<>();
-//		if(orderItemNoList.isEmpty()) {
-//			map.put("receiptList", null);
-//		} else {
-//			List<CombineShipping> receiptList = new ArrayList<>();
-//			for(String orderItemNo : orderItemNoList) {
-//				log.info("orderItemNo : " + orderItemNo);
-//				receiptList.add(combineShippingDao.selectAReceipt(orderItemNo));
-//			}
-//			log.info("receiptList : " + receiptList);
-//			map.put("receiptList", receiptList);
-//		}
 			map.put("pager", pager);
 			map.put("receiptList", orderItemNoList);
 		
@@ -161,7 +148,6 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	// TB_ORD_ITM OI_URLS_QTY 업데이트.
 	@Override
 	public String updateReceipt(CombineShippingPartner[] combineShippingPartnerList) {
-//	public String updateReceipt(CombineShipping[] combineShippingList) {
 		String result = "fail";
 		int totalAffectedRows = 0;
 		for(CombineShippingPartner combineShippingPartner : combineShippingPartnerList) {
