@@ -233,9 +233,7 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 	   		AND V_NAME LIKE CONCAT('%',#{afterPickingFilter.vendorName},'%')
 	   	</if>
 		</where>
-		<!-- LIMIT : row의 개수 -->
 		LIMIT #{pager.rowsPerPage}
-		<!-- OFFSET : 시작 row의 index -->
 		OFFSET #{pager.startRowIndex}
 	</select>
 	
