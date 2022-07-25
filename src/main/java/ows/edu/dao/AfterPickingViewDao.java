@@ -18,6 +18,10 @@ public interface AfterPickingViewDao {
 			@Param("afterPickingFilter") AfterPickingFilter afterPickingFilter
 			, @Param("pager") Pager pager
 		);
+	public List<Long> selectOrderNo(
+			@Param("afterPickingFilter") AfterPickingFilter afterPickingFilter
+			, @Param("pager") Pager pager
+		);
 
 	public List<String> selectReleaseInspectionEmpNm(AfterPickingFilter afterPickingFilter);
 

@@ -3,11 +3,26 @@
 
 <mapper namespace="ows.edu.dao.OrderItemDao">
 
+ 	<select id="selectOiNo" resultType="Integer">
+ 		SELECT OI_NO
+ 		FROM TB_ORD_ITM
+ 		WHERE ORD_NO=#{ordNo}
+ 	</select>
+ 	
+ 	<select id="selectConcatNote" resultType="string">
+ 		SELECT CONCAT_WS('\n',
+ 		<foreach collection="oiNoList" item="oiNo" index="index" separator="," close="">
+		 (SELECT OI_NT FROM TB_ORD_ITM WHERE OI_NO=#{oiNo})
+		</foreach>
+		) as NT
+ 	</select>
+ 	
  	<update id="updateOiUnreleaseQuantity" parameterType="combineShippingPartner">
  		UPDATE TB_ORD_ITM
  		SET OI_URLS_QTY=#{receiveUnreleaseQuantity}
  		WHERE OI_NO=#{orderItemNo}
  	</update>
+ 	
 </mapper>
 
 
