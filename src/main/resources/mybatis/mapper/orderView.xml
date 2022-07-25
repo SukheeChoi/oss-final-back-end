@@ -3,188 +3,293 @@
 
 <mapper namespace="ows.edu.dao.OrderViewDao">
 	<resultMap id="orderViewMap" type="orderView">
-		<result property="orderDate" column="ORD_DT"/>
-		<result property="orderNo" column="ORD_NO"/>
-		<result property="clientName" column="CLT_NAME"/>
-		<result property="itemName" column="ITM_NAME"/>
-		<result property="itemCode" column="ITM_CODE"/>
-		<result property="orderItemQuantity" column="OI_QTY"/>
-		<result property="shippingCategory" column="ORD_SHP_CAT"/>
-		<result property="vendorName" column="V_NAME"/>
-		
-		<result property="pickingDirectionAttempt" column="PD_ATM"/>
-		<result property="pickingDirectionDate" column="PD_DT"/>
-		<result property="pickingDirectionQuantity" column="PD_QTY"/>
-		
-		<result property="pickingEmployee" column="PIC_NAME"/>
-		<result property="pickingQuantity" column="PIC_QTY"/>
-		<result property="pickingDate" column="PIC_DT"/>
-		
-		<result property="orderShippingWay" column="ORD_SHP_WAY"/>
-		<result property="orderCheckDate" column="IP_ORD_CHK_DT"/>
-		<result property="releaseQuantity" column="IP_RLS_QTY"/>
-		<result property="releaseScheduleDate" column="IP_RLS_SCH_DT"/>
-		<result property="recieveDate" column="CSP_RCV_DT"/>
-		
-		<result property="packingInspectionEmployee" column="RI_NAME"/>
-		<result property="inspectionDate" column="RI_DT"/>
-		
-		<result property="releaseEmployee" column="RLS_NAME"/>
-		<result property="releaseDate" column="RLS_DT"/>
-		
-		<result property="transferEmployee" column="TRF_NAME"/>
-		<result property="transferDate" column="TRF_DT"/>
-		
-		<result property="orderStatus" column="ORD_STS"/>
-		<result property="unrelease" column="OI_URLS_QTY"/>
-		<result property="itemOSS" column="ITM_OSS"/>
+		<result property="orderDate" column="ORD_DT" />
+		<result property="orderNo" column="ORD_NO" />
+		<result property="clientName" column="CLT_NAME" />
+		<result property="itemName" column="ITM_NAME" />
+		<result property="itemCode" column="ITM_CODE" />
+		<result property="orderItemQuantity" column="OI_QTY" />
+		<result property="shippingCategory" column="ORD_SHP_CAT" />
+		<result property="vendorName" column="V_NAME" />
+
+		<result property="pickingDirectionAttempt" column="PD_ATM" />
+		<result property="pickingDirectionDate" column="PD_DT" />
+		<result property="pickingDirectionQuantity" column="PD_QTY" />
+
+		<result property="pickingEmployee" column="PIC_NAME" />
+		<result property="pickingQuantity" column="PIC_QTY" />
+		<result property="pickingDate" column="PIC_DT" />
+
+		<result property="orderShippingWay" column="ORD_SHP_WAY" />
+		<result property="orderCheckDate" column="IP_ORD_CHK_DT" />
+		<result property="releaseQuantity" column="IP_RLS_QTY" />
+		<result property="releaseScheduleDate" column="IP_RLS_SCH_DT" />
+		<result property="recieveDate" column="CSP_RCV_DT" />
+
+		<result property="packingInspectionEmployee" column="RI_NAME" />
+		<result property="inspectionDate" column="RI_DT" />
+
+		<result property="releaseEmployee" column="RLS_NAME" />
+		<result property="releaseDate" column="RLS_DT" />
+
+		<result property="transferEmployee" column="TRF_NAME" />
+		<result property="transferDate" column="TRF_DT" />
+
+		<result property="orderStatus" column="ORD_STS" />
+		<result property="unrelease" column="OI_URLS_QTY" />
+		<result property="itemOSS" column="ITM_OSS" />
 	</resultMap>
-	
+
 	<!-- 상단 현황 전체 건수 -->
 	<select id="countAll" resultType="int">
 		SELECT COUNT(*) FROM TB_ORD
 	</select>
-	
+
 	<!-- 상단 오스템 전체 건수 -->
 	<select id="countOsstem" resultType="int">
-		SELECT COUNT(*) FROM TB_ORD WHERE ORD_SHP_WAY = '오스템'
+		SELECT COUNT(*) FROM TB_ORD
+		WHERE ORD_SHP_WAY = '오스템'
 	</select>
-	
+
 	<!-- 상단 협력사합배송 전체 건수 -->
 	<select id="countVendorPlus" resultType="int">
-		SELECT COUNT(*) FROM TB_ORD WHERE ORD_SHP_WAY = '합배송'
+		SELECT COUNT(*) FROM
+		TB_ORD WHERE ORD_SHP_WAY = '합배송'
 	</select>
-	
+
 	<!-- 상단 협력사직배송 전체 건수 -->
 	<select id="countVendorDir" resultType="int">
-		SELECT COUNT(*) FROM TB_ORD WHERE ORD_SHP_WAY = '협력사'
+		SELECT COUNT(*) FROM
+		TB_ORD WHERE ORD_SHP_WAY = '협력사'
 	</select>
-	
+
 	<!-- 상단 미출고 전체 건수 -->
 	<select id="countunleased" resultType="int">
-		SELECT COUNT(*) FROM TB_ORD ord WHERE ORD_NO IN (select ORD_NO FROM TB_ORD_ITM WHERE OI_URLS_QTY GROUP BY ORD_NO)
+		SELECT COUNT(*) FROM
+		TB_ORD ord WHERE ORD_NO IN (select ORD_NO FROM TB_ORD_ITM WHERE
+		OI_URLS_QTY GROUP BY ORD_NO)
 	</select>
-	
-	<select id="select" resultMap="orderViewMap">
-		SELECT * FROM ord_view
-	</select>
-	
-	<!-- 주문 데이터 개수 가져오기  -->
+
+	<!-- 주문 데이터 개수 가져오기 -->
 	<select id="count" resultType="int">
-		SELECT count(*) FROM ord_view
-		
-		<if test="company != null and shippingway != null and unreleased != null">
-		WHERE (
-			<!-- 오스템 제품  -->
-			<if test="itemOSS == 1">						
-				(ITM_OSS = 1 AND V_NAME = '오스템')
-			</if>
-					
-			<if test="itemOSSPRO == 1">
-				<if test="itemOSS == 1">
-					OR
-				</if>		
-				(ITM_OSS = 1 AND V_NAME != '오스템')
-			</if>
-			
-			<if test="itemVND == 1">
-				<if test="itemOSS == 1 or itemOSSPRO == 1">
-					OR
-				</if>  					
-				(ITM_OSS = 0 AND ORD_SHP_WAY = '직배송')
-			</if>
+		select COUNT(*)
+		FROM (SELECT ORD_NO, ITM_CODE, OI_NO, OI_QTY, OI_URLS_QTY FROM TB_ORD_ITM) orditm
+		LEFT JOIN
+		  (SELECT ORD_NO, ORD_DT, ORD_SHP_CAT, ORD_SHP_WAY, ORD_STS, CLT_NO FROM TB_ORD) ord
+		    ON ord.ORD_NO = orditm.ORD_NO
+		JOIN
+		  (SELECT CLT_NO, CLT_NAME FROM TB_CLT) clt
+		    ON ord.CLT_NO = clt.CLT_NO
+		JOIN
+		  (SELECT ITM_CODE, ITM_NAME, ITM_OSS, V_NO FROM TB_ITM) itm
+		    ON orditm.ITM_CODE = itm.ITM_CODE
+		LEFT JOIN
+		  (SELECT V_NO, V_NAME FROM TB_VND) vnd
+		    ON itm.V_NO = vnd.V_NO
+		    
+		-- 피킹지시 조인
+		LEFT JOIN
+		  (SELECT OI_NO, PD_ATM, PD_DT, PD_QTY FROM TB_PIC_DRC) pd
+		    ON orditm.OI_NO = pd.OI_NO
 
-			<if test="itemVNDPLUS == 1">
-				<if test="itemOSS == 1 or itemOSSPRO == 1 or itemVND == 1">
-					OR
-				</if>  							
-				(ITM_OSS = 0 AND ORD_SHP_WAY = '합배송')
-			</if>
-		)
-		 <!-- 긴급 일반  -->               
-         <if test="shippingCategory == 1">   <!-- 긴급 -->
-            AND ORD_SHP_CAT = '긴급'
-         </if>
+		-- 피킹 조인
+		LEFT JOIN
+		  (SELECT OI_NO, PIC_QTY, PIC_DT, EMP_ID FROM TB_PIC) pic
+		    ON orditm.OI_NO = pic.OI_NO
 
-         <if test="shippingCategory == 2">   <!-- 일반 --> 
-            AND ORD_SHP_CAT = '일반'
-         </if>
-         
-         <!-- 출고 미출고  -->         
-         <if test="pickingdirectionUnreleased == 1">   <!-- 출고 -->
-            AND OI_URLS_QTY IS NULL || OI_URLS_QTY = 0
-         </if>
-         <if test="pickingdirectionUnreleased == 2">   <!-- 미출고  -->
-            AND OI_URLS_QTY >= 1
-         </if>
-         
-         <if test='searchSelected != null and searchContent != null and searchSelected.equals("주문번호")'>
-         	AND ORD_NO LIKE CONCAT('%', #{searchContent}, '%')
-         </if>
-         <if test='searchSelected != null and searchContent != null and searchSelected.equals("거래처")'>
-         	AND CLT_NAME LIKE CONCAT('%', #{searchContent}, '%')
-         </if>
-    	</if>
+		-- 협력사 조인
+		LEFT JOIN
+		  (SELECT OI_NO, CS_ORD_CHK_DT, CS_RCV_QTY, CS_RLS_SCH_DT, CS_RCV_DT FROM TB_CMB_SHP) cs
+		    ON orditm.OI_NO = cs.OI_NO
+
+		-- 출고검수 조인
+		LEFT JOIN
+		  (SELECT OI_NO, EMP_ID, RI_DT FROM TB_RLS_INSP) ri
+		    ON orditm.OI_NO = ri.OI_NO
+
+		-- 출고 조인
+		LEFT JOIN
+		  (SELECT ORD_NO, RLS_DT, EMP_ID FROM TB_RLS) rls
+		    ON ord.ORD_NO = rls.ORD_NO
+
+		-- 인계 조인
+		LEFT JOIN
+		  (SELECT ORD_NO, EMP_ID, TRF_DT FROM TB_TRF) trf
+		    ON ord.ORD_NO = trf.ORD_NO
+		    
+    WHERE 1=1
+
+		<!-- 오스템 제품 -->
+		<if test="of.itemOSS == 1">
+			OR (ITM_OSS = 1 AND V_NAME = '오스템')
+		</if>
+
+		<if test="of.itemOSSPRO == 1">
+			OR (ITM_OSS = 1 AND V_NAME != '오스템')
+		</if>
+
+		<if test="of.itemVND == 1">
+			OR (ITM_OSS = 0 AND ORD_SHP_WAY = '직배송')
+		</if>
+
+		<if test="of.itemVNDPLUS == 1">
+			OR (ITM_OSS = 0 AND ORD_SHP_WAY = '합배송')
+		</if>
+
+		<!-- 긴급 일반 -->
+		<if test="of.shippingCategory == 1">   <!-- 긴급 -->
+			AND ORD_SHP_CAT = '긴급'
+		</if>
+
+		<if test="of.shippingCategory == 2">   <!-- 일반 -->
+			AND ORD_SHP_CAT = '일반'
+		</if>
+
+		<!-- 출고 미출고 -->
+		<if test='of.pickingdirectionUnreleased == 1'>   <!-- 출고 -->
+			AND OI_URLS_QTY IS NULL || OI_URLS_QTY = 0
+		</if>
+		<if test="of.pickingdirectionUnreleased == 2">   <!-- 미출고 -->
+			AND OI_URLS_QTY >= 1
+		</if>
+
+		<if
+			test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("주문번호")'>
+			AND ord.ORD_NO LIKE CONCAT('%', #{of.searchContent}, '%')
+		</if>
+		<if
+			test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("거래처")'>
+			AND CLT_NAME LIKE CONCAT('%', #{of.searchContent}, '%')
+		</if>
+		ORDER BY ORD_DT desc, ord.ORD_NO, orditm.OI_NO
 	</select>
-	
-	<!-- 주문 데이터 가져오기  -->
+
+	<!-- 주문 데이터 가져오기 -->
 	<select id="selectByFilter" resultMap="orderViewMap">
-		SELECT * FROM ord_view
-		
-		<if test="of.company != null and of.shippingway != null and of.unreleased != null">
-		WHERE (
-			<!-- 오스템 제품  -->
-			<if test="of.itemOSS == 1">						
-				(ITM_OSS = 1 AND V_NAME = '오스템')
-			</if>
-					
-			<if test="of.itemOSSPRO == 1">
-				<if test="of.itemOSS == 1">
-					OR
-				</if>		
-				(ITM_OSS = 1 AND V_NAME != '오스템')
-			</if>
-			
-	 		<if test="of.itemVND == 1">
-				<if test="of.itemOSS == 1 or of.itemOSSPRO == 1">
-					OR
-				</if>  					
-				(ITM_OSS = 0 AND ORD_SHP_WAY = '직배송')
-			</if>
+		SELECT
+		date_format(ord.ORD_DT, '%m-%d %H:%i') AS ORD_DT
+		, ord.ORD_NO
+		, clt.CLT_NAME
+		, itm.ITM_NAME
+		, itm.ITM_CODE
+		, orditm.OI_QTY
+		, ord.ORD_SHP_CAT
+		, vnd.V_NAME
+    , pd.PD_ATM
+		, date_format(pd.PD_DT, '%m-%d %H:%i') AS PD_DT
+		, pd.PD_QTY
+    , (SELECT EMP_NAME FROM TB_EMP WHERE EMP_ID = pic.EMP_ID) AS PIC_NAME
+		, pic.PIC_QTY
+		, date_format(pic.PIC_DT, '%m-%d %H:%i') AS PIC_DT
+		, IF(ord.ORD_SHP_WAY = '협력사' OR ord.ORD_SHP_WAY = '오스템', '직배송', '합배송') AS ORD_SHP_WAY
+		, date_format(cs.CS_ORD_CHK_DT, '%m-%d %H:%i') AS CS_ORD_CHK_DT
+		, cs.CS_RCV_QTY
+		, date_format(cs.CS_RLS_SCH_DT, '%m-%d') AS CS_RLS_SCH_DT
+		, date_format(cs.CS_RCV_DT, '%m-%d %H:%i') AS CS_RCV_DT
 
-			<if test="of.itemVNDPLUS == 1">
-				<if test="of.itemOSS == 1 or of.itemOSSPRO == 1 or of.itemVND == 1">
-					OR
-				</if>  							
-				(ITM_OSS = 0 AND ORD_SHP_WAY = '합배송')
-			</if>
-		)
-		 <!-- 긴급 일반  -->                          
-         <if test="of.shippingCategory == 1">   <!-- 긴급 -->
-            AND ORD_SHP_CAT = '긴급'
-         </if>
+		, (SELECT EMP_NAME FROM TB_EMP WHERE EMP_ID = ri.EMP_ID) AS RI_NAME
+		, date_format(ri.RI_DT, '%m-%d %H:%i') AS RI_DT
 
-         <if test="of.shippingCategory == 2">   <!-- 일반 --> 
-            AND ORD_SHP_CAT = '일반'
-         </if>
-         
-         <!-- 출고 미출고  -->         
-         <if test='of.pickingdirectionUnreleased == 1'>   <!-- 출고 -->
-            AND OI_URLS_QTY IS NULL || OI_URLS_QTY = 0
-         </if>
-         <if test="of.pickingdirectionUnreleased == 2">   <!-- 미출고  -->
-            AND OI_URLS_QTY >= 1
-         </if>
-         
-         <if test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("주문번호")'>
-         	AND ORD_NO LIKE CONCAT('%', #{of.searchContent}, '%')
-         </if>
-         <if test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("거래처")'>
-         	AND CLT_NAME LIKE CONCAT('%', #{of.searchContent}, '%')
-         </if>
-         LIMIT #{pager.rowsPerPage} OFFSET #{pager.startRowIndex}
-    	</if>
-    	
+		, (SELECT EMP_NAME FROM TB_EMP WHERE EMP_ID = rls.EMP_ID) as RLS_NAME
+		, date_format(rls.RLS_DT, '%m-%d %H:%i') AS RLS_DT
+
+		, (SELECT EMP_NAME FROM TB_EMP WHERE EMP_ID = trf.EMP_ID) as TRF_NAME
+		, date_format(trf.TRF_DT, '%m-%d %H:%i') AS TRF_DT
+
+		, ord.ORD_STS
+		, orditm.OI_URLS_QTY
+		, itm.ITM_OSS
+
+		FROM (SELECT ORD_NO, ITM_CODE, OI_NO, OI_QTY, OI_URLS_QTY FROM TB_ORD_ITM) orditm
+		LEFT JOIN
+      (SELECT ORD_NO, ORD_DT, ORD_SHP_CAT, ORD_SHP_WAY, ORD_STS, CLT_NO FROM TB_ORD) ord
+        ON ord.ORD_NO = orditm.ORD_NO
+    JOIN
+      (SELECT CLT_NO, CLT_NAME FROM TB_CLT) clt
+        ON ord.CLT_NO = clt.CLT_NO
+    JOIN
+      (SELECT ITM_CODE, ITM_NAME, ITM_OSS, V_NO FROM TB_ITM) itm
+        ON orditm.ITM_CODE = itm.ITM_CODE
+    LEFT JOIN
+      (SELECT V_NO, V_NAME FROM TB_VND) vnd
+        ON itm.V_NO = vnd.V_NO
+        
+    -- 피킹지시 조인
+    LEFT JOIN
+      (SELECT OI_NO, PD_ATM, PD_DT, PD_QTY FROM TB_PIC_DRC) pd
+        ON orditm.OI_NO = pd.OI_NO
+
+    -- 피킹 조인
+    LEFT JOIN
+      (SELECT OI_NO, PIC_QTY, PIC_DT, EMP_ID FROM TB_PIC) pic
+        ON orditm.OI_NO = pic.OI_NO
+
+    -- 협력사 조인
+    LEFT JOIN
+      (SELECT OI_NO, CS_ORD_CHK_DT, CS_RCV_QTY, CS_RLS_SCH_DT, CS_RCV_DT FROM TB_CMB_SHP) cs
+        ON orditm.OI_NO = cs.OI_NO
+
+    -- 출고검수 조인
+    LEFT JOIN
+      (SELECT OI_NO, EMP_ID, RI_DT FROM TB_RLS_INSP) ri
+        ON orditm.OI_NO = ri.OI_NO
+
+    -- 출고 조인
+    LEFT JOIN
+      (SELECT ORD_NO, RLS_DT, EMP_ID FROM TB_RLS) rls
+        ON ord.ORD_NO = rls.ORD_NO
+
+    -- 인계 조인
+    LEFT JOIN
+      (SELECT ORD_NO, EMP_ID, TRF_DT FROM TB_TRF) trf
+        ON ord.ORD_NO = trf.ORD_NO
+        
+    WHERE 1=1
+
+		<!-- 오스템 제품 -->
+		<if test="of.itemOSS == 1">
+			OR (ITM_OSS = 1 AND V_NAME = '오스템')
+		</if>
+
+		<if test="of.itemOSSPRO == 1">
+			OR (ITM_OSS = 1 AND V_NAME != '오스템')
+		</if>
+
+		<if test="of.itemVND == 1">
+			OR (ITM_OSS = 0 AND ORD_SHP_WAY = '직배송')
+		</if>
+
+		<if test="of.itemVNDPLUS == 1">
+			OR (ITM_OSS = 0 AND ORD_SHP_WAY = '합배송')
+		</if>
+
+		<!-- 긴급 일반 -->
+		<if test="of.shippingCategory == 1">   <!-- 긴급 -->
+			AND ORD_SHP_CAT = '긴급'
+		</if>
+
+		<if test="of.shippingCategory == 2">   <!-- 일반 -->
+			AND ORD_SHP_CAT = '일반'
+		</if>
+
+		<!-- 출고 미출고 -->
+		<if test='of.pickingdirectionUnreleased == 1'>   <!-- 출고 -->
+			AND OI_URLS_QTY IS NULL || OI_URLS_QTY = 0
+		</if>
+		<if test="of.pickingdirectionUnreleased == 2">   <!-- 미출고 -->
+			AND OI_URLS_QTY >= 1
+		</if>
+
+		<if
+			test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("주문번호")'>
+			AND ord.ORD_NO LIKE CONCAT('%', #{of.searchContent}, '%')
+		</if>
+		<if
+			test='of.searchSelected != null and of.searchContent != null and of.searchSelected.equals("거래처")'>
+			AND CLT_NAME LIKE CONCAT('%', #{of.searchContent}, '%')
+		</if>
+		ORDER BY ORD_DT desc, ord.ORD_NO, orditm.OI_NO
+		LIMIT #{pager.rowsPerPage} OFFSET #{pager.startRowIndex}
 	</select>
 
 </mapper>

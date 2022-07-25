@@ -64,6 +64,9 @@
 	 	</if>
 		GROUP BY OI.OI_NO
 		ORDER BY O.ORD_STS
+		<!-- Pager -->
+		<!-- LIMIT #{pager.rowsPerPage}
+		OFFSET #{pager.startRowIndex}; -->
 	</select>
 	
 	
@@ -98,6 +101,8 @@
 	 		AND O.ORD_STS != 0
 		GROUP BY OI.OI_NO
 		ORDER BY O.ORD_STS
+		<!-- LIMIT #{pager.rowsPerPage}
+		OFFSET #{pager.startRowIndex}; -->
 	</select>
 	
 	<!-- 주문 단계마다 카운트 --> 

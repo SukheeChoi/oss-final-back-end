@@ -10,5 +10,4 @@ public class ClientFilter {
 	private boolean unrelease;
 	private Long orderNo;
 	private String clientName;
-//	private Pager pager;
 }

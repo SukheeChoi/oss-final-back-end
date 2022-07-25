@@ -31,12 +31,9 @@ public class ClientController {
 	@Resource
 	private ClientModalService clientModalService;
 	
-	//배송구분, 주문 단계, 미출고로 필터링
+	//배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링
 	@PostMapping("/getFilterList")
-	public Map<String, Object> getFilterList(@RequestBody ClientFilter filterList
-//											@RequestParam(value="pageNo", defaultValue="1") int pageNo
-											) {
-		log.info(filterList);
+	public Map<String, Object> getFilterList(@RequestBody ClientFilter filterList) {
 		String[] shippingCategory = filterList.getShippingCategory();
 		int status = filterList.getStatus();
 		boolean orderUnrelease = filterList.isUnrelease();
@@ -49,8 +46,6 @@ public class ClientController {
 		map1.put("orderUnrelease", orderUnrelease);
 		map1.put("orderNo", orderNo);
 		map1.put("clientName", clientName);
-//		map1.put("pageNo", pageNo);
-		log.info("clientcontroller - map1: " + map1);
 
 		List<Client> list1 = clientService.getReleaseList(map1);
 		List<Client> list2 = clientService.getUnreleaseList(map1);
@@ -58,7 +53,6 @@ public class ClientController {
 		Map<String, Object> map2 = new HashMap<>();
 		map2.put("list1", list1);
 		map2.put("list2", list2);
-		log.info("map2 : " + map2);
 		return map2;
 	}
 	
@@ -80,20 +74,36 @@ public class ClientController {
 		return unreleaseCnt;
 	}
 	
+	/**
+	 * 주문이력 정보를 반환함
+	 * 
+	 * @author 이동현
+	 * @param clientNo 고객번호
+	 * @param orderNo 주문번호
+	 * @return 거래처 정보, 진행 주문 정보, 주문 이력을 반환함
+	 */
 	@GetMapping("/modal")
 	public Map<String, Object> getModal(@RequestParam int clientNo, @RequestParam String orderNo) {
-	  //모달 정보
+		
 	  Map<String, Object> data = clientModalService.getModal(clientNo, orderNo);
+	  
     return data;
 	}
 	
+	/**
+	 * 주문 이력 상세 정보를 반환함
+	 * 
+	 * @author 이동현
+	 * @param orderNo 주문번호
+	 * @return 주문 이력에 해당하는 상세 내역을 반환
+	 */
 	@GetMapping("/modalDetail")
 	public Map<String, Object> getModalDetail(@RequestParam String orderNo) {
-    //상세 내역
-    List<ClientOrderDetail> clientOrderDetail = clientModalService.getClientOrderDetailByOrderNo(orderNo);
+
+      List<ClientOrderDetail> clientOrderDetail = clientModalService.getClientOrderDetailByOrderNo(orderNo);
     
-    Map<String, Object> map = new HashMap<>();
-    map.put("clientOrderDetail", clientOrderDetail);
+      Map<String, Object> map = new HashMap<>();
+      map.put("clientOrderDetail", clientOrderDetail);
     return map;
   }
 }

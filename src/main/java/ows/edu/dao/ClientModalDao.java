@@ -12,15 +12,40 @@ import ows.edu.dto.SelectedOrder;
 @Mapper
 public interface ClientModalDao {
 
-  //거래처 정보
-  public ClientDetail searchClientDetail(int clientNo);
+  /**
+   * 거래처 정보 반환
+   * 
+   * @author 이동현
+   * @param clientNo 고객번호
+   * @return 고객번호에 해당하는 거래처 정보를 반환함
+   */
+  public ClientDetail selectClientDetail(int clientNo);
   
-  //진행 주문 정보
-  public List<SelectedOrder> searchSelectedOrder(String orderNo);
+  /**
+   * 진행 주문 정보 반환
+   * 
+   * @author 이동현
+   * @param orderNo 주문번호
+   * @return 주문번호에 해당하는 진행 주문 정보 목록 반환
+   */
+  public List<SelectedOrder> selectSelectedOrder(String orderNo);
   
-  //과거 주문 이력
-  public List<ClientOrder> searchAllClientOrder(int clientNo, String orderNo);
+  /**
+   * 전체 주문 이력 반환
+   * 
+   * @author 이동현
+   * @param clientNo 고객번호
+   * @param orderNo 주문번호
+   * @return 고객번호에 해당하는 모든 주문 이력 목록 반환(선택한 주문 제외)
+   */
+  public List<ClientOrder> selectAllClientOrder(int clientNo, String orderNo);
   
-  //상세내역
-  public List<ClientOrderDetail> searchAllClientOrderDetail(String orderNo);
+  /**
+   * 주문 이력 상세 정보 반환
+   * 
+   * @author 이동현
+   * @param orderNo 주문번호
+   * @return 주문번호에 해당하는 주문 이력 상세 정보 목록 반환
+   */
+  public List<ClientOrderDetail> selectAllClientOrderDetail(String orderNo);
 }
