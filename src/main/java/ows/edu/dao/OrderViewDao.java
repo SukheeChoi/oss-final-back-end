@@ -30,7 +30,7 @@ public interface OrderViewDao {
    * @param orderFilter 회사/배송구분/미출고/검색조건/검색내용을 포함
    * @return 전체 주문 개수 반환
    */
-  public int count(OrderFilter orderFilter);
+  public int count(@Param("of") OrderFilter orderFilter);
   
   /**
    * 전체 주문 현황 반환
