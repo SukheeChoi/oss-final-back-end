@@ -133,75 +133,47 @@
 
  	
 <!-- ========================================현주======================================== -->
-<!-- UPDATE 테이블이름
-SET 필드이름1=데이터값1, 필드이름2=데이터값2, ...
-WHERE 필드이름=데이터값 -->
 
-	<!-- 검수수량, 미출고수량 업데이트 -->
+	<!-- 검수수량 업데이트 --> 
 	<update id="releaseInspectionQtyUpdate" parameterType="String">
-<!-- 		UPDATE TB_RLS_INSP
-		INNER JOIN tb_ord_itm on tb_rls_insp.oi_no = tb_ord_itm.oi_no
-		INNER JOIN TB_PIC ON tb_ord_itm.oi_no = TB_PIC.OI_NO
-		INNER JOIN tb_ord on TB_ORD_ITM.ord_no = TB_ORD.ord_no
-		INNER JOIN tb_rls on TB_ORD.ord_no = tb_rls.ord_no
-		set tb_rls_insp.ri_qty = TB_PIC.pic_qty, tb_rls.rls_dn = 1
-		WHERE TB_RLS.RLS_CODE = #{releaseCode} -->
 		<!-- 출고검수 테이블에 출고검수 컬럼 넣고 이후에 set 해주기 -->	
-		UPDATE TB_ORD_ITM
-		INNER JOIN TB_BRCD ON TB_ORD_ITM.OI_NO = TB_BRCD.OI_NO
-		INNER JOIN TB_RLS_INSP ON TB_RLS_INSP.OI_NO = TB_BRCD.OI_NO
-		SET tb_rls_insp.ri_qty = tb_rls_insp.ri_qty + 1,
-			TB_ORD_ITM.OI_URLS_QTY = IF(TB_ORD_ITM.OI_URLS_QTY > 0, TB_ORD_ITM.OI_URLS_QTY - 1 , TB_ORD_ITM.OI_URLS_QTY),
-		    TB_BRCD.BRCD_DN = 1
+		UPDATE TB_RLS_INSP
+		INNER JOIN TB_BRCD ON TB_RLS_INSP.OI_NO = TB_BRCD.OI_NO
+		INNER JOIN TB_ORD_ITM ON TB_BRCD.OI_NO = TB_ORD_ITM.OI_NO
+			<!-- #이미 검수 였던거 다시 검수 눌렀을 때, RI_QTY 증가 x -->	
+		SET tb_rls_insp.ri_qty = IF(TB_BRCD.BRCD_DN = 1, tb_rls_insp.ri_qty, tb_rls_insp.ri_qty + 1),
+			<!-- #미출고였던거 검수로 바꾸었을 때, 미출고수량 하나 다운 -->
+			TB_ORD_ITM.OI_URLS_QTY = IF(TB_BRCD.BRCD_DN = 0, TB_ORD_ITM.OI_URLS_QTY - 1 , TB_ORD_ITM.OI_URLS_QTY)
+		    <!-- TB_BRCD.BRCD_DN = 1 -->
 		WHERE TB_BRCD.BRCD_NO = #{barCode}
 	</update>
 	
+	<!-- 미출고수량 업데이트 -->
 	<update id="unRleaseQtyUpdate" parameterType="String">
-<!-- 		UPDATE TB_RLS_INSP
-		INNER JOIN tb_ord_itm on tb_rls_insp.oi_no = tb_ord_itm.oi_no
-		INNER JOIN TB_PIC ON tb_ord_itm.oi_no = TB_PIC.OI_NO
-		INNER JOIN tb_ord on TB_ORD_ITM.ord_no = TB_ORD.ord_no
-		INNER JOIN tb_rls on TB_ORD.ord_no = tb_rls.ord_no
-		set tb_rls_insp.RI_URLS = TB_PIC.pic_qty, tb_rls.rls_dn = 0
-		WHERE TB_RLS.RLS_CODE = #{releaseCode} -->
 		UPDATE TB_ORD_ITM
 		INNER JOIN TB_BRCD ON TB_ORD_ITM.OI_NO = TB_BRCD.OI_NO
 		INNER JOIN TB_RLS_INSP ON TB_RLS_INSP.OI_NO = TB_BRCD.OI_NO
-		SET TB_ORD_ITM.OI_URLS_QTY = TB_ORD_ITM.OI_URLS_QTY + 1,
-			TB_RLS_INSP.RI_QTY = IF(TB_RLS_INSP.RI_QTY > 0, TB_RLS_INSP.RI_QTY - 1, TB_RLS_INSP.RI_QTY), 
-		    TB_BRCD.BRCD_DN = 0
+			<!-- #이미 미출고 였던거 다시 미출고 눌렀을 때, OI_URLS_QTY 증가 x -->	
+		SET TB_ORD_ITM.OI_URLS_QTY = IF(TB_BRCD.BRCD_DN = 0, TB_ORD_ITM.OI_URLS_QTY, TB_ORD_ITM.OI_URLS_QTY+1),
+			<!-- #검수되었던거 미출고로 바꾸었을 때, 검수수량 하나 다운 -->	
+			TB_RLS_INSP.RI_QTY = IF(TB_BRCD.BRCD_DN = 1, TB_RLS_INSP.RI_QTY - 1, TB_RLS_INSP.RI_QTY)
+		    <!-- TB_BRCD.BRCD_DN = 0 -->
 		WHERE TB_BRCD.BRCD_NO = #{barCode}
 	</update>
-	
-	<resultMap id="releaseInspectionScanMap" type="releaseInspection">
-		<result property="releaseInspectionQuantity" column="RI_QTY"/>
-		<result property="unReleased" column="RI_URLS"/>		
-		<result property="releasePrintDate" column="RI_RLS_PRT_DT"/>
-		<result property="receiptePrintDate" column="RI_RCPT_PRT_DT"/>
-		<result property="releaseInspectionDate" column="RI_DT"/>
-		<result property="releaseInspectionNote" column="RI_NT"/>	
-		<association property="release" javaType="release">
-			<result property="releaseCode" column="RLS_CODE"/>
-			<result property="releaseBarCode" column="RLS_BRCD"/>
-			<result property="releaseDone" column="RLS_DN"/>
-		</association>
-		<association property="order" javaType="order">		
-			<result property="shippingCategory" column="ORD_SHP_CAT"/>					
-			<result property="orderNo" column="ORD_NO"/>		
-			<result property="clientNo" column="clt_no"/>	
-		</association>
-		<association property="picking" javaType="picking">
-			<result property="pickingQty" column="PIC_QTY"/>
-		</association>
-		<association property="client" javaType="client">
-			<result property="clientName" column="CLT_NAME"/>
-		</association>
-	</resultMap>
 	
 	<update id="update" parameterType="Map">
 		update TB_RLS_INSP set
 		ri_qty = ri_qty + #{releaseInspectionQty}
 		where oi_no = #{orderItemNo}
+	</update>
+	
+	<update id="updateReleaseInspectionDate" parameterType="long">
+		update TB_RLS_INSP
+		set TB_RLS_INSP.ri_dt = now()
+		where TB_RLS_INSP.oi_no in (select tb_ord_itm.oi_no
+		from tb_ord_itm, tb_ord
+		where tb_ord_itm.ord_no = tb_ord.ord_no
+		and tb_ord.ord_no = #{orderNo})
 	</update>
 </mapper>
 
