@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,18 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.InspectionLabeling;
 import ows.edu.dto.InspectionLabelingStatus;
-import ows.edu.dto.InspectionLabelingView;
 import ows.edu.dto.InspectionLabelingWork;
 import ows.edu.dto.LabelingWorkTime;
-import ows.edu.dto.Pager;
 import ows.edu.dto.UpdateTime;
 import ows.edu.service.InspectionLabelingService;
 
 @RestController
-@Log4j2
 @RequestMapping("/label")
 public class InspectionLabelingController {
   
@@ -93,7 +88,7 @@ public class InspectionLabelingController {
   @GetMapping("/workDetail")
   public Map<String, Object> getListByLWTNo(InspectionLabeling inspectionLabeling
                                                   , @RequestParam(defaultValue = "1") int pageNo
-                                                  , @RequestParam(defaultValue = "5") int pageSize) {
+                                                  , @RequestParam(defaultValue = "15") int pageSize) {
       
     Map<String, Object> map = inspectionLabelingService.getListByLWTNo(inspectionLabeling, pageNo, pageSize);
     return map;

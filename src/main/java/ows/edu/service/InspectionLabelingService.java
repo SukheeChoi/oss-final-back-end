@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -147,15 +146,10 @@ public class InspectionLabelingService {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일HH:mm");
     Date lastStartDate = sdf.parse(date + startTime);
     Date lastEndDate = sdf.parse(date + endTime);
-//  int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
-    
-    //시연용 테스트 코드
-    Date testStartDate =sdf.parse("2022년 07월 27일" + startTime);
-    Date testEndDate = sdf.parse("2022년 07월 27일"  + endTime);
-    int testTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(testStartDate, testEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
+    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
 
     String result = "fail";
-    if(overTimeResult + testTimeResult == 2) {
+    if(overTimeResult + workTimeResult == 2) {
       result = "success";
     }
     return result;
@@ -180,15 +174,10 @@ public class InspectionLabelingService {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일HH:mm");
     Date lastStartDate = sdf.parse(date + startTime);
     Date lastEndDate = sdf.parse(date + endTime);
-//  int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
-    
-    //시연용 테스트 코드
-    Date testStartDate = sdf.parse("2022년 07월 27일" + startTime);
-    Date testEndDate = sdf.parse("2022년 07월 27일"  + endTime);
-    int testTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(testStartDate, testEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
+    int workTimeResult = inspectionLabelingDao.updateInspectionLabelingWork(lastStartDate, lastEndDate, updateTime.getLabelingWorkTimeNo(), updateTime.getPlacingOrderNo());
     
     String result = "fail";
-    if(testTimeResult == 1) {
+    if(workTimeResult == 1) {
       result = "success";
     }
     return result;

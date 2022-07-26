@@ -12,7 +12,6 @@ import ows.edu.dto.Pager;
 @Mapper
 public interface OrderViewDao {
 
-
   /**
    * 페이지에 맞는 주문 확인 반환
    * 
