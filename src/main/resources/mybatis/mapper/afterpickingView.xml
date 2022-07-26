@@ -115,8 +115,8 @@
 	<select id="selectReleaseInspectionEmpNm" resultType="string">
 		SELECT DISTINCT RI_EMP_NAME
 		FROM V_AFT_PIC
-		WHERE RI_EMP_NAME IS NOT NULL
 		<where>
+			AND RI_EMP_NAME IS NOT NULL
 			<!-- 배송구분 필터링: 전체/일반/긴급 -->
 			<if test='shippingCategory != null'>
 				AND ORD_SHP_CAT=#{shippingCategory}
@@ -136,8 +136,8 @@
 			</if>
 			<!-- 주문번호 필터링 -->
 			<if test='orderNo != null'>
-				AND ORD_NO LIKE CONCAT('%',#{orderNo},'%')
-				<!-- AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%') -->
+				<!-- AND ORD_NO LIKE CONCAT('%',#{orderNo},'%') -->
+				AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%')
 			</if>
 			<!-- 거래처 필터링 -->
 			<if test='clientName != null'>

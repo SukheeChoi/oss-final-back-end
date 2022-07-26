@@ -116,8 +116,9 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 			if (affectedRowNo == 1) {
 				totalAffectedRows++;
 			}
-			// 미출고 수량 업데이트.
-			orderItemDao.updateOiUnreleaseQuantity(combineShippingPartner);
+			// 미출고 수량과 메모 업데이트.
+			orderItemDao.update(combineShippingPartner);
+//			orderItemDao.updateOiUnreleaseQuantity(combineShippingPartner);
 		}
 		if (totalAffectedRows == combineShippingPartnerList.length) {
 			result = "success";

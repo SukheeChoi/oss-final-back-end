@@ -22,12 +22,19 @@
 		) SQ
 	</select>
 
-	<update id="updateOiUnreleaseQuantity"
+	<update id="update"
+		parameterType="combineShippingPartner">
+		UPDATE TB_ORD_ITM
+		SET OI_URLS_QTY=#{receiveUnreleaseQuantity}
+			, OI_NT=#{orderItemNote}
+		WHERE OI_NO=#{orderItemNo}
+	</update>
+<!-- 	<update id="updateOiUnreleaseQuantity"
 		parameterType="combineShippingPartner">
 		UPDATE TB_ORD_ITM
 		SET OI_URLS_QTY=#{receiveUnreleaseQuantity}
 		WHERE OI_NO=#{orderItemNo}
-	</update>
+	</update> -->
 
 </mapper>
 
