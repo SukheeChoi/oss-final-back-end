@@ -1,27 +1,21 @@
 package ows.edu.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.OrderFilter;
 import ows.edu.dto.OrderStatus;
-import ows.edu.dto.OrderView;
-import ows.edu.dto.Pager;
+
 import ows.edu.service.OrderViewService;
 
 @RestController
-@CrossOrigin(origins="*", allowedHeaders = "*")
 @RequestMapping("/order")
-@Log4j2
 public class OrderController {
 
   @Autowired
@@ -55,7 +49,7 @@ public class OrderController {
   public Map<String, Object> getfilterList(OrderFilter orderfilter
                          , @RequestParam(defaultValue = "1") int pageNo
                          , @RequestParam(defaultValue = "16") int pageSize) {
-    log.info(orderfilter);
+
     Map<String, Object> map = orderViewService.getListByFilter(orderfilter, pageNo, pageSize);
     
     return map;

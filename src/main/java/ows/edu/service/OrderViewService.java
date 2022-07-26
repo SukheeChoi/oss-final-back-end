@@ -9,7 +9,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.OrderViewDao;
 import ows.edu.dto.OrderFilter;
 import ows.edu.dto.OrderStatus;
@@ -17,8 +16,8 @@ import ows.edu.dto.OrderView;
 import ows.edu.dto.Pager;
 
 @Service
-@Log4j2
 public class OrderViewService {
+	
   @Autowired
   private OrderViewDao orderViewDao;
 
