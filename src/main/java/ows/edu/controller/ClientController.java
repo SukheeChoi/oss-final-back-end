@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.Client;
 import ows.edu.dto.ClientFilter;
 import ows.edu.dto.ClientOrderDetail;
@@ -23,7 +22,6 @@ import ows.edu.service.ClientService;
 
 @RestController
 @RequestMapping("/client")
-@Log4j2
 public class ClientController {
 	@Resource
 	ClientService clientService;

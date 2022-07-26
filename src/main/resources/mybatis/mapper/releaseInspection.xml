@@ -2,6 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.ReleaseInspectionDao">
+<!-- 최숙희.
+resultMap과 HashMap 각각 사용해보고자 만들었던 부분.
+ -->
 <!-- 
  	<resultMap id="afterPickingMap" type="afterPicking">
 		<association property="releaseInspection" javaType="releaseInspection">

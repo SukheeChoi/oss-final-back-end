@@ -35,8 +35,6 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	OrderDao orderDao;
 	@Resource
 	PickingDirectionDao pickingDirectionDao;
-//	@Resource
-//	PackingDao packingDao;
 	@Resource
 	ReleasePackingDao releasePackingDao;
 	@Resource
@@ -77,7 +75,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	/**
 	 * 1. afterPickingViewDao로부터 필터링된 목록의 전체 행수 받아와서 Pager객체 생성.
 	 * 2. afterPickingViewDao로부터 페이지네이션 적용한 목록 받아옴.
-	 * 3.  
+	 * 3.  데이터 형식 조정.
 	 * @author 최숙희
 	 */
 	@Override
@@ -93,9 +91,41 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				, pager
 			);
 		
+		// 비고란 합쳐서 가져온 값 할당.
+		// 주문번호 중복없이 가져오기
+		List<Long> ordNoList = afterPickingViewDao.selectOrderNo(
+				afterPickingFilter
+				, pager
+			);
+		// OI_NO 모으기.
+		Map<String, String> noteMap = new HashMap<>();
+		for(long ordNo : ordNoList) {
+			List<Integer> oiNoList = orderItemDao.selectOiNo(ordNo);
+			// oiNo로 OI_NT합치기.
+			String concatNote = orderItemDao.selectConcatNote(oiNoList);
+			noteMap.put(String.valueOf(ordNo), concatNote);
+		}
+		
 		HashMap<String, String> map = new HashMap<>();
 		for(int i=0; i<ap.size(); i++) {
 			map = ap.get(i);
+			// 비고 란에 바인딩할 메모 값이 ORD_NO가 같다면 모두 같은 값을 가지도록 조정.
+			if(ap.get(i).get("ORD_NO") != null) {
+				if(noteMap.get( String.valueOf(ap.get(i).get("ORD_NO"))) == null
+					|| noteMap.get( String.valueOf(ap.get(i).get("ORD_NO"))).equals("")
+				) {
+					map.replace(
+						"OI_NT"
+						, " "// 그리드 셀 병합을 위해, 메모값이 없는 경우 공백문자 할당.
+					);
+				} else {
+					map.replace(
+						"OI_NT"
+						, noteMap.get( String.valueOf(ap.get(i).get("ORD_NO")) )
+					);
+				}
+			}
+			
 			
 			// 출고요청서 출력일시 컬럼 값을 '담당자성명+\n+(+mm:dd+ +hh:MM+)'형태로 만듦.
 			if(

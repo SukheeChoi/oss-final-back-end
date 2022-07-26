@@ -27,7 +27,7 @@ public interface CombineShippingDao {
 									, @Param("vendorId") String vendorId
 									, @Param("startDate") String startDate
 									, @Param("endDate") String endDate);
-	
+	// 수령 목록 조회.
 	public List<String> selectReceiptList(@Param("toDo") int toDo
 													, @Param("vendorId") String vendorId
 													, @Param("startDate") String startDate
@@ -39,7 +39,7 @@ public interface CombineShippingDao {
 									, @Param("startDate") String startDate
 									, @Param("endDate") String endDate);
 
-	
+	// 전달 목록 조회.
 	public List<CombineShipping> selectDeliveryList(@Param("toDo") int toDo
 													, @Param("employeeId") String employeeId
 													, @Param("startDate") String startDate

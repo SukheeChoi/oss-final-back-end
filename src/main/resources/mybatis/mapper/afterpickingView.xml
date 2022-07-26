@@ -160,8 +160,8 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 		</if>
 		<!-- 주문번호 필터링 -->
 		<if test='orderNo != null'>
-	   		<!-- AND ORD_NO LIKE CONCAT('%',#{orderNo},'%') -->
-	   		AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%')
+	   		AND ORD_NO LIKE CONCAT('%',#{orderNo},'%')
+	   		<!-- AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{orderNo},'%') -->
 		</if>
 		<!-- 거래처 필터링 -->
 	   	<if test='clientName != null'>
@@ -233,10 +233,52 @@ CREATE OR REPLACE VIEW V_AFT_PIC AS
 	   		AND V_NAME LIKE CONCAT('%',#{afterPickingFilter.vendorName},'%')
 	   	</if>
 		</where>
-		<!-- LIMIT : row의 개수 -->
 		LIMIT #{pager.rowsPerPage}
-		<!-- OFFSET : 시작 row의 index -->
 		OFFSET #{pager.startRowIndex}
+	</select>
+	
+	<select id="selectOrderNo" resultType="long">
+		SELECT DISTINCT ORD_NO
+		FROM V_AFT_PIC
+		<where>
+		<!-- 배송구분 필터링: 전체/일반/긴급 -->
+	   	<if test='afterPickingFilter.shippingCategory != null'>
+			AND ORD_SHP_CAT=#{afterPickingFilter.shippingCategory}
+		</if>
+		<!-- 배송방식 필터링: 전체/오스템/합배송(협력사 제외.) -->
+	   	<if test='afterPickingFilter.shippingWay != null'>
+			AND ORD_SHP_WAY=#{afterPickingFilter.shippingWay}
+		</if>
+		<!-- 출고/미출고 필터링 -->
+	  	<if test='afterPickingFilter.released != null
+	  		and afterPickingFilter.released.equals("출고")'>
+			AND ( OI_URLS_QTY = 0 OR ISNULL(OI_URLS_QTY) )
+		</if>
+		<if test='afterPickingFilter.released != null
+			and afterPickingFilter.released.equals("미출고")'>
+			AND OI_URLS_QTY > 0
+		</if>
+		<!-- 출고검수/패킹 담당자 필터링 -->
+	    <if test='afterPickingFilter.assignee != null'>
+			AND RI_EMP_NAME = #{afterPickingFilter.assignee}
+		</if>
+		<!-- 주문번호 필터링 -->
+		<if test='afterPickingFilter.orderNo != null'>
+	   		AND CONCAT(ORD_NO, '') LIKE CONCAT('%',#{afterPickingFilter.orderNo},'%')
+		</if>
+		<!-- 거래처 필터링 -->
+	   	<if test='afterPickingFilter.clientName != null'>
+			AND CLT_NAME LIKE CONCAT('%',#{afterPickingFilter.clientName},'%')
+		</if>
+		<!-- 배송지 필터링 -->
+	   	<if test='afterPickingFilter.shippingDestination != null'>
+	 		AND ORD_SHP_DEST LIKE CONCAT('%',#{afterPickingFilter.shippingDestination},'%')
+	 	</if>
+	 	<!-- 업체명으로 필터링 -->
+	   	<if test='afterPickingFilter.vendorName != null'>
+	   		AND V_NAME LIKE CONCAT('%',#{afterPickingFilter.vendorName},'%')
+	   	</if>
+		</where>
 	</select>
 	
 </mapper>

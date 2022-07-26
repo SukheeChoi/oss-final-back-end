@@ -21,10 +21,10 @@
 		<result property="pickingDate" column="PIC_DT" />
 
 		<result property="orderShippingWay" column="ORD_SHP_WAY" />
-		<result property="orderCheckDate" column="IP_ORD_CHK_DT" />
-		<result property="releaseQuantity" column="IP_RLS_QTY" />
-		<result property="releaseScheduleDate" column="IP_RLS_SCH_DT" />
-		<result property="recieveDate" column="CSP_RCV_DT" />
+		<result property="orderCheckDate" column="CS_ORD_CHK_DT" />
+		<result property="releaseQuantity" column="CS_RCV_QTY" />
+		<result property="releaseScheduleDate" column="CS_RLS_SCH_DT" />
+		<result property="recieveDate" column="CS_RCV_DT" />
 
 		<result property="packingInspectionEmployee" column="RI_NAME" />
 		<result property="inspectionDate" column="RI_DT" />
@@ -117,24 +117,34 @@
 		  (SELECT ORD_NO, EMP_ID, TRF_DT FROM TB_TRF) trf
 		    ON ord.ORD_NO = trf.ORD_NO
 		    
-    WHERE 1=1
+    <if test="of.company != null and of.shippingway != null and of.unreleased != null">
+    WHERE (
+      <!-- 오스템 제품  -->
+      <if test="of.itemOSS == 1">           
+        (ITM_OSS = 1 AND V_NAME = '오스템')
+      </if>
+          
+      <if test="of.itemOSSPRO == 1">
+        <if test="of.itemOSS == 1">
+          OR
+        </if>   
+        (ITM_OSS = 1 AND V_NAME != '오스템')
+      </if>
+      
+      <if test="of.itemVND == 1">
+        <if test="of.itemOSS == 1 or of.itemOSSPRO == 1">
+          OR
+        </if>           
+        (ITM_OSS = 0 AND ORD_SHP_WAY = '협력사')
+      </if>
 
-		<!-- 오스템 제품 -->
-		<if test="of.itemOSS == 1">
-			OR (ITM_OSS = 1 AND V_NAME = '오스템')
-		</if>
-
-		<if test="of.itemOSSPRO == 1">
-			OR (ITM_OSS = 1 AND V_NAME != '오스템')
-		</if>
-
-		<if test="of.itemVND == 1">
-			OR (ITM_OSS = 0 AND ORD_SHP_WAY = '직배송')
-		</if>
-
-		<if test="of.itemVNDPLUS == 1">
-			OR (ITM_OSS = 0 AND ORD_SHP_WAY = '합배송')
-		</if>
+      <if test="of.itemVNDPLUS == 1">
+        <if test="of.itemOSS == 1 or of.itemOSSPRO == 1 or of.itemVND == 1">
+          OR
+        </if>               
+        (ITM_OSS = 0 AND ORD_SHP_WAY = '합배송')
+      </if>
+    )
 
 		<!-- 긴급 일반 -->
 		<if test="of.shippingCategory == 1">   <!-- 긴급 -->
@@ -162,6 +172,7 @@
 			AND CLT_NAME LIKE CONCAT('%', #{of.searchContent}, '%')
 		</if>
 		ORDER BY ORD_DT desc, ord.ORD_NO, orditm.OI_NO
+		</if>
 	</select>
 
 	<!-- 주문 데이터 가져오기 -->
@@ -181,8 +192,9 @@
     , (SELECT EMP_NAME FROM TB_EMP WHERE EMP_ID = pic.EMP_ID) AS PIC_NAME
 		, pic.PIC_QTY
 		, date_format(pic.PIC_DT, '%m-%d %H:%i') AS PIC_DT
+		
 		, IF(ord.ORD_SHP_WAY = '협력사' OR ord.ORD_SHP_WAY = '오스템', '직배송', '합배송') AS ORD_SHP_WAY
-		, date_format(cs.CS_ORD_CHK_DT, '%m-%d %H:%i') AS CS_ORD_CHK_DT
+		, date_format(cs.CS_ORD_CHK_DT, '%m-%d %H:%i') AS CS_ORD_CHK_DT	
 		, cs.CS_RCV_QTY
 		, date_format(cs.CS_RLS_SCH_DT, '%m-%d') AS CS_RLS_SCH_DT
 		, date_format(cs.CS_RCV_DT, '%m-%d %H:%i') AS CS_RCV_DT
@@ -244,24 +256,34 @@
       (SELECT ORD_NO, EMP_ID, TRF_DT FROM TB_TRF) trf
         ON ord.ORD_NO = trf.ORD_NO
         
-    WHERE 1=1
+    <if test="of.company != null and of.shippingway != null and of.unreleased != null">
+    WHERE (
+      <!-- 오스템 제품  -->
+      <if test="of.itemOSS == 1">           
+        (ITM_OSS = 1 AND V_NAME = '오스템')
+      </if>
+          
+      <if test="of.itemOSSPRO == 1">
+        <if test="of.itemOSS == 1">
+          OR
+        </if>   
+        (ITM_OSS = 1 AND V_NAME != '오스템')
+      </if>
+      
+      <if test="of.itemVND == 1">
+        <if test="of.itemOSS == 1 or of.itemOSSPRO == 1">
+          OR
+        </if>           
+        (ITM_OSS = 0 AND ORD_SHP_WAY = '협력사')
+      </if>
 
-		<!-- 오스템 제품 -->
-		<if test="of.itemOSS == 1">
-			OR (ITM_OSS = 1 AND V_NAME = '오스템')
-		</if>
-
-		<if test="of.itemOSSPRO == 1">
-			OR (ITM_OSS = 1 AND V_NAME != '오스템')
-		</if>
-
-		<if test="of.itemVND == 1">
-			OR (ITM_OSS = 0 AND ORD_SHP_WAY = '직배송')
-		</if>
-
-		<if test="of.itemVNDPLUS == 1">
-			OR (ITM_OSS = 0 AND ORD_SHP_WAY = '합배송')
-		</if>
+      <if test="of.itemVNDPLUS == 1">
+        <if test="of.itemOSS == 1 or of.itemOSSPRO == 1 or of.itemVND == 1">
+          OR
+        </if>               
+        (ITM_OSS = 0 AND ORD_SHP_WAY = '합배송')
+      </if>
+    )
 
 		<!-- 긴급 일반 -->
 		<if test="of.shippingCategory == 1">   <!-- 긴급 -->
@@ -290,6 +312,7 @@
 		</if>
 		ORDER BY ORD_DT desc, ord.ORD_NO, orditm.OI_NO
 		LIMIT #{pager.rowsPerPage} OFFSET #{pager.startRowIndex}
+		</if>
 	</select>
 
 </mapper>
