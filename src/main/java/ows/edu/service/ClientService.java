@@ -19,25 +19,14 @@ public class ClientService {
 	ClientDao clientDao;
 	
 	/**
-	 * 출고 리스트(긴급, 상태, 미출고, 주문번호, 거래처명으로 필터링)
+	 * 주문 리스트(긴급, 상태, 미출고, 주문번호, 거래처명으로 필터링)
 	 * 
 	 * @author 김예원
 	 * @param Map<String, Object> 필터링 객체를 담은 map
 	 * @return List<Client> 필터링한 데이터
 	 */
-	public List<Client> getReleaseList(Map<String, Object> map){
-		return clientDao.getReleaseList(map);
-	}
-	
-	/**
-	 * 미출고 리스트(긴급, 상태, 주문번호, 거래처명으로 필터링)
-	 * 
-	 * @author 김예원
-	 * @param Map<String, Object> 필터링 객체를 담은 map
-	 * @return List<Client> 필터링한 데이터
-	 */
-	public List<Client> getUnreleaseList(Map<String, Object> map){
-		return clientDao.getUnreleaseList(map);
+	public List<Client> getFilteredList(Map<String, Object> map){
+		return clientDao.getFilteredList(map);
 	}
 
 	/**
@@ -54,7 +43,7 @@ public class ClientService {
 	 * 주문 단계 별(clientDao.statusCnt(i)) 건수 list에 삽입
 	 * 
 	 * @author 김예원
-	 * @return List<Integer> 주문 단계 별 건수
+	 * @return List<Integer> 주문 단계 별 건수 
 	 */
 	public List<Integer> getstatusCnt() {
 		List<Integer> list = new ArrayList<>();
