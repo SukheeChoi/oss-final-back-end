@@ -125,9 +125,10 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		return map;
 	}
 
-	// 수령여부 update: 수령 수량, 수령여부, 미출고 수량.
-	// TB_CMB_SHP CS_RCV_QTY && CS_RCV_CHK && CS_RCV_URLS_QTY 업데이트.
-	// TB_ORD_ITM OI_URLS_QTY 업데이트.
+	/**
+	 * 수령여부 update.
+	 * @author 최숙희
+	 */
 	@Override
 	public String updateReceipt(CombineShippingPartner[] combineShippingPartnerList) {
 		String result = "fail";
@@ -148,10 +149,13 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 		return result;
 	}
 	
-	// 전달여부 update.
-	// TB_CMB_SHP CS_DLV_QTY && CS_DLV_CHK && ((CS_RCV_URLS_QTY &&)) CS_DLV_URLS_QTY 업데이트.
-	// TB_ORD_ITM OI_URLS_QTY 업데이트.
-	// TB_ORD ORD_STS 업데이트.(2->4)
+	/**
+	 * 전달여부 update.
+	 * CS_DLV_QTY && CS_DLV_CHK && ((CS_RCV_URLS_QTY &&)) CS_DLV_URLS_QTY 업데이트.
+	 * TB_ORD_ITM OI_URLS_QTY 업데이트.
+	 * TB_ORD ORD_STS 업데이트.(2->4)
+	 * @author 최숙희
+	 */
 	@Override
 	public String updateDelivery(int[] orderItemNoList) {
 		log.info("실행");

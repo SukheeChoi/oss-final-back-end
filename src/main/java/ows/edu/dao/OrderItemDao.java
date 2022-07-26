@@ -14,9 +14,10 @@ public interface OrderItemDao {
 	 */
 	public List<Integer> selectOiNo(Long ordNo);
 	/**
+	 *oiNO를 
 	 * @author 최숙희
 	 * @param oiNoList
-	 * @return
+	 * @return oiNO
 	 */
 	public String selectConcatNote(List<Integer> oiNoList);
 	/**

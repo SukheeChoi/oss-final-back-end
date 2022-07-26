@@ -75,7 +75,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	/**
 	 * 1. afterPickingViewDao로부터 필터링된 목록의 전체 행수 받아와서 Pager객체 생성.
 	 * 2. afterPickingViewDao로부터 페이지네이션 적용한 목록 받아옴.
-	 * 3.  
+	 * 3.  데이터 형식 조정.
 	 * @author 최숙희
 	 */
 	@Override
@@ -92,26 +92,20 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 			);
 		
 		// 비고란 합쳐서 가져온 값 할당.
-		// 주문번호 DISTINCT로 가져오기
+		// 주문번호 중복없이 가져오기
 		List<Long> ordNoList = afterPickingViewDao.selectOrderNo(
 				afterPickingFilter
 				, pager
 			);
-//		log.info("ordNoList : " + ordNoList);
 		// OI_NO 모으기.
 		Map<String, String> noteMap = new HashMap<>();
 		for(long ordNo : ordNoList) {
 			List<Integer> oiNoList = orderItemDao.selectOiNo(ordNo);
-//			log.info("oiNoList : " + oiNoList);
 			// oiNo로 OI_NT합치기.
 			String concatNote = orderItemDao.selectConcatNote(oiNoList);
-//			log.info("concatNote : " + concatNote);
 			noteMap.put(String.valueOf(ordNo), concatNote);
 		}
-		log.info("!!! noteMap : " + noteMap);
 		
-		// 
-		log.info("ap : " + ap);
 		HashMap<String, String> map = new HashMap<>();
 		for(int i=0; i<ap.size(); i++) {
 			map = ap.get(i);
@@ -122,7 +116,7 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 				) {
 					map.replace(
 						"OI_NT"
-						, " "
+						, " "// 그리드 셀 병합을 위해, 메모값이 없는 경우 공백문자 할당.
 					);
 				} else {
 					map.replace(
