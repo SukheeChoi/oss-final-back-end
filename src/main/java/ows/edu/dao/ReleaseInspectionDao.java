@@ -32,17 +32,20 @@ public interface ReleaseInspectionDao {
 		, String vendorName
 	);
 
-	//========================현주========================
-	//검수수량 업데이트
-	public int releaseInspectionQtyUpdate(@Param("barCode") String barCode);
-	
-	//미출고수량 업데이트
-	public int unRleaseQtyUpdate(@Param("barCode") String barCode);
-	
-	//출고검수수량 업데이트
-	public int update(Map<String, Integer> map);
-	
-	//출고검수일 업데이트
-	public int updateReleaseInspectionDate(Long orderNo);
+   //========================현주========================
+   //검수수량 업데이트
+   public int releaseInspectionQtyUpdate(@Param("barCode") String barCode);
+   
+   //미출고수량 업데이트
+   public int unRleaseQtyUpdate(@Param("barCode") String barCode);
+   
+   //출고검수수량 업데이트
+   public int update(Map<String, Integer> map);
+   
+   //출고검수일 업데이트
+   public int updateReleaseInspectionDate(Long orderNo);
+   
+   //총 검수수량 조회
+   public int getTotalItemQty(Long orderNo);
 }
 

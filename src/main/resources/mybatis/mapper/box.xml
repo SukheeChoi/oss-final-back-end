@@ -2,33 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.BoxDao">
-	<resultMap id="boxMap" type="box">
-		<result property="boxNo" column="BX_NO"/>
-		<result property="releaseCode" column="RLS_CODE"/>
-		<result property="orderItemNo" column="OI_NO"/>
-		<result property="boxNumber" column="BX_NUM"/>
-		<result property="boxItemQuantity" column="BX_ITM_QTY"/>
-	</resultMap>
+   <resultMap id="boxMap" type="box">
+      <result property="boxNo" column="BX_NO"/>
+      <result property="releaseCode" column="RLS_CODE"/>
+      <result property="orderItemNo" column="OI_NO"/>
+      <result property="boxNumber" column="BX_NUM"/>
+      <result property="boxItemQuantity" column="BX_ITM_QTY"/>
+   </resultMap>
 
-	<insert id="insert" parameterType="box">			
-		insert into tb_bx(rls_code, oi_no, bx_num, bx_itm_qty)
-		values (#{releaseCode},#{orderItemNo},#{boxNumber},#{boxItemQuantity})		
-	</insert>
-	
-	<update id="update" parameterType="box">
-		update tb_bx
-		set bx_itm_qty = #{boxItemQuantity}
-		where oi_no = #{orderItemNo} and bx_num = #{boxNumber}
-	</update>
-	
-<!-- 		update tb_box set
-			rls_code = #{releaseCode},
-			box_num = #{boxNumber},
-			itm_code = #{itemCode},
-			itm_name = #{itemName},
-			ri_qty = #{releaseInspectionQty},
-			pic_qty = #{pickingQty},
-			oi_qty = #{pickingDone} -->
-	
+   <insert id="insert" parameterType="box">         
+      insert into tb_bx(rls_code, oi_no, bx_num, bx_itm_qty)
+      values (#{releaseCode},#{orderItemNo},#{boxNumber},#{boxItemQuantity})      
+   </insert>
+   
+   <update id="update" parameterType="box">
+      update tb_bx
+      set bx_itm_qty = #{boxItemQuantity}
+      where oi_no = #{orderItemNo} and bx_num = #{boxNumber}
+   </update>
+   
+   <select id="selectSumItemQty" parameterType="String" resultType="int">
+      select sum(bx_itm_qty) from tb_bx where rls_code = #{releaseCode}
+   </select>   
 </mapper>
-

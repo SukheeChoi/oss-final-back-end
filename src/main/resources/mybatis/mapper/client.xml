@@ -13,7 +13,7 @@
 		<result property="orderWay" column="ORD_ORD_WAY"/>	
 		<result property="shippingCategory" column="ORD_SHP_CAT"/>	
 		<result property="clientNo" column="CLT_NO"/>
- 		<result property="unrelease" column="UNRELEASE"/>	
+<!-- 		<result property="unrelease" column="UNRELEASE"/>--> 		
 		<association property="client" javaType="client">
 		 	<result property="clientNo" column="CLT_NO"/>
 			<result property="clientName" column="CLT_NAME"/>
@@ -30,9 +30,9 @@
 		</association>
 	</resultMap>
 
-	<!-- 주문한 데이터 가져오기, 필터링 -->
-	<select id="getFilteredList" resultMap="clientMap" parameterType="hashmap">
-		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY, COUNT(CASE WHEN OI.OI_URLS_QTY != 0 then 1 end) AS UNRELEASE
+	<!-- 출고인 데이터 가져오기, 필터링 -->
+	<select id="getReleaseList" resultMap="clientMap" parameterType="hashmap">
+		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY
 		FROM TB_ORD O
 		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
 		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
@@ -43,6 +43,14 @@
 			</foreach>
 			)
 			AND O.ORD_STS != 0
+			<!-- 미출고 값이 0이거나 널인 값 : 출고 데이터 -->
+			AND (OI.OI_URLS_QTY = 0
+			OR OI.OI_URLS_QTY IS NULL)
+		<!-- '미출고 보기' 값이 true일 때 : 출고 데이터가 띄워져야하므로 미출고 조건을 줌 -->
+		<if test = 'orderUnrelease == true'>
+			AND OI.OI_URLS_QTY IS NOT NULL
+  			AND OI.OI_URLS_QTY != 0
+		</if>
 		<choose>
 			<!-- 단계 2는 피킹지시와 피킹 단계를 포함함 -->
 			<when test = 'status == 2'>
@@ -62,12 +70,48 @@
 	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
 	 	</if>
 		GROUP BY OI.OI_NO
-		<!-- '미출고 보기' 값이 true일 때 : 출고 데이터가 띄워져야하므로 미출고 조건을 줌 -->
-		<if test = 'orderUnrelease == true'>
-  			HAVING UNRELEASE != 0
+		<!-- 주문 단계로 정렬 -->
+		ORDER BY O.ORD_STS
+	</select>
+	
+	
+	<!-- 미출고인 데이터 가져오기, 필터링 -->
+	<select id="getUnreleaseList" resultMap="clientMap" parameterType="hashmap">
+		SELECT C.CLT_NO, C.CLT_NAME, O.ORD_STS, O.ORD_SHP_CAT, O.ORD_NO, OI.OI_NO, OI.OI_URLS_QTY
+		FROM TB_ORD O
+		LEFT JOIN TB_CLT C ON (O.CLT_NO = C.CLT_NO)
+		LEFT JOIN TB_ORD_ITM OI ON (O.ORD_NO = OI.ORD_NO)
+		<!-- 배송구분 필터링(긴급, 일반) -->
+		WHERE O.ORD_SHP_CAT IN (
+			<foreach collection="shippingCategory" item="shippingCategory" separator=",">
+				#{shippingCategory}
+			</foreach>
+			)
+			AND O.ORD_STS != 0
+			<!-- 미출고 값이 0과 널이 아닌 값 : 미출고 데이터 -->
+			AND OI.OI_URLS_QTY IS NOT NULL
+  			AND OI.OI_URLS_QTY != 0
+		<choose>
+			<!-- 단계 2는 피킹지시와 피킹 단계를 포함함 -->
+			<when test = 'status == 2'>
+				AND O.ORD_STS IN (2,3)
+			</when>
+			<!-- 단계가 2와 -1(전체 선택)이 아닐 때 -->
+			<when test = 'status != 2 and status != -1'>
+				AND O.ORD_STS = #{status}
+			</when>
+		</choose>
+		<!-- 검색 필터링 : 주문 번호에 값이 입력되었을 때 -->
+ 		<if test='orderNo != null and !orderNo.equals("")'>
+			AND O.ORD_NO LIKE CONCAT('%',#{orderNo},'%')
 		</if>
-		<!-- 미출고, 주문 단계 순서로 정렬 -->
-		ORDER BY UNRELEASE DESC, O.ORD_STS
+		<!-- 검색 필터링 : 거래처명에 값이 입력되었을 때  -->
+	   	<if test='clientName != null and !clientName.equals("")'>
+	 		AND C.CLT_NAME LIKE CONCAT('%',#{clientName},'%')
+	 	</if>
+		GROUP BY OI.OI_NO
+		<!-- 주문 단계로 정렬 -->
+		ORDER BY O.ORD_STS
 	</select>
 	
 	<!-- 주문 단계마다 카운트 --> 
