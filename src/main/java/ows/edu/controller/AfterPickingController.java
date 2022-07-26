@@ -26,7 +26,6 @@ public class AfterPickingController {
 	@Resource
 	ReleaseInspectionService releaseInspectionService;
 	
-	
 	/**
 	 * '출고검수/패킹 진행'페이지 상단 현황 정보 응답.
 	 * 주문건수, 피킹지시건수, 출고검수+패킹 건수, 미출고건수

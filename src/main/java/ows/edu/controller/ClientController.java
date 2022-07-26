@@ -28,7 +28,9 @@ public class ClientController {
 	
 	@Resource
 	private ClientModalService clientModalService;
-		
+	
+	//배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링
+	
 	/**
 	 * 배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링
 	 * 
@@ -54,11 +56,13 @@ public class ClientController {
 		map1.put("orderUnrelease", orderUnrelease);
 		map1.put("orderNo", orderNo);
 		map1.put("clientName", clientName);
-		
-		List<Client> list = clientService.getFilteredList(map1);
+
+		List<Client> list1 = clientService.getReleaseList(map1);
+		List<Client> list2 = clientService.getUnreleaseList(map1);
 		
 		Map<String, Object> map2 = new HashMap<>();
-		map2.put("list", list);
+		map2.put("list1", list1);
+		map2.put("list2", list2);
 		return map2;
 	}
 	
@@ -83,7 +87,7 @@ public class ClientController {
 	 * 
 	 * @author 김예원
 	 * @param unreleaseCnt 미출고 건수
-	 * @return 미출고 건를 반환
+	 * @return 미출고 건수를 반환
 	 */
 	@GetMapping("/unreleaseCnt")
 	public int unreleaseCnt() {

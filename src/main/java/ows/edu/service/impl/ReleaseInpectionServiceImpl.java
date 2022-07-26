@@ -234,104 +234,81 @@ public class ReleaseInpectionServiceImpl implements ReleaseInspectionService {
 	}
 
 	
-	//현주=============================================================================
-	
-	private String releaseCode ="";
-	
-	public List<ReleasePacking> select(){
-		List<ReleasePacking> list = releasePackingDao.select();
-		int count = 0;
-		
-		for(int i=0; i<list.size(); i++ ) {
-			if(!list.get(i).getReleaseCode().equals(releaseCode)) {
-				releaseCode = list.get(i).getReleaseCode();
-				count++;
-			}
-			list.get(i).setNo(count);
-		}
-		return list;
-	}
-	
-	public List<ReleasePacking> selectByFilterPage(Pager pager){
-		List<ReleasePacking> list = releasePackingDao.selectByFilterPage(pager);
-		
-//		int count = pager.getStartRowIndex();
-//		
-//		//현재 페이지 번호
-//		int pageNo = pager.getPageNo();
-//		
-//		//이전까지의 releseCode 개수
-//		
-//		
-//		for(int i=0; i<list.size(); i++ ) {
-//			if(!list.get(i).getReleaseCode().equals(releaseCode)) {
-//				releaseCode = list.get(i).getReleaseCode();
-//				count++;
-//			}
-//			list.get(i).setNo(count);
-//		}		
-		
-		return list;
-	}
-	
-	public int count() {
-		return releasePackingDao.count();
-	}
-	
-	public List<ReleasePacking> selectByPage(Pager pager){
-		return releasePackingDao.selectByPage(pager);
-	}
-	
-	public List<ReleasePacking> selectByOrderNo(String orderNo, int index){
-		return releasePackingDao.selectByOrderNo(orderNo, index);
-	}
-	
-	//검수수량, 미출고 수량 업데이트
-	@Transactional
-	public void releaseInspectionQtyUpdate(String barCode) {
-		releaseInspectionDao.releaseInspectionQtyUpdate(barCode);
-		barcodeDao.updateBarcodeDnTrue(barCode);
-	}
+	   //현주=============================================================================
+	   
+	   private String releaseCode ="";
+	   
+	   public List<ReleasePacking> select(){
+	      List<ReleasePacking> list = releasePackingDao.select();
+	      int count = 0;
+	      
+	      for(int i=0; i<list.size(); i++ ) {
+	         if(!list.get(i).getReleaseCode().equals(releaseCode)) {
+	            releaseCode = list.get(i).getReleaseCode();
+	            count++;
+	         }
+	         list.get(i).setNo(count);
+	      }
+	      return list;
+	   }
+	   
+	   public List<ReleasePacking> selectByFilterPage(Pager pager){
+	      List<ReleasePacking> list = releasePackingDao.selectByFilterPage(pager);      
+	      return list;
+	   }
+	   
+	   public int count() {
+	      return releasePackingDao.count();
+	   }
+	   
+	   public List<ReleasePacking> selectByPage(Pager pager){
+	      return releasePackingDao.selectByPage(pager);
+	   }
+	   
+	   public List<ReleasePacking> selectByOrderNo(String orderNo, int index){
+	      return releasePackingDao.selectByOrderNo(orderNo, index);
+	   }
+	   
+	   //검수수량, 미출고 수량 업데이트
+	   @Transactional
+	   public void releaseInspectionQtyUpdate(String barCode) {
+	      releaseInspectionDao.releaseInspectionQtyUpdate(barCode);
+	      barcodeDao.updateBarcodeDnTrue(barCode);
+	   }
 
-	@Transactional
-	public void unRleaseQtyUpdate(String barCode) {
-		releaseInspectionDao.unRleaseQtyUpdate(barCode);
-		barcodeDao.updateBarcodeDnFalse(barCode);
-	}
+	   @Transactional
+	   public void unRleaseQtyUpdate(String barCode) {
+	      releaseInspectionDao.unRleaseQtyUpdate(barCode);
+	      barcodeDao.updateBarcodeDnFalse(barCode);
+	   }
 
-	//스캔
-	@Override
-	public List<ReleasePacking> scan(String release, String kind) {
-		return releasePackingDao.scan(release, kind);
-	}
+	   //스캔
+	   @Override
+	   public List<ReleasePacking> scan(String release, String kind) {
+	      return releasePackingDao.scan(release, kind);
+	   }
 
-	@Override
-	public int update(List<Box> boxArrays) {
-		int updateCount = 0;
-		System.out.println("========update=========");
-		for(Box boxArray : boxArrays) {
-			
-			Map<String, Integer> map = new HashMap<>();
-//			map.put("releaseInspectionQty", boxArray.getReleaseInspectionQty());
-//			System.out.println(boxArray.getReleaseInspectionQty());
-			map.put("orderItemNo", boxArray.getOrderItemNo());
-			System.out.println(boxArray.getOrderItemNo());
-			updateCount =+ releaseInspectionDao.update(map);
-		}		
-		return updateCount; 
-	}
+	   @Override
+	   public int update(List<Box> boxArrays) {
+	      int updateCount = 0;
+	      for(Box boxArray : boxArrays) {
+	         
+	         Map<String, Integer> map = new HashMap<>();
+	         map.put("orderItemNo", boxArray.getOrderItemNo());
+	         System.out.println(boxArray.getOrderItemNo());
+	         updateCount =+ releaseInspectionDao.update(map);
+	      }      
+	      return updateCount; 
+	   }
 
-	@Override
-	public List<ReleasePacking> selectByReleaseCode(String releaseCode) {
-		// TODO Auto-generated method stub
-		return releasePackingDao.selectByReleaseCode(releaseCode);
-	}
+	   @Override
+	   public List<ReleasePacking> selectByReleaseCode(String releaseCode) {
+	      // TODO Auto-generated method stub
+	      return releasePackingDao.selectByReleaseCode(releaseCode);
+	   }
 
-	//출고검수일 업데이트
-	@Override
-	public int updateReleaseInspectionDate(Long orderNo) {
-		// TODO Auto-generated method stub
-		return releaseInspectionDao.updateReleaseInspectionDate(orderNo);
-	}
-	
+	   @Override
+	   public int getTotalItemQty(Long orderNo) {
+	      return releaseInspectionDao.getTotalItemQty(orderNo);
+	   }
 }
