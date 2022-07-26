@@ -8,8 +8,6 @@ public class AfterPicking {
 	private String strPackingUnreleased;
 	private String strAfterPickingUnreleased;
 	private String strBoxQuantity;
-	
-	///
 	private ReleaseInspection releaseInspection;
 	private Release release;
 	private Item item;
@@ -18,5 +16,5 @@ public class AfterPicking {
 	private Order order;
 	private Packing packing;
 	private Client client;
-	
+
 }

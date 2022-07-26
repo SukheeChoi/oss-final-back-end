@@ -28,48 +28,49 @@ public class CombineShippingController {
 	@Resource
 	CombineShippingService combineShippingService;
 
-	
 	/**
 	 * 필터링 정보에 해당하는 수령 대상 업체 조회
+	 * 
 	 * @author 최숙희
-	 * @param toDo 할일 상태값(1=할일, 0=한일)
+	 * @param toDo     할일 상태값(1=할일, 0=한일)
 	 * @param dateList [시작일, 종료일] 선택된 날짜가 없으면 당일로 조회
 	 * @return 협력사 목록
 	 */
 	@PostMapping("/vendorList")
-	public Map<String, Object> getVendorList(@RequestParam(value="toDo", defaultValue="1") int toDo
-											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList) {
+	public Map<String, Object> getVendorList(@RequestParam(value = "toDo", defaultValue = "1") int toDo,
+			@RequestParam(value = "dateList", defaultValue = "[]") String[] dateList) {
 		log.info("vendorList");
-		
+
 		Map<String, Object> map = new HashMap<>();
-		
+
 		List<Vendor> list = new ArrayList<>();
 		list = combineShippingService.getVendorList(toDo, dateList);
-		
-		if(list.isEmpty()) {
+
+		if (list.isEmpty()) {
 			map.put("list", null);
 		} else {
 			map.put("list", list);
 		}
-		
+
 		return map;
 	}
-	
+
 	/**
 	 * 필터링 정보에 해당하는 전달 담당자 조회
+	 * 
 	 * @author 최숙희
-	 * @param toDo 할일 상태값(1=할일, 0=한일)
+	 * @param toDo     할일 상태값(1=할일, 0=한일)
 	 * @param dateList [시작일, 종료일] 선택된 날짜가 없으면 당일로 조회
 	 * @return 합배송 담당직원의 목록
 	 */
 	@PostMapping("/assigneeList")
-	public Map<String, Object> getAssigneeList(@RequestParam(value="toDo", defaultValue="1") int toDo
-											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList){
-		
+	public Map<String, Object> getAssigneeList(@RequestParam(value = "toDo", defaultValue = "1") int toDo,
+			@RequestParam(value = "dateList", defaultValue = "[]") String[] dateList) {
+
 		log.info("assigneeList");
 		Map<String, Object> map = new HashMap<>();
 		List<Employee> list = combineShippingService.getAssigneeList(toDo, dateList);
-		if(list.isEmpty()) {
+		if (list.isEmpty()) {
 			map.put("list", null);
 		} else {
 			map.put("list", list);
@@ -77,75 +78,69 @@ public class CombineShippingController {
 		log.info("map" + map);
 		return map;
 	}
-	
+
 	/**
 	 * @author 최숙희
-	 * @param toDo 할일 상태값(1=할일, 0=한일)
-	 * @param vendorId 선택된 협력사PK
-	 * @param dateList [시작일, 종료일] 선택된 날짜가 없으면 당일로 조회
-	 * @param pageNo 선택된 페이지 번호
+	 * @param toDo        할일 상태값(1=할일, 0=한일)
+	 * @param vendorId    선택된 협력사PK
+	 * @param dateList    [시작일, 종료일] 선택된 날짜가 없으면 당일로 조회
+	 * @param pageNo      선택된 페이지 번호
 	 * @param rowsPerPage 그리드에 표시될 행 수
 	 * @return 필터링된 수령 목록
 	 */
 	@PostMapping("/receiptList")
-	public Map<String, Object> geReceiptList(@RequestParam(value="toDo", defaultValue="1") int toDo
-											, @RequestParam(value="vendorId", defaultValue="전체") String vendorId
-											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
-											, @RequestParam(value="pageNo", defaultValue="1") int pageNo
-											, @RequestParam(value="perPage", defaultValue="40") int rowsPerPage){
+	public Map<String, Object> geReceiptList(@RequestParam(value = "toDo", defaultValue = "1") int toDo,
+			@RequestParam(value = "vendorId", defaultValue = "전체") String vendorId,
+			@RequestParam(value = "dateList", defaultValue = "[]") String[] dateList,
+			@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+			@RequestParam(value = "perPage", defaultValue = "40") int rowsPerPage) {
 
 		Map<String, Object> map = new HashMap<>();
-		map = combineShippingService
-				.getReceiptList(toDo, vendorId, dateList, pageNo, rowsPerPage);
-		
+		map = combineShippingService.getReceiptList(toDo, vendorId, dateList, pageNo, rowsPerPage);
+
 		return map;
 	}
 
 	/**
 	 * @author 최숙희
-	 * @param toDo 할일 상태값(1=할일, 0=한일)
-	 * @param employeeId 선택된 전달 담당자 PK
-	 * @param dateList [시작일, 종료일] 선택된 날짜가 없으면 당일로 조회
-	 * @param pageNo 선택된 페이지 번호
+	 * @param toDo        할일 상태값(1=할일, 0=한일)
+	 * @param employeeId  선택된 전달 담당자 PK
+	 * @param dateList    [시작일, 종료일] 선택된 날짜가 없으면 당일로 조회
+	 * @param pageNo      선택된 페이지 번호
 	 * @param rowsPerPage 그리드에 표시할 행 수
 	 * @return 필터링 된 전달 목록
 	 */
 	@PostMapping("/deliveryList")
-	public Map<String, Object> getDeliveryList(@RequestParam(value="toDo", defaultValue="1") int toDo
-											, @RequestParam(value="employeeId", defaultValue="전체") String employeeId
-											, @RequestParam(value="dateList", defaultValue="[]") String[] dateList
-											, @RequestParam(value="pageNo", defaultValue="1") int pageNo
-											, @RequestParam(value="perPage", defaultValue="40") int rowsPerPage
-			) {
+	public Map<String, Object> getDeliveryList(@RequestParam(value = "toDo", defaultValue = "1") int toDo,
+			@RequestParam(value = "employeeId", defaultValue = "전체") String employeeId,
+			@RequestParam(value = "dateList", defaultValue = "[]") String[] dateList,
+			@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+			@RequestParam(value = "perPage", defaultValue = "40") int rowsPerPage) {
 
-		Map<String, Object> map = combineShippingService
-									.getDeliveryList(
-											toDo, employeeId, dateList
-											, pageNo
-											, rowsPerPage
-									);
-		
+		Map<String, Object> map = combineShippingService.getDeliveryList(toDo, employeeId, dateList, pageNo,
+				rowsPerPage);
+
 		return map;
 	}
-	
+
 	/**
 	 * @author 최숙희
 	 * @param receiptListForUpdate { PK(OI_NO), 미출고 값 }
-	 * @return 업데이트 성공여부 
+	 * @return 업데이트 성공여부
 	 */
 	@PutMapping("/receipt")
 	public Map<String, String> updateReceipt(@RequestBody CombineShippingPartner[] receiptListForUpdate) {
 		Map<String, String> resultMap = new HashMap<>();
 		String result = combineShippingService.updateReceipt(receiptListForUpdate);
 		resultMap.put("result", result);
-		
+
 		return resultMap;
 	}
-	
+
 	/**
 	 * @author 최숙희
 	 * @param orderItemNoList [ PK(OI_NO) ]
-	 * @return 업데이트 성공여부 
+	 * @return 업데이트 성공여부
 	 */
 	@PutMapping("/delivery")
 	public Map<String, String> updateDelivery(@RequestBody int[] orderItemNoList) {
@@ -156,6 +151,5 @@ public class CombineShippingController {
 		resultMap.put("result", result);
 		return resultMap;
 	}
-	
-	
+
 }

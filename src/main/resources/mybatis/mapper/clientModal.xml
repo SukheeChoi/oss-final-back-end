@@ -50,75 +50,94 @@
 	</resultMap>
 
 	<!-- 거래처 정보 -->
-	<select id="selectClientDetail" parameterType="int" resultMap="clientDetailMap">
-		SELECT CONCAT(clt.CLT_NAME, '(', clt.CLT_NO, ')') AS CLT_NAME
-			, CONCAT(clt.CLT_RPR, ' 원장') AS CLT_RPR
-		    , clt.CLT_RPR_CNT
-		    , cd.CD_SHP_ADDR
-		    , cd.CD_SHP_DEST
-		    , brnc.BRNC_NAME
-		    , CONCAT(emp.EMP_NAME, ' ', emp.EMP_PST) AS EMP_NAME
-		    , emp.EMP_CNT
+	<select id="selectClientDetail" parameterType="int"
+		resultMap="clientDetailMap">
+		SELECT CONCAT(clt.CLT_NAME, '(', clt.CLT_NO, ')') AS
+		CLT_NAME
+		, CONCAT(clt.CLT_RPR, ' 원장') AS CLT_RPR
+		, clt.CLT_RPR_CNT
+		, cd.CD_SHP_ADDR
+		, cd.CD_SHP_DEST
+		, brnc.BRNC_NAME
+		, CONCAT(emp.EMP_NAME, ' ', emp.EMP_PST) AS EMP_NAME
+		, emp.EMP_CNT
 		FROM TB_CLT clt
-		JOIN TB_CLT_DTL cd ON clt.CLT_NO = cd.CLT_NO
+		JOIN TB_CLT_DTL cd ON clt.CLT_NO =
+		cd.CLT_NO
 		JOIN TB_EMP emp ON clt.EMP_ID = emp.EMP_ID
-		JOIN TB_BRNC brnc ON emp.BRNC_CODE = brnc.BRNC_CODE
+		JOIN TB_BRNC brnc
+		ON emp.BRNC_CODE = brnc.BRNC_CODE
 		WHERE clt.CLT_NO = #{clientNo}
-		GROUP BY clt.CLT_NO
+		GROUP
+		BY clt.CLT_NO
 	</select>
-	
+
 	<!-- 진행 주문 정보 -->
-	<select id="selectSelectedOrder" parameterType="string" resultMap="recentOrderMap">
+	<select id="selectSelectedOrder" parameterType="string"
+		resultMap="recentOrderMap">
 		SELECT ord.ORD_NO
-			, ord.ORD_SHP_CAT
-		    , DATE_FORMAT(ord.ORD_DT, '%m-%d %H:%i') AS ORD_DT
-		    , itm.ITM_NAME
-		    , orditm.ITM_CODE
-		    , vnd.V_NAME
-		    , orditm.OI_QTY
-		    , IF(pic.OI_NO IS NOT NULL, pic.PIC_QTY, csp.CSP_DLV_QTY) AS PIC_QTY
-		    , IF(ri.OI_NO IS NOT NULL AND orditm.OI_URLS_QTY = 0, '완료', '미완료') AS RI_COM
-		    , rls.RLS_IVC_CODE
-		    , ord.ORD_SHP_ADDR
+		, ord.ORD_SHP_CAT
+		, DATE_FORMAT(ord.ORD_DT, '%m-%d %H:%i') AS ORD_DT
+		, itm.ITM_NAME
+		, orditm.ITM_CODE
+		, vnd.V_NAME
+		, orditm.OI_QTY
+		, IF(pic.OI_NO IS NOT NULL, pic.PIC_QTY, csp.CSP_DLV_QTY) AS PIC_QTY
+		, IF(ri.OI_NO IS NOT NULL AND orditm.OI_URLS_QTY = 0, '완료', '미완료') AS
+		RI_COM
+		, rls.RLS_IVC_CODE
+		, ord.ORD_SHP_ADDR
 		FROM TB_ORD ord
-		RIGHT JOIN TB_ORD_ITM orditm ON ord.ORD_NO = orditm.ORD_NO
-		JOIN TB_ITM itm ON itm.ITM_CODE = orditm.ITM_CODE
+		RIGHT JOIN TB_ORD_ITM orditm ON
+		ord.ORD_NO = orditm.ORD_NO
+		JOIN TB_ITM itm ON itm.ITM_CODE =
+		orditm.ITM_CODE
 		JOIN TB_VND vnd ON itm.V_NO = vnd.V_NO
-		LEFT JOIN TB_PIC pic ON pic.OI_NO = orditm.OI_NO
-		LEFT JOIN TB_CMB_SHP_PTN csp ON csp.OI_NO = orditm.OI_NO
-		LEFT JOIN TB_RLS_INSP ri ON ri.OI_NO = orditm.OI_NO
+		LEFT JOIN TB_PIC
+		pic ON pic.OI_NO = orditm.OI_NO
+		LEFT JOIN TB_CMB_SHP_PTN csp ON
+		csp.OI_NO = orditm.OI_NO
+		LEFT JOIN TB_RLS_INSP ri ON ri.OI_NO =
+		orditm.OI_NO
 		LEFT JOIN TB_RLS rls ON rls.ORD_NO = ord.ORD_NO
-		WHERE ord.ORD_NO = #{orderNo}
+		WHERE
+		ord.ORD_NO = #{orderNo}
 	</select>
-	
+
 	<!-- 과거 주문 이력 -->
 	<select id="selectAllClientOrder" resultMap="pastOrderMap">
 		select clt.CLT_NAME
-			, DATE_FORMAT(ord.ORD_DT, '%Y-%m-%d') AS ORD_DT
-			, orditm.ITM_CODE
-			, COUNT(orditm.ITM_CODE) - 1 AS CNT_ITM
-			, SUM(orditm.OI_QTY) AS OI_QTY
-			, ord.ORD_NO
-		    , ord.ORD_ORD_WAY
-		    , DATE_FORMAT(rls.RLS_DT, '%Y-%m-%d') AS RLS_DT
+		, DATE_FORMAT(ord.ORD_DT, '%Y-%m-%d') AS ORD_DT
+		, orditm.ITM_CODE
+		, COUNT(orditm.ITM_CODE) - 1 AS CNT_ITM
+		, SUM(orditm.OI_QTY) AS OI_QTY
+		, ord.ORD_NO
+		, ord.ORD_ORD_WAY
+		, DATE_FORMAT(rls.RLS_DT, '%Y-%m-%d') AS RLS_DT
 		from TB_ORD ord
-		JOIN TB_CLT clt ON ord.CLT_NO = clt.CLT_NO
-		RIGHT JOIN TB_ORD_ITM orditm ON ord.ORD_NO = orditm.ORD_NO
-		LEFT JOIN TB_RLS rls ON ord.ORD_NO = rls.ORD_NO
+		JOIN
+		TB_CLT clt ON ord.CLT_NO = clt.CLT_NO
+		RIGHT JOIN TB_ORD_ITM orditm ON
+		ord.ORD_NO = orditm.ORD_NO
+		LEFT JOIN TB_RLS rls ON ord.ORD_NO =
+		rls.ORD_NO
 		WHERE clt.CLT_NO = #{clientNo} AND ord.ORD_NO != #{orderNo}
 		GROUP BY ord.ORD_NO
 		ORDER BY ORD_DT DESC
 	</select>
 
 	<!-- 과거 주문 상세 내역 -->
-	<select id="selectAllClientOrderDetail" parameterType="string" resultMap="pastOrderDetailMap">
+	<select id="selectAllClientOrderDetail" parameterType="string"
+		resultMap="pastOrderDetailMap">
 		select itm.ITM_NAME
 		, orditm.ITM_CODE
 		, orditm.OI_QTY
-		from TB_ORD ord
+		from
+		TB_ORD ord
 		RIGHT JOIN TB_ORD_ITM orditm ON ord.ORD_NO = orditm.ORD_NO
 		JOIN TB_ITM itm ON orditm.ITM_CODE = itm.ITM_CODE
-		WHERE ord.ORD_NO = #{orderNo}
+		WHERE ord.ORD_NO =
+		#{orderNo}
 	</select>
 
 
