@@ -28,9 +28,7 @@ public class ClientController {
 	
 	@Resource
 	private ClientModalService clientModalService;
-	
-	//배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링
-	
+		
 	/**
 	 * 배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링
 	 * 
@@ -49,8 +47,6 @@ public class ClientController {
 		boolean orderUnrelease = filterList.isUnrelease();
 		Long orderNo = filterList.getOrderNo();
 		String clientName = filterList.getClientName();
-//		int pageNo = filterList.getPageNo();
-//		int perPage = filterList.getPerPage();
 	
 		Map<String, Object> map1 = new HashMap<>();
 		map1.put("shippingCategory", shippingCategory);
@@ -58,8 +54,6 @@ public class ClientController {
 		map1.put("orderUnrelease", orderUnrelease);
 		map1.put("orderNo", orderNo);
 		map1.put("clientName", clientName);
-//		map1.put("pageNo", pageNo);
-//		map1.put("perPage", perPage);
 		
 		List<Client> list = clientService.getFilteredList(map1);
 		

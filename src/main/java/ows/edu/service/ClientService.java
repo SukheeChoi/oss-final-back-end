@@ -8,11 +8,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.ClientDao;
 import ows.edu.dto.Client;
 
-@Log4j2
 @Service
 public class ClientService {
 	@Resource
