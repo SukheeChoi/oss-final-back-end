@@ -29,5 +29,6 @@ public interface OrderItemDao {
 	 * @param combineShippingPartner
 	 * @return 업데이트 처리된 행 수
 	 */
-	public int updateOiUnreleaseQuantity(CombineShippingPartner combineShippingPartner);
+//	public int updateOiUnreleaseQuantity(CombineShippingPartner combineShippingPartner);
+	public int update(CombineShippingPartner combineShippingPartner);
 }

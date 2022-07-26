@@ -67,7 +67,6 @@ public class CombineShippingController {
 	public Map<String, Object> getAssigneeList(@RequestParam(value = "toDo", defaultValue = "1") int toDo,
 			@RequestParam(value = "dateList", defaultValue = "[]") String[] dateList) {
 
-		log.info("assigneeList");
 		Map<String, Object> map = new HashMap<>();
 		List<Employee> list = combineShippingService.getAssigneeList(toDo, dateList);
 		if (list.isEmpty()) {
@@ -75,7 +74,6 @@ public class CombineShippingController {
 		} else {
 			map.put("list", list);
 		}
-		log.info("map" + map);
 		return map;
 	}
 
@@ -94,7 +92,7 @@ public class CombineShippingController {
 			@RequestParam(value = "dateList", defaultValue = "[]") String[] dateList,
 			@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
 			@RequestParam(value = "perPage", defaultValue = "40") int rowsPerPage) {
-
+		
 		Map<String, Object> map = new HashMap<>();
 		map = combineShippingService.getReceiptList(toDo, vendorId, dateList, pageNo, rowsPerPage);
 
@@ -130,6 +128,8 @@ public class CombineShippingController {
 	 */
 	@PutMapping("/receipt")
 	public Map<String, String> updateReceipt(@RequestBody CombineShippingPartner[] receiptListForUpdate) {
+		log.info("receiptListForUpdate : " + receiptListForUpdate);
+		
 		Map<String, String> resultMap = new HashMap<>();
 		String result = combineShippingService.updateReceipt(receiptListForUpdate);
 		resultMap.put("result", result);

@@ -115,7 +115,6 @@
 	<select id="selectReleaseInspectionEmpNm" resultType="string">
 		SELECT DISTINCT RI_EMP_NAME
 		FROM V_AFT_PIC
-		<!-- WHERE RI_EMP_NAME IS NOT NULL -->
 		<where>
 			AND RI_EMP_NAME IS NOT NULL
 			<!-- 배송구분 필터링: 전체/일반/긴급 -->

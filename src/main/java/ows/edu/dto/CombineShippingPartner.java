@@ -16,6 +16,8 @@ public class CombineShippingPartner {
   private Integer deliveryQuantity;
   private Integer receiveUnreleaseQuantity;
   private Integer deliveryUnreleaseQuantity;
+  // 메모 추가.
+  private String orderItemNote;
   
   private OrderItem orderItem;
   private Item item;
