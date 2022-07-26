@@ -44,7 +44,6 @@ public class ClientController {
 	 */
 	@PostMapping("/getFilterList")
 	public Map<String, Object> getFilterList(@RequestBody ClientFilter filterList) {
-		log.info("getFilterList - filterList : " + filterList);
 		String[] shippingCategory = filterList.getShippingCategory();
 		int status = filterList.getStatus();
 		boolean orderUnrelease = filterList.isUnrelease();
