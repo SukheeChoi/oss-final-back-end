@@ -2,98 +2,98 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ows.edu.dao.OrderDao">
-	<!--
-	@author 최숙희
-	출고검수/패킹 진행 페이지용.
-	처리 단계에 해당하는 현황 정보.
-	-->
-	<select id="countSummaryByStatus" parameterType="int" resultType="hashMAp">
-		SELECT O.ORD_NUM, OI_URLS.URLS_NUM, PI.PIC_DIR_NUM, E.EX_NUM, N.NM_NUM
+	<!-- @author 최숙희 출고검수/패킹 진행 페이지용. 처리 단계에 해당하는 현황 정보. -->
+	<select id="countSummaryByStatus" parameterType="int"
+		resultType="hashMAp">
+		SELECT O.ORD_NUM, OI_URLS.URLS_NUM, PI.PIC_DIR_NUM,
+		E.EX_NUM, N.NM_NUM
 		FROM
-			(SELECT COUNT(*) 'ORD_NUM'
-			FROM TB_ORD
-			WHERE ORD_STS != 0
-		    ) O
-			, (
-		    SELECT COUNT(*) 'URLS_NUM'
-			FROM (
-				SELECT O.ORD_STS ORD_STS
-					, SUM(OI.OI_URLS_QTY) AS SUM_OI_URLS_QTY
-				FROM TB_ORD_ITM OI
-				LEFT JOIN TB_ORD O
-					ON (OI.ORD_NO = O.ORD_NO)
-				WHERE O.ORD_STS = #{status}
-				GROUP BY O.ORD_NO
-			) SQ
-			WHERE SQ.SUM_OI_URLS_QTY > 0
-		    ) OI_URLS
-			, (SELECT COUNT(*) 'PIC_DIR_NUM'
-			FROM TB_ORD
-			WHERE ORD_STS = 2
-		    ) PI    
-			, (SELECT COUNT(*) 'EX_NUM'
-			FROM TB_ORD
-			WHERE ORD_STS =  #{status}
-			AND ORD_SHP_CAT = '긴급'
-			) E
-			, (SELECT COUNT(*) 'NM_NUM'
-			FROM TB_ORD
-			WHERE ORD_STS =  #{status}
-			AND ORD_SHP_CAT = '일반'
-		    ) N
-	</select>
-	
-	<select id="countProgressOrder" resultType="int">
-		SELECT COUNT(*)
+		(SELECT COUNT(*) 'ORD_NUM'
 		FROM TB_ORD
 		WHERE ORD_STS != 0
+		) O
+		, (
+		SELECT COUNT(*) 'URLS_NUM'
+		FROM (
+		SELECT O.ORD_STS ORD_STS
+		, SUM(OI.OI_URLS_QTY) AS SUM_OI_URLS_QTY
+		FROM TB_ORD_ITM OI
+		LEFT JOIN TB_ORD O
+		ON (OI.ORD_NO = O.ORD_NO)
+		WHERE O.ORD_STS = #{status}
+		GROUP BY O.ORD_NO
+		) SQ
+		WHERE SQ.SUM_OI_URLS_QTY > 0
+		) OI_URLS
+		, (SELECT COUNT(*) 'PIC_DIR_NUM'
+		FROM TB_ORD
+		WHERE ORD_STS = 2
+		) PI
+		, (SELECT COUNT(*) 'EX_NUM'
+		FROM TB_ORD
+		WHERE ORD_STS = #{status}
+		AND ORD_SHP_CAT = '긴급'
+		) E
+		, (SELECT COUNT(*) 'NM_NUM'
+		FROM TB_ORD
+		WHERE ORD_STS = #{status}
+		AND ORD_SHP_CAT = '일반'
+		) N
 	</select>
-	
+
+	<select id="countProgressOrder" resultType="int">
+		SELECT COUNT(*)
+		FROM
+		TB_ORD
+		WHERE ORD_STS != 0
+	</select>
+
 	<!-- 피킹완료건 -->
 	<select id="pickingDoneCount" resultType="int">
-        SELECT COUNT(*)
-        FROM TB_ORD
-        WHERE ORD_STS IN (4,5,6)
+		SELECT COUNT(*)
+		FROM TB_ORD
+		WHERE ORD_STS IN (4,5,6)
 	</select>
-	
+
 	<!-- 피킹완료건(일반) -->
 	<select id="pickDnCommonCount" resultType="int">
-        SELECT COUNT(*)
-        FROM TB_ORD
-        WHERE ORD_STS IN (4,5,6) and ord_shp_cat = "일반"	
+		SELECT COUNT(*)
+		FROM TB_ORD
+		WHERE ORD_STS IN (4,5,6) and ord_shp_cat = "일반"
 	</select>
-	
+
 	<select id="pickDnEmergencyCount" resultType="int">
-        SELECT COUNT(*)
-        FROM TB_ORD
-        WHERE ORD_STS IN (4,5,6) and ord_shp_cat = "긴급"	
+		SELECT COUNT(*)
+		FROM TB_ORD
+		WHERE ORD_STS IN (4,5,6) and ord_shp_cat = "긴급"
 	</select>
-	
+
 	<!-- 출고검수/패킹(완료)건 -->
 	<select id="rlsInspPackingCount" resultType="int">
-        SELECT COUNT(*)
-        FROM TB_ORD
-        WHERE ORD_STS IN (5,6)
+		SELECT COUNT(*)
+		FROM TB_ORD
+		WHERE ORD_STS IN (5,6)
 	</select>
-	
+
 	<select id="rlsInspPackCommonCount" resultType="int">
-        SELECT COUNT(*)
-        FROM TB_ORD
-        WHERE ORD_STS = 4
-        	AND ORD_SHP_CAT = "일반"	
+		SELECT COUNT(*)
+		FROM TB_ORD
+		WHERE ORD_STS = 4
+		AND ORD_SHP_CAT = "일반"
 	</select>
 
 	<select id="rlsInspPackEmergencyCount" resultType="int">
-        SELECT COUNT(*)
-        FROM TB_ORD
-        WHERE ORD_STS = 4
-        	AND ORD_SHP_CAT = "긴급"	
-	</select>	
+		SELECT COUNT(*)
+		FROM TB_ORD
+		WHERE ORD_STS = 4
+		AND ORD_SHP_CAT = "긴급"
+	</select>
 
 	<!-- 패킹 최종 완료 -->
 	<update id="updateOrdSts" parameterType="long">
 		UPDATE TB_ORD
-		SET ORD_STS = 5
+		SET ORD_STS
+		= 5
 		WHERE ORD_NO = #{ord_no}
 	</update>
 

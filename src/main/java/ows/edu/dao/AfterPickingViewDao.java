@@ -13,15 +13,12 @@ import ows.edu.dto.Pager;
 public interface AfterPickingViewDao {
 
 	public int selectCountAll(AfterPickingFilter afterPickingFilter);
-	
-	public List<HashMap<String, String>> selectAll(
-			@Param("afterPickingFilter") AfterPickingFilter afterPickingFilter
-			, @Param("pager") Pager pager
-		);
-	public List<Long> selectOrderNo(
-			@Param("afterPickingFilter") AfterPickingFilter afterPickingFilter
-			, @Param("pager") Pager pager
-		);
+
+	public List<HashMap<String, String>> selectAll(@Param("afterPickingFilter") AfterPickingFilter afterPickingFilter,
+			@Param("pager") Pager pager);
+
+	public List<Long> selectOrderNo(@Param("afterPickingFilter") AfterPickingFilter afterPickingFilter,
+			@Param("pager") Pager pager);
 
 	public List<String> selectReleaseInspectionEmpNm(AfterPickingFilter afterPickingFilter);
 

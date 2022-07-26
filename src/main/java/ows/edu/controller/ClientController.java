@@ -25,21 +25,19 @@ import ows.edu.service.ClientService;
 public class ClientController {
 	@Resource
 	ClientService clientService;
-	
+
 	@Resource
 	private ClientModalService clientModalService;
-	
-	//배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링
-	
+
 	/**
 	 * 배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링
 	 * 
 	 * @author 김예원
 	 * @param shippingCategory 배송구분(긴급, 일반)
-	 * @param status 주문 단계(주문~인계)
-	 * @param orderUnrelease 미출고
-	 * @param orderNo 주문번호
-	 * @param clientName 거래처명
+	 * @param status           주문 단계(주문~인계)
+	 * @param orderUnrelease   미출고
+	 * @param orderNo          주문번호
+	 * @param clientName       거래처명
 	 * @return 배송구분, 주문 단계, 미출고, 주문번호, 거래처 이름로 필터링된 데이터를 반환
 	 */
 	@PostMapping("/getFilterList")
@@ -49,7 +47,7 @@ public class ClientController {
 		boolean orderUnrelease = filterList.isUnrelease();
 		Long orderNo = filterList.getOrderNo();
 		String clientName = filterList.getClientName();
-	
+
 		Map<String, Object> map1 = new HashMap<>();
 		map1.put("shippingCategory", shippingCategory);
 		map1.put("status", status);
@@ -59,13 +57,13 @@ public class ClientController {
 
 		List<Client> list1 = clientService.getReleaseList(map1);
 		List<Client> list2 = clientService.getUnreleaseList(map1);
-		
+
 		Map<String, Object> map2 = new HashMap<>();
 		map2.put("list1", list1);
 		map2.put("list2", list2);
 		return map2;
 	}
-	
+
 	/**
 	 * 주문 단계 별 건수 요청
 	 * 
@@ -74,9 +72,9 @@ public class ClientController {
 	 * @return 주문 단계마다의 건수 데이터를 반환
 	 */
 	@GetMapping("/sts")
-	public Map<String, Object> statusCnt() {	
+	public Map<String, Object> statusCnt() {
 		List<Integer> statusCnt = clientService.getstatusCnt();
-		
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("statusCnt", statusCnt);
 		return map;
@@ -94,23 +92,23 @@ public class ClientController {
 		int unreleaseCnt = clientService.unreleaseCnt();
 		return unreleaseCnt;
 	}
-	
+
 	/**
 	 * 주문이력 정보를 반환함
 	 * 
 	 * @author 이동현
 	 * @param clientNo 고객번호
-	 * @param orderNo 주문번호
+	 * @param orderNo  주문번호
 	 * @return 거래처 정보, 진행 주문 정보, 주문 이력을 반환함
 	 */
 	@GetMapping("/modal")
 	public Map<String, Object> getModal(@RequestParam int clientNo, @RequestParam String orderNo) {
-		
-	  Map<String, Object> data = clientModalService.getModal(clientNo, orderNo);
-	  
-    return data;
+
+		Map<String, Object> data = clientModalService.getModal(clientNo, orderNo);
+
+		return data;
 	}
-	
+
 	/**
 	 * 주문 이력 상세 정보를 반환함
 	 * 
@@ -121,10 +119,10 @@ public class ClientController {
 	@GetMapping("/modalDetail")
 	public Map<String, Object> getModalDetail(@RequestParam String orderNo) {
 
-      List<ClientOrderDetail> clientOrderDetail = clientModalService.getClientOrderDetailByOrderNo(orderNo);
-    
-      Map<String, Object> map = new HashMap<>();
-      map.put("clientOrderDetail", clientOrderDetail);
-    return map;
-  }
+		List<ClientOrderDetail> clientOrderDetail = clientModalService.getClientOrderDetailByOrderNo(orderNo);
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("clientOrderDetail", clientOrderDetail);
+		return map;
+	}
 }

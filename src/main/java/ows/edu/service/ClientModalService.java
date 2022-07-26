@@ -18,42 +18,42 @@ import ows.edu.dto.SelectedOrder;
 @Service
 public class ClientModalService {
 
-  @Autowired
-  private ClientModalDao clientModalDao;
-  
-  /**
-   * 주문이력 정보를 반환함
-   * 
-   * @param clientNo 고객번호
-   * @param orderNo 주문번호
-   * @return 거래처 정보, 진행 주문 정보, 주문 이력을 반환함
-   */
-  public Map<String, Object> getModal(int clientNo, String orderNo) {
-    Map<String, Object> map = new HashMap<>();
-    
-    //거래처 정보
-    ClientDetail clientDetail = clientModalDao.selectClientDetail(clientNo);
+	@Autowired
+	private ClientModalDao clientModalDao;
 
-    //클릭한 주문 정보
-    List<SelectedOrder> selectedOrder = clientModalDao.selectSelectedOrder(orderNo);
-    
-    //전체 주문 이력(클릭한 주문 제외)
-    List<ClientOrder> clientOrder = clientModalDao.selectAllClientOrder(clientNo, orderNo);
-    
-    map.put("clientDetail", clientDetail);
-    map.put("selectedOrder", selectedOrder);
-    map.put("clientOrder", clientOrder);
-    return map;
-  }
-    
-  /**
-   * 주문 이력 상세 정보를 반환함
-   * 
-   * @author 이동현
-   * @param orderNo 주문번호
-   * @return 주문 이력에 해당하는 상세 내역을 반환
-   */
-  public List<ClientOrderDetail> getClientOrderDetailByOrderNo(String orderNo) {
-    return clientModalDao.selectAllClientOrderDetail(orderNo);
-  };
+	/**
+	 * 주문이력 정보를 반환함
+	 * 
+	 * @param clientNo 고객번호
+	 * @param orderNo  주문번호
+	 * @return 거래처 정보, 진행 주문 정보, 주문 이력을 반환함
+	 */
+	public Map<String, Object> getModal(int clientNo, String orderNo) {
+		Map<String, Object> map = new HashMap<>();
+
+		// 거래처 정보
+		ClientDetail clientDetail = clientModalDao.selectClientDetail(clientNo);
+
+		// 클릭한 주문 정보
+		List<SelectedOrder> selectedOrder = clientModalDao.selectSelectedOrder(orderNo);
+
+		// 전체 주문 이력(클릭한 주문 제외)
+		List<ClientOrder> clientOrder = clientModalDao.selectAllClientOrder(clientNo, orderNo);
+
+		map.put("clientDetail", clientDetail);
+		map.put("selectedOrder", selectedOrder);
+		map.put("clientOrder", clientOrder);
+		return map;
+	}
+
+	/**
+	 * 주문 이력 상세 정보를 반환함
+	 * 
+	 * @author 이동현
+	 * @param orderNo 주문번호
+	 * @return 주문 이력에 해당하는 상세 내역을 반환
+	 */
+	public List<ClientOrderDetail> getClientOrderDetailByOrderNo(String orderNo) {
+		return clientModalDao.selectAllClientOrderDetail(orderNo);
+	};
 }

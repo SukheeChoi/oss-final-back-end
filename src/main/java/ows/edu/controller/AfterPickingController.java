@@ -25,11 +25,10 @@ public class AfterPickingController {
 
 	@Resource
 	ReleaseInspectionService releaseInspectionService;
-	
+
 	/**
-	 * '출고검수/패킹 진행'페이지 상단 현황 정보 응답.
-	 * 주문건수, 피킹지시건수, 출고검수+패킹 건수, 미출고건수
-	 * 출고검수 중에서 긴급/일반 건수
+	 * '출고검수/패킹 진행'페이지 상단 현황 정보 응답. 주문건수, 피킹지시건수, 출고검수+패킹 건수, 미출고건수 출고검수 중에서 긴급/일반
+	 * 건수
 	 * 
 	 * @author 최숙희
 	 * @return Map<String, Object> 현황 정보
@@ -37,10 +36,10 @@ public class AfterPickingController {
 	@GetMapping("/summary")
 	public Map<String, Object> getSummary() {
 		Map<String, Object> summaryMap = releaseInspectionService.getSummary();
-		
+
 		return summaryMap;
 	}
-	
+
 	/**
 	 * @author 최숙희
 	 * @param afterPickingFilter 출고검수/패킹 진행 목록 필터링에 필요한 모든 정보
@@ -51,7 +50,7 @@ public class AfterPickingController {
 		Map<String, Object> map = new HashMap<>();
 		List<String> list = releaseInspectionService.getAssigneeList(afterPickingFilter);
 		map.put("list", list);
-		
+
 		return map;
 	}
 
@@ -62,11 +61,11 @@ public class AfterPickingController {
 	 */
 	@PostMapping("/")
 	public Map<String, Object> getList(@RequestBody AfterPickingFilter afterPickingFilter) {
-		
-		if(afterPickingFilter.getPageNo() == null || afterPickingFilter.getPageNo() == 0) {
+
+		if (afterPickingFilter.getPageNo() == null || afterPickingFilter.getPageNo() == 0) {
 			afterPickingFilter.setPageNo(1);
 		}
-		if(afterPickingFilter.getPageSize() == null || afterPickingFilter.getPageSize() == 0) {
+		if (afterPickingFilter.getPageSize() == null || afterPickingFilter.getPageSize() == 0) {
 			afterPickingFilter.setPageSize(18);
 		}
 
@@ -76,5 +75,4 @@ public class AfterPickingController {
 		return map;
 	}
 
-	
 }

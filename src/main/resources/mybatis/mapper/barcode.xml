@@ -12,6 +12,6 @@
 		set brcd_dn = 0
 		where brcd_no = #{barcodeNumber}
 	</update>
-	
+
 </mapper>
 

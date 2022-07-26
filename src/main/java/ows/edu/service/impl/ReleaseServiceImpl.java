@@ -13,16 +13,10 @@ import ows.edu.service.ReleaseService;
 
 @Service
 @Log4j2
-public class ReleaseServiceImpl implements ReleaseService{
-	
+public class ReleaseServiceImpl implements ReleaseService {
+
 	@Resource
 	ReleaseDao releaseDao;
-
-//	@Override
-//	public int updateReleaseDone(Map<String, Object> map) {
-//		int updateCount = releaseDao.updateReleaseDone(map);
-//		return updateCount;
-//	}
 
 	@Override
 	public int updateReleaseBoxQty(Box box) {
@@ -30,5 +24,5 @@ public class ReleaseServiceImpl implements ReleaseService{
 		log.info(box);
 		int updateCount = releaseDao.updateReleaseBoxQty(box);
 		return updateCount;
-	}	
+	}
 }

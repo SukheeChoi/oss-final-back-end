@@ -13,7 +13,6 @@
 		<result property="orderWay" column="ORD_ORD_WAY"/>	
 		<result property="shippingCategory" column="ORD_SHP_CAT"/>	
 		<result property="clientNo" column="CLT_NO"/>
-<!-- 		<result property="unrelease" column="UNRELEASE"/>--> 		
 		<association property="client" javaType="client">
 		 	<result property="clientNo" column="CLT_NO"/>
 			<result property="clientName" column="CLT_NAME"/>

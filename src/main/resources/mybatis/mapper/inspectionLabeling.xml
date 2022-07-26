@@ -26,7 +26,8 @@
 	</resultMap>
 
 	<!-- 왼쪽 업체명 기준으로 데이터 가져오기 / 3번째 트리 그리드 데이터 -->
-	<resultMap id="InspectionLabelingWorkMap" type="inspectionLabelingWork">
+	<resultMap id="InspectionLabelingWorkMap"
+		type="inspectionLabelingWork">
 		<result property="placingOrderNo" column="PO_CODE" />
 		<result property="title" column="V_NAME" />
 		<result property="receiveDate" column="PO_RCV_DT" />
@@ -42,7 +43,8 @@
 		<result property="lateTime" column="ILW_LT_TM" />
 		<result property="inspectionQuantity" column="ILW_INSP_QTY" />
 		<result property="passItemQuantity" column="ILW_PAS_ITM_QTY" />
-		<result property="labelingItemQuantity" column="ILW_LBL_ITM_QTY" />
+		<result property="labelingItemQuantity"
+			column="ILW_LBL_ITM_QTY" />
 	</resultMap>
 
 	<!-- 오른쪽 작업 담당자 기준으로 데이터 가져오기 -->
@@ -83,73 +85,90 @@
 
 	<!-- 왼쪽 전체 데이터 가져오기 / 전체 트리 그리드 데이터 -->
 	<select id="selectAllByTotal" resultMap="LabelingWorkTimeMap">
-    SELECT SUM(LWT_RCV_ITM) as LWT_RCV_ITM
-      , SUM(LWT_RCV_QTY) as LWT_RCV_QTY
-      , SUM(LWT_CRT_QTY) as LWT_CRT_QTY
-      , SUM(LWT_PRG_QTY) as LWT_PRG_QTY
-      , DATE_FORMAT((SELECT MIN(ILW_SCH_SRT_TM) FROM TB_LBL_WRK_TM lwt RIGHT JOIN TB_INSP_LBL_WRK ilw ON lwt.LWT_NO = ilw.LWT_NO WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')), '%H:%i') AS LWT_SCH_SRT_TM
-      , DATE_FORMAT((SELECT MAX(ILW_SCH_END_TM) FROM TB_LBL_WRK_TM lwt RIGHT JOIN TB_INSP_LBL_WRK ilw ON lwt.LWT_NO = ilw.LWT_NO WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')), '%H:%i') AS LWT_SCH_END_TM
-      , (SELECT timestampdiff(Minute, MIN(ILW_SCH_SRT_TM), MAX(ILW_SCH_END_TM)) FROM TB_LBL_WRK_TM lwt RIGHT JOIN TB_INSP_LBL_WRK ilw ON lwt.LWT_NO = ilw.LWT_NO WHERE LWT_DT = date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')) AS LWT_TTL_WRK_TM
-      , avg(LWT_9) as LWT_9
-      , avg(LWT_10) as LWT_10
-      , avg(LWT_11) as LWT_11
-      , avg(LWT_13) as LWT_13
-      , avg(LWT_14) as LWT_14
-      , avg(LWT_15) as LWT_15
-      , avg(LWT_16) as LWT_16
-      , avg(LWT_17) as LWT_17
-    FROM TB_LBL_WRK_TM 
-    WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')
+		SELECT SUM(LWT_RCV_ITM) as LWT_RCV_ITM
+		, SUM(LWT_RCV_QTY) as LWT_RCV_QTY
+		, SUM(LWT_CRT_QTY) as LWT_CRT_QTY
+		, SUM(LWT_PRG_QTY) as LWT_PRG_QTY
+		, DATE_FORMAT((SELECT MIN(ILW_SCH_SRT_TM) FROM TB_LBL_WRK_TM lwt RIGHT
+		JOIN TB_INSP_LBL_WRK ilw ON lwt.LWT_NO = ilw.LWT_NO WHERE
+		date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')),
+		'%H:%i') AS LWT_SCH_SRT_TM
+		, DATE_FORMAT((SELECT MAX(ILW_SCH_END_TM) FROM TB_LBL_WRK_TM lwt RIGHT
+		JOIN TB_INSP_LBL_WRK ilw ON lwt.LWT_NO = ilw.LWT_NO WHERE
+		date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')),
+		'%H:%i') AS LWT_SCH_END_TM
+		, (SELECT timestampdiff(Minute, MIN(ILW_SCH_SRT_TM),
+		MAX(ILW_SCH_END_TM)) FROM TB_LBL_WRK_TM lwt RIGHT JOIN TB_INSP_LBL_WRK
+		ilw ON lwt.LWT_NO = ilw.LWT_NO WHERE LWT_DT = date_format(LWT_DT,
+		'%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')) AS LWT_TTL_WRK_TM
+		, avg(LWT_9) as LWT_9
+		, avg(LWT_10) as LWT_10
+		, avg(LWT_11) as LWT_11
+		, avg(LWT_13) as LWT_13
+		, avg(LWT_14) as LWT_14
+		, avg(LWT_15) as LWT_15
+		, avg(LWT_16) as LWT_16
+		, avg(LWT_17) as LWT_17
+		FROM TB_LBL_WRK_TM
+		WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')
 	</select>
 
 	<!-- 왼쪽 담당자 기준으로 데이터 가져오기 / 2번째 트리 그리드 데이터 -->
 	<select id="selectAllByName" resultMap="LabelingWorkTimeMap">
 		SELECT lwt.LWT_NO
-			 , emp.EMP_name
-			 , lwt.LWT_RCV_ITM
-			 , lwt.LWT_RCV_QTY
-			 , lwt.LWT_CRT_QTY
-			 , lwt.LWT_PRG_QTY
-			 , DATE_FORMAT(MIN(ilw.ILW_SCH_SRT_TM), '%H:%i') as LWT_SCH_SRT_TM
-			 , DATE_FORMAT(MAX(ilw.ILW_SCH_END_TM), '%H:%i') as LWT_SCH_END_TM
-			 , timestampdiff(Minute, MIN(ilw.ILW_SCH_SRT_TM), MAX(ilw.ILW_SCH_END_TM)) as LWT_TTL_WRK_TM
-			 , lwt.LWT_9
-			 , lwt.LWT_10
-			 , lwt.LWT_11
-			 , lwt.LWT_13
-			 , lwt.LWT_14
-			 , lwt.LWT_15
-			 , lwt.LWT_16
-			 , lwt.LWT_17
+		, emp.EMP_name
+		, lwt.LWT_RCV_ITM
+		, lwt.LWT_RCV_QTY
+		, lwt.LWT_CRT_QTY
+		, lwt.LWT_PRG_QTY
+		, DATE_FORMAT(MIN(ilw.ILW_SCH_SRT_TM), '%H:%i') as LWT_SCH_SRT_TM
+		, DATE_FORMAT(MAX(ilw.ILW_SCH_END_TM), '%H:%i') as LWT_SCH_END_TM
+		, timestampdiff(Minute, MIN(ilw.ILW_SCH_SRT_TM),
+		MAX(ilw.ILW_SCH_END_TM)) as LWT_TTL_WRK_TM
+		, lwt.LWT_9
+		, lwt.LWT_10
+		, lwt.LWT_11
+		, lwt.LWT_13
+		, lwt.LWT_14
+		, lwt.LWT_15
+		, lwt.LWT_16
+		, lwt.LWT_17
 		from TB_LBL_WRK_TM lwt
-		JOIN TB_EMP emp ON emp.EMP_ID = lwt.EMP_ID
+		JOIN TB_EMP emp ON emp.EMP_ID =
+		lwt.EMP_ID
 		RIGHT JOIN TB_INSP_LBL_WRK ilw ON ilw.LWT_NO = lwt.LWT_NO
-		WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(),  '%Y-%m-%d')
+		WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(),
+		'%Y-%m-%d')
 		GROUP BY LWT_NO
 	</select>
 
 	<!-- 왼쪽 업체명 기준으로 데이터 가져오기 / 3번째 트리 그리드 데이터 -->
-	<select id="selectAllByLWTNo" parameterType="int" resultMap="InspectionLabelingWorkMap">
-		SELECT ilw.PO_CODE 
-			, vnd.V_NAME
-			, DATE_FORMAT(po.PO_RCV_DT, '%m-%d %H:%i') AS PO_RCV_DT
-			, ilw.ILW_RCV_ITM
-			, ilw.ILW_RCV_QTY
-			, DATE_FORMAT(ilw.ILW_SCH_SRT_TM, '%H:%i') AS ILW_SCH_SRT_TM
-			, DATE_FORMAT(ilw.ILW_SCH_END_TM, '%H:%i') AS ILW_SCH_END_TM
-			, timestampdiff(Minute, ilw.ILW_SCH_SRT_TM, ilw.ILW_SCH_END_TM) AS LWT_TTL_WRK_TM
-			, DATE_FORMAT(ilw.ILW_SRT_TM, '%H:%i') AS ILW_SRT_TM
-			, DATE_FORMAT(ilw.ILW_WRK_TM, '%H:%i') AS ILW_WRK_TM
-			, CONCAT(FLOOR(ROUND(ilw.ILW_LBL_ITM_QTY / ilw.ILW_RCV_QTY, 2) * 100), '%') AS ILW_PRG_RT
-			, ilw.ILW_STS
-			, CONCAT(ilw.ILW_LT_TM, '분') AS ILW_LT_TM
-			, ilw.ILW_INSP_QTY
-			, ilw.ILW_PAS_ITM_QTY
-			, ilw.ILW_LBL_ITM_QTY
+	<select id="selectAllByLWTNo" parameterType="int"
+		resultMap="InspectionLabelingWorkMap">
+		SELECT ilw.PO_CODE
+		, vnd.V_NAME
+		, DATE_FORMAT(po.PO_RCV_DT, '%m-%d %H:%i') AS PO_RCV_DT
+		, ilw.ILW_RCV_ITM
+		, ilw.ILW_RCV_QTY
+		, DATE_FORMAT(ilw.ILW_SCH_SRT_TM, '%H:%i') AS ILW_SCH_SRT_TM
+		, DATE_FORMAT(ilw.ILW_SCH_END_TM, '%H:%i') AS ILW_SCH_END_TM
+		, timestampdiff(Minute, ilw.ILW_SCH_SRT_TM, ilw.ILW_SCH_END_TM) AS
+		LWT_TTL_WRK_TM
+		, DATE_FORMAT(ilw.ILW_SRT_TM, '%H:%i') AS ILW_SRT_TM
+		, DATE_FORMAT(ilw.ILW_WRK_TM, '%H:%i') AS ILW_WRK_TM
+		, CONCAT(FLOOR(ROUND(ilw.ILW_LBL_ITM_QTY / ilw.ILW_RCV_QTY, 2) * 100),
+		'%') AS ILW_PRG_RT
+		, ilw.ILW_STS
+		, CONCAT(ilw.ILW_LT_TM, '분') AS ILW_LT_TM
+		, ilw.ILW_INSP_QTY
+		, ilw.ILW_PAS_ITM_QTY
+		, ilw.ILW_LBL_ITM_QTY
 		FROM TB_INSP_LBL_WRK ilw
-		JOIN TB_PLC_ORD po ON ilw.PO_CODE = po.PO_CODE
-		JOIN TB_VND vnd	on po.V_NO = vnd.V_NO
-		WHERE ilw.LWT_NO = #{labelingWorkTimeNo}
+		JOIN TB_PLC_ORD po ON
+		ilw.PO_CODE = po.PO_CODE
+		JOIN TB_VND vnd on po.V_NO = vnd.V_NO
+		WHERE
+		ilw.LWT_NO = #{labelingWorkTimeNo}
 		ORDER BY ILW_SCH_SRT_TM
 	</select>
 
@@ -157,26 +176,30 @@
 	<select id="selectAllDetailByLWTNo"
 		resultMap="InspectionLabelingViewMap">
 		SELECT lwt.EMP_ID
-			 , vnd.V_NAME
-			 , itm.ITM_NAME
-		     , itm.ITM_CODE
-		     , ilw.PO_CODE
-		     , poi.LOT_CODE
-		     , poi.POI_RCV_QTY
-		     , IF(IL_ACP = 0, NULL, il.IL_INSP_QTY) AS IL_INSP_QTY
-		     , IF(IL_ACP = 0, NULL, il.IL_PAS_ITM_QTY) AS IL_PAS_ITM_QTY
-		     , IF(IL_ACP = 0, NULL, il.IL_MIS_ITM_QTY) AS IL_MIS_ITM_QTY
-		     , IF(IL_ACP = 0, NULL, il.IL_DMG_ITM_QTY) AS IL_DMG_ITM_QTY
-		     , IF(IL_ACP = 0, NULL, il.IL_ETC_ITM_QTY) AS IL_ETC_ITM_QTY
-		     , il.IL_ACP
-		     , IF(IL_ACP = 0, NULL, il.IL_LBL_ITM_QTY) AS IL_LBL_ITM_QTY
-		FROM TB_LBL_WRK_TM lwt
+		, vnd.V_NAME
+		, itm.ITM_NAME
+		, itm.ITM_CODE
+		, ilw.PO_CODE
+		, poi.LOT_CODE
+		, poi.POI_RCV_QTY
+		, IF(IL_ACP = 0, NULL, il.IL_INSP_QTY) AS IL_INSP_QTY
+		, IF(IL_ACP = 0, NULL, il.IL_PAS_ITM_QTY) AS IL_PAS_ITM_QTY
+		, IF(IL_ACP = 0, NULL, il.IL_MIS_ITM_QTY) AS IL_MIS_ITM_QTY
+		, IF(IL_ACP = 0, NULL, il.IL_DMG_ITM_QTY) AS IL_DMG_ITM_QTY
+		, IF(IL_ACP = 0, NULL, il.IL_ETC_ITM_QTY) AS IL_ETC_ITM_QTY
+		, il.IL_ACP
+		, IF(IL_ACP = 0, NULL, il.IL_LBL_ITM_QTY) AS IL_LBL_ITM_QTY
+		FROM
+		TB_LBL_WRK_TM lwt
 		JOIN TB_INSP_LBL_WRK ilw ON lwt.LWT_NO = ilw.LWT_NO
 		JOIN TB_PLC_ORD_ITM poi ON ilw.PO_CODE = poi.PO_CODE
-		JOIN TB_PLC_ORD po ON poi.PO_CODE = po.PO_CODE
-		JOIN TB_ITM itm ON itm.ITM_CODE = poi.ITM_CODE
+		JOIN TB_PLC_ORD po
+		ON poi.PO_CODE = po.PO_CODE
+		JOIN TB_ITM itm ON itm.ITM_CODE =
+		poi.ITM_CODE
 		JOIN TB_VND vnd ON vnd.V_NO = po.V_NO
-		JOIN TB_INSP_LBL il ON il.POI_NO = poi.POI_NO
+		JOIN TB_INSP_LBL il
+		ON il.POI_NO = poi.POI_NO
 		WHERE lwt.LWT_NO = #{il.labelingWorkTimeNo}
 		<if
 			test='il.searchSelected != null and il.searchContent != null and il.searchSelected.equals("업체명")'>
@@ -198,32 +221,38 @@
 		LIMIT #{pager.rowsPerPage} OFFSET
 		#{pager.startRowIndex}
 	</select>
-	
+
 	<!-- 잔업 데이터 불러오기 -->
 	<select id="selectAllByLWTNoIsNULL"
 		resultMap="InspectionLabelingWorkMap">
 		SELECT po.PO_CODE
 		, ilw.ILW_RCV_ITM
 		, ilw.ILW_RCV_QTY
-		, vnd.V_NAME
+		,
+		vnd.V_NAME
 		, po.PO_RCV_DT
-		 FROM FOUREVER.TB_INSP_LBL_WRK ilw
-		JOIN TB_PLC_ORD po ON po.PO_CODE = ilw.PO_CODE
+		FROM FOUREVER.TB_INSP_LBL_WRK ilw
+		JOIN TB_PLC_ORD po ON po.PO_CODE =
+		ilw.PO_CODE
 		JOIN TB_VND vnd ON po.V_NO = vnd.V_NO
 		where LWT_NO IS NULL
 	</select>
-	
+
 	<select id="countDetailByLWTNO" resultType="int">
 		SELECT count(*)
 		FROM TB_LBL_WRK_TM lwt
 		JOIN TB_INSP_LBL_WRK ilw ON
 		lwt.LWT_NO = ilw.LWT_NO
-		JOIN TB_PLC_ORD_ITM poi ON ilw.PO_CODE = poi.PO_CODE
+		JOIN TB_PLC_ORD_ITM poi ON ilw.PO_CODE =
+		poi.PO_CODE
 		JOIN TB_PLC_ORD po ON poi.PO_CODE = po.PO_CODE
-		JOIN TB_ITM itm ON itm.ITM_CODE = poi.ITM_CODE
-		JOIN TB_VND vnd ON vnd.V_NO = po.V_NO
+		JOIN TB_ITM
+		itm ON itm.ITM_CODE = poi.ITM_CODE
+		JOIN TB_VND vnd ON vnd.V_NO =
+		po.V_NO
 		JOIN TB_INSP_LBL il ON il.POI_NO = poi.POI_NO
-		WHERE lwt.LWT_NO = #{labelingWorkTimeNo}
+		WHERE lwt.LWT_NO =
+		#{labelingWorkTimeNo}
 		<if
 			test='!searchSelected.equals("null") and !searchContent.equals("null") and searchSelected.equals("업체명")'>
 			AND V_NAME LIKE CONCAT('%', #{searchContent}, '%');
@@ -245,53 +274,55 @@
 	<!-- 현황 가져오기(물품수령 품목/개수) -->
 	<select id="selectStatusTotal"
 		resultMap="InspectionLabelingStatusMap">
-    SELECT SUM(ILW_RCV_ITM) AS SUM_RCV_ITM
-      , SUM(ILW_RCV_QTY) AS SUM_RCV_QTY 
-    FROM TB_INSP_LBL_WRK ilw
-    LEFT JOIN TB_LBL_WRK_TM lwt ON lwt.LWT_NO = ilw.LWT_NO
-    WHERE ilw.LWT_NO IS NOT NULL AND date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')
+		SELECT SUM(ILW_RCV_ITM) AS SUM_RCV_ITM
+		, SUM(ILW_RCV_QTY) AS SUM_RCV_QTY
+		FROM TB_INSP_LBL_WRK ilw
+		LEFT JOIN TB_LBL_WRK_TM lwt ON lwt.LWT_NO = ilw.LWT_NO
+		WHERE ilw.LWT_NO IS NOT NULL AND date_format(LWT_DT, '%Y-%m-%d') =
+		date_format(curdate(), '%Y-%m-%d')
 	</select>
 
 	<!-- 현황 가져오기(검품검수 품목/개수, 라벨링 품목/개수, 양품 품목/개수, 누락 품목/개수, 파손 품목/개수 ) -->
 	<select id="selectStatus"
 		resultMap="InspectionLabelingStatusMap">
-    SELECT COUNT(IL_INSP_QTY) AS CNT_INSP_QTY
-         , SUM(IL_INSP_QTY) AS SUM_INSP_QTY
-         , COUNT(IL_LBL_ITM_QTY) AS CNT_LBL_QTY
-         , SUM(IL_LBL_ITM_QTY) AS SUM_LBL_QTY
-         , COUNT(IL_PAS_ITM_QTY) AS CNT_PAS_QTY
-         , SUM(IL_PAS_ITM_QTY) AS SUM_PAS_QTY
-         , COUNT(IF(IL_MIS_ITM_QTY > 0, IL_MIS_ITM_QTY, NULL)) AS CNT_MIS_QTY
-         , SUM(IL_MIS_ITM_QTY) AS SUM_MIS_QTY
-         , COUNT(IF(IL_DMG_ITM_QTY > 0, IL_DMG_ITM_QTY, NULL)) AS CNT_DMG_QTY
-         , SUM(IL_DMG_ITM_QTY) AS SUM_DMG_QTY
-    FROM TB_INSP_LBL il
-    LEFT JOIN TB_PLC_ORD_ITM plc ON il.POI_NO = plc.POI_NO
-    LEFT JOIN TB_PLC_ORD po ON po.PO_CODE = plc.PO_CODE
-    LEFT JOIN TB_INSP_LBL_WRK ilw ON ilw.PO_CODE = po.PO_CODE
-    LEFT JOIN TB_LBL_WRK_TM lwt ON lwt.LWT_NO = ilw.LWT_NO
-    WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')
+		SELECT COUNT(IL_INSP_QTY) AS CNT_INSP_QTY
+		, SUM(IL_INSP_QTY) AS SUM_INSP_QTY
+		, COUNT(IL_LBL_ITM_QTY) AS CNT_LBL_QTY
+		, SUM(IL_LBL_ITM_QTY) AS SUM_LBL_QTY
+		, COUNT(IL_PAS_ITM_QTY) AS CNT_PAS_QTY
+		, SUM(IL_PAS_ITM_QTY) AS SUM_PAS_QTY
+		, COUNT(IF(IL_MIS_ITM_QTY > 0, IL_MIS_ITM_QTY, NULL)) AS CNT_MIS_QTY
+		, SUM(IL_MIS_ITM_QTY) AS SUM_MIS_QTY
+		, COUNT(IF(IL_DMG_ITM_QTY > 0, IL_DMG_ITM_QTY, NULL)) AS CNT_DMG_QTY
+		, SUM(IL_DMG_ITM_QTY) AS SUM_DMG_QTY
+		FROM TB_INSP_LBL il
+		LEFT JOIN TB_PLC_ORD_ITM plc ON il.POI_NO = plc.POI_NO
+		LEFT JOIN TB_PLC_ORD po ON po.PO_CODE = plc.PO_CODE
+		LEFT JOIN TB_INSP_LBL_WRK ilw ON ilw.PO_CODE = po.PO_CODE
+		LEFT JOIN TB_LBL_WRK_TM lwt ON lwt.LWT_NO = ilw.LWT_NO
+		WHERE date_format(LWT_DT, '%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')
 	</select>
-	
+
 	<!-- 잔업 추가 -->
 	<update id="updateLabelingWorkTime">
-		UPDATE TB_LBL_WRK_TM 
+		UPDATE TB_LBL_WRK_TM
 		SET LWT_RCV_ITM = LWT_RCV_ITM + #{receiveItem}
-			, LWT_RCV_QTY = LWT_RCV_QTY + #{receiveQuantity}
-		WHERE LWT_NO = #{labelingWorkTimeNo};
+		, LWT_RCV_QTY = LWT_RCV_QTY + #{receiveQuantity}
+		WHERE LWT_NO =
+		#{labelingWorkTimeNo};
 	</update>
-	
+
 	<!-- 예정시간 수정 -->
 	<update id="updateInspectionLabelingWork">
-		UPDATE TB_INSP_LBL_WRK 
-		SET 
-			ILW_SCH_SRT_TM = #{startTime}
-			, ILW_SCH_END_TM = #{endTime}
-			<if test="labelingWorkTimeNo != null">
-				, LWT_NO = #{labelingWorkTimeNo}
-			</if>
+		UPDATE TB_INSP_LBL_WRK
+		SET
+		ILW_SCH_SRT_TM = #{startTime}
+		, ILW_SCH_END_TM = #{endTime}
+		<if test="labelingWorkTimeNo != null">
+			, LWT_NO = #{labelingWorkTimeNo}
+		</if>
 		WHERE PO_CODE = #{placingOrderNo};
 	</update>
-	
+
 </mapper>
 
