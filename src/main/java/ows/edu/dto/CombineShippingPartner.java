@@ -18,6 +18,8 @@ public class CombineShippingPartner {
   private Integer deliveryUnreleaseQuantity;
   // 메모 추가.
   private String orderItemNote;
+  //전달 업데이트시에 주문 상태값 변경하기 위한 주문번호.
+  private String orederNo;
   
   private OrderItem orderItem;
   private Item item;

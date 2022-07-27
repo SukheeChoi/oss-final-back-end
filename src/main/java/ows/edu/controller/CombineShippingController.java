@@ -143,11 +143,11 @@ public class CombineShippingController {
 	 * @return 업데이트 성공여부
 	 */
 	@PutMapping("/delivery")
-	public Map<String, String> updateDelivery(@RequestBody int[] orderItemNoList) {
-		log.info("orderItemList.length : " + orderItemNoList.length);
+	public Map<String, String> updateDelivery(@RequestBody CombineShippingPartner[] deliveryListForUpdate) {
+		log.info("deliveryListForUpdate.length : " + deliveryListForUpdate.length);
 
 		Map<String, String> resultMap = new HashMap<>();
-		String result = combineShippingService.updateDelivery(orderItemNoList);
+		String result = combineShippingService.updateDelivery(deliveryListForUpdate);
 		resultMap.put("result", result);
 		return resultMap;
 	}

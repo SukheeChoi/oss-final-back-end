@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
 import ows.edu.dao.CombineShippingDao;
+import ows.edu.dao.OrderDao;
 import ows.edu.dao.OrderItemDao;
 import ows.edu.dto.CombineShipping;
 import ows.edu.dto.CombineShippingPartner;
@@ -27,6 +28,8 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	CombineShippingDao combineShippingDao;
 	@Resource
 	OrderItemDao orderItemDao;
+	@Resource
+	OrderDao orderDao;
 
 	@Override
 	public List<Vendor> getVendorList(int toDo, String[] dateList) {
@@ -135,17 +138,21 @@ public class CombineShippingServiceImpl implements CombineShippingService {
 	 * @author 최숙희
 	 */
 	@Override
-	public String updateDelivery(int[] orderItemNoList) {
+	public String updateDelivery(CombineShippingPartner[] combineShippingPartnerList) {
 		log.info("실행");
 		String result = "fail";
 		int totalAffectedRows = 0;
-		for (int orderItemNo : orderItemNoList) {
-			int affectedRowNo = combineShippingDao.updateADelivery(orderItemNo);
+		for (CombineShippingPartner combineShippingPartner : combineShippingPartnerList) {
+			int affectedRowNo = combineShippingDao.updateADelivery(combineShippingPartner);
 			if (affectedRowNo == 1) {
 				totalAffectedRows++;
 			}
+			// 주문 상태값 변경.(2->4)
+			int row = orderDao.updateOrderStatus(combineShippingPartner.getOrederNo(), 4);
+			log.info("row : " + row);
 		}
-		if (totalAffectedRows == orderItemNoList.length) {
+		//
+		if (totalAffectedRows == combineShippingPartnerList.length) {
 			result = "success";
 		}
 		return result;

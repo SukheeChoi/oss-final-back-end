@@ -39,6 +39,6 @@ public interface CombineShippingDao {
 	public int updateAReceipt(CombineShippingPartner combineShippingPartner);
 
 	// 전달여부 update.
-	public int updateADelivery(int orderItemNo);
+	public int updateADelivery(CombineShippingPartner orderItemNo);
 
 }

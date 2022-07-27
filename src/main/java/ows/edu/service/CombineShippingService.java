@@ -29,6 +29,6 @@ public interface CombineShippingService {
 	public String updateReceipt(CombineShippingPartner[] combineShippingPartnerList);
 
 	// 전달여부 update.
-	public String updateDelivery(int[] orderItemList);
+	public String updateDelivery(CombineShippingPartner[] combineShippingPartnerList);
 
 }

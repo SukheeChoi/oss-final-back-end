@@ -3,6 +3,7 @@ package ows.edu.dao;
 import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface OrderDao {
@@ -14,6 +15,14 @@ public interface OrderDao {
 	 * @return int 필터링된 주문 건수.
 	 */
 	public HashMap<String, Object> countSummaryByStatus(int status);
+	/**
+	 * @author 최숙희
+	 * @param orderNo
+	 * @param status
+	 * @return
+	 */
+	public int updateOrderStatus(@Param("orderNo") String orderNo, @Param("status") int status);
+	
 
 	public int countProgressOrder();
 

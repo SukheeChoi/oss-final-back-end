@@ -40,6 +40,12 @@
 		AND ORD_SHP_CAT = '일반'
 		) N
 	</select>
+	<update id="updateOrderStatus">
+		UPDATE TB_ORD
+		SET ORD_STS=#{status}
+		WHERE ORD_NO=#{orderNo}
+	</update>
+	<!-- /// -->
 
 	<select id="countProgressOrder" resultType="int">
 		SELECT COUNT(*)
