@@ -93,6 +93,7 @@ public class CombineShippingController {
 			@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
 			@RequestParam(value = "perPage", defaultValue = "40") int rowsPerPage) {
 		
+		log.info("receiptList");
 		Map<String, Object> map = new HashMap<>();
 		map = combineShippingService.getReceiptList(toDo, vendorId, dateList, pageNo, rowsPerPage);
 

@@ -99,7 +99,7 @@
 		'%H:%i') AS LWT_SCH_END_TM
 		, (SELECT timestampdiff(Minute, MIN(ILW_SCH_SRT_TM),
 		MAX(ILW_SCH_END_TM)) FROM TB_LBL_WRK_TM lwt RIGHT JOIN TB_INSP_LBL_WRK
-		ilw ON lwt.LWT_NO = ilw.LWT_NO WHERE LWT_DT = date_format(LWT_DT,
+		ilw ON lwt.LWT_NO = ilw.LWT_NO WHERE date_format(LWT_DT,
 		'%Y-%m-%d') = date_format(curdate(), '%Y-%m-%d')) AS LWT_TTL_WRK_TM
 		, avg(LWT_9) as LWT_9
 		, avg(LWT_10) as LWT_10

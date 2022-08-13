@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.log4j.Log4j2;
 import ows.edu.dto.Client;
 import ows.edu.dto.ClientFilter;
 import ows.edu.dto.ClientOrderDetail;
 import ows.edu.service.ClientModalService;
 import ows.edu.service.ClientService;
 
+@Log4j2
 @RestController
 @RequestMapping("/client")
 public class ClientController {
@@ -55,12 +57,10 @@ public class ClientController {
 		map1.put("orderNo", orderNo);
 		map1.put("clientName", clientName);
 
-		List<Client> list1 = clientService.getReleaseList(map1);
-		List<Client> list2 = clientService.getUnreleaseList(map1);
+		List<Client> list = clientService.getFilteredList(map1);
 
 		Map<String, Object> map2 = new HashMap<>();
-		map2.put("list1", list1);
-		map2.put("list2", list2);
+		map2.put("list", list);
 		return map2;
 	}
 
